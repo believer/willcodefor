@@ -29,3 +29,4 @@ vendor/
 /.gocache/
 
 .env
+node_modules
