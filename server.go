@@ -9,7 +9,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
-	"github.com/joho/godotenv"
 
 	_ "github.com/lib/pq"
 
@@ -17,15 +16,8 @@ import (
 )
 
 func main() {
-	// Load .env file
-	err := godotenv.Load()
-
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	connStr := os.Getenv("DATABASE_URL")
-	db, err := sql.Open("postgres", connStr)
+	connectionString := os.Getenv("DATABASE_URL")
+	db, err := sql.Open("postgres", connectionString)
 
 	if err != nil {
 		log.Fatal(err)
