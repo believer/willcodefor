@@ -28,7 +28,6 @@
 # Go package manager cache and generated files
 .cache
 .gocache
-go.sum
 
-**/.env
+.env
 fly.toml
