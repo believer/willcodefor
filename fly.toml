@@ -1,0 +1,19 @@
+# fly.toml app configuration file generated for willcodefor-go on 2023-08-09T15:46:19+02:00
+
+app = "willcodefor-go"
+primary_region = "arn"
+
+[build]
+  builder = "paketobuildpacks/builder:base"
+  buildpacks = ["gcr.io/paketo-buildpacks/go"]
+
+[env]
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]

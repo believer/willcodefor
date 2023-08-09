@@ -1,0 +1,34 @@
+# flyctl launch added from .gitignore
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+**/*.o
+**/*.a
+**/*.so
+
+# Compiled Go packages and binaries
+**/*.exe
+**/*.exe~
+**/*.dll
+**/*.so
+**/*.dylib
+
+# Test binary, build with `go test -c`
+**/*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+**/*.out
+
+# Build output
+**/build
+**/bin
+**/tmp
+
+# Dependency directories (vendoring)
+**/vendor
+
+# Go package manager cache and generated files
+.cache
+.gocache
+go.sum
+
+**/.env
+fly.toml

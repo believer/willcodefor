@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Rickard Natt och Dag</title>
+    <link href="/public/styles.css" rel="stylesheet" />
+    <link rel="icon" href="/public/favicon.ico" type="image/x-icon" />
+    <link href="/public/tokyonight.css" rel="stylesheet" />
+    <script src="/public/htmx.min.js"></script>
+    <script src="/public/command-menu.js"></script>
+  </head>
+  <body
+    class="bg-white dark:bg-tokyoNight-bg dark:text-gray-200"
+    hx-boost="true"
+  >
+    <main class="grid py-5 grid-template-main">
+      <div
+        class="col-start-3 col-end-4 flex flex-col space-y-2 border-b border-gray-200 pb-8 md:flex-row md:items-center md:justify-end md:space-y-0 md:space-x-8 md:border-0 md:pb-0"
+      >
+        <a class="font-bold no-underline hover:underline" href="/">
+          @rnattochdag
+        </a>
+        <a class="font-bold no-underline hover:underline" href="/posts">
+          Writing
+        </a>
+      </div>
+      <div class="col-start-3 col-end-4 my-10 md:my-12">{{embed}}</div>
+    </main>
+    <dialog data-command-menu hx-get="/command-menu" hx-trigger="load"></dialog>
+  </body>
+</html>
