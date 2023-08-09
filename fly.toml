@@ -7,6 +7,9 @@ primary_region = "arn"
   builder = "paketobuildpacks/builder:base"
   buildpacks = ["gcr.io/paketo-buildpacks/go"]
 
+[build.args]
+  BP_KEEP_FILES = "public/*:views/*"
+
 [env]
   PORT = "8080"
 
