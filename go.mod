@@ -1,4 +1,4 @@
-module believer/willcodefor
+module github.com/believer/willcodefor-go
 
 go 1.20
 

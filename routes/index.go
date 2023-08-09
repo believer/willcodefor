@@ -2,14 +2,11 @@ package routes
 
 import (
 	"database/sql"
+	"github.com/believer/willcodefor-go/data"
+	"github.com/gofiber/fiber/v2"
+	_ "github.com/lib/pq"
 	"log"
 	"time"
-
-	"github.com/gofiber/fiber/v2"
-
-	_ "github.com/lib/pq"
-
-	"believer/willcodefor/data"
 )
 
 func IndexHandler(c *fiber.Ctx, db *sql.DB) error {

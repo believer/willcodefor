@@ -16,7 +16,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"believer/willcodefor/routes"
+	"github.com/believer/willcodefor-go/routes"
 )
 
 func main() {
