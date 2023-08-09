@@ -10,9 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 	"github.com/joho/godotenv"
-	"github.com/rs/zerolog"
-	"github.com/simukti/sqldb-logger"
-	"github.com/simukti/sqldb-logger/logadapter/zerologadapter"
 
 	_ "github.com/lib/pq"
 
@@ -28,10 +25,7 @@ func main() {
 	}
 
 	connStr := os.Getenv("DATABASE_URL")
-
 	db, err := sql.Open("postgres", connStr)
-	loggerAdapter := zerologadapter.New(zerolog.New(os.Stdout))
-	db = sqldblogger.OpenDriver(connStr, db.Driver(), loggerAdapter)
 
 	if err != nil {
 		log.Fatal(err)
