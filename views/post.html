@@ -11,31 +11,31 @@
   </article>
   {{ if .Series }}
   <div
-    hx-get="/posts/series/{{ .Series }}?title={{ .Title }}"
+    hx-get="/series/{{ .Series }}?slug={{ .Slug }}"
     hx-trigger="load"
     hx-swap="outerHTML"
-  />
+  ></div>
   {{ end }}
   <hr />
   <ul
     class="flex flex-col items-center justify-between gap-5 space-y-3 text-sm sm:flex-row sm:space-y-0"
   >
-    <div
+    <li
       class="h-5"
-      hx-get="/posts/next/{{ .ID }}"
+      hx-get="/posts/{{ .ID }}/next"
       hx-trigger="revealed"
       hx-swap="outerHTML"
     >
       <div class="htmx-indicator">Loading next post...</div>
-    </div>
-    <div
+    </li>
+    <li
       class="h-5"
-      hx-get="/posts/previous/{{ .ID }}"
+      hx-get="/posts/{{ .ID }}/previous"
       hx-trigger="revealed"
       hx-swap="outerHTML"
     >
       <div class="htmx-indicator">Loading previous post...</div>
-    </div>
+    </li>
   </ul>
   <footer class="mt-8 text-center text-xs text-gray-600">
     This til was created
@@ -50,7 +50,7 @@
       ></span
     >{{ end }}. It has been viewed
     <span
-      hx-post="/posts/stats/{{ .ID }}"
+      hx-post="/posts/{{ .ID }}/stats"
       hx-trigger="intersect"
       hx-swap="outerHTML"
     >

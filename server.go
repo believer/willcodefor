@@ -25,6 +25,7 @@ func main() {
 
 	// Set up Fiber and view engine
 	engine := html.New("./views", ".html")
+
 	engine.AddFunc(
 		"unescape", func(s string) template.HTML {
 			return template.HTML(s)
@@ -33,6 +34,15 @@ func main() {
 	engine.AddFunc(
 		"add", func(x, y int) int {
 			return x + y
+		},
+	)
+
+	engine.AddFunc(
+		"navigationItems", func() []routes.NavigationItem {
+			return []routes.NavigationItem{
+				{Title: "Home", URL: "/"},
+				{Title: "Writing", URL: "/posts"},
+			}
 		},
 	)
 
@@ -60,6 +70,51 @@ func main() {
 
 	app.Get("/posts/:slug", func(c *fiber.Ctx) error {
 		return routes.PostHandler(c, db)
+	})
+
+	app.Get("/posts/:id/next", func(c *fiber.Ctx) error {
+		return routes.PostNextHandler(c, db)
+	})
+
+	app.Get("/posts/:id/previous", func(c *fiber.Ctx) error {
+		return routes.PostPreviousHandler(c, db)
+	})
+
+	app.Post("/posts/:id/stats", func(c *fiber.Ctx) error {
+		return routes.PostStatsHandler(c, db)
+	})
+
+	app.Get("/series/:series", func(c *fiber.Ctx) error {
+		return routes.PostSeriesHandler(c, db)
+	})
+
+	app.Get("/feed.xml", func(c *fiber.Ctx) error {
+		return routes.FeedHandler(c, db)
+	})
+
+	app.Get("/sitemap.xml", func(c *fiber.Ctx) error {
+		return routes.SitemapHandler(c, db)
+	})
+
+	app.Get("/iteam", func(c *fiber.Ctx) error {
+		return c.Render("iteam", fiber.Map{})
+	})
+
+	// Redirects to old page
+	app.Get("/stats", func(c *fiber.Ctx) error {
+		return c.Redirect("https://willcodefor-htmx.fly.dev/stats", fiber.StatusTemporaryRedirect)
+	})
+
+	app.Get("/admin", func(c *fiber.Ctx) error {
+		return c.Redirect("https://willcodefor-htmx.fly.dev/admin", fiber.StatusTemporaryRedirect)
+	})
+
+	app.Get("/robots.txt", func(c *fiber.Ctx) error {
+		return c.SendFile("./public/robots.txt")
+	})
+
+	app.Get("/humans.txt", func(c *fiber.Ctx) error {
+		return c.SendFile("./public/humans.txt")
 	})
 
 	// Define port if it doesn't exist in env

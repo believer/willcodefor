@@ -1,0 +1,16 @@
+<section
+  class="mt-5 rounded-lg bg-brandBlue-50 p-5 text-sm shadow-lg dark:bg-tokyoNight-dark"
+>
+  <h2 class="mb-2">{{ .SeriesName }} series</h2>
+  <ul class="counter space-y-2">
+    {{ range .Posts }}
+    <li class="counter-increment">
+      {{ if eq $.Slug .Slug }}
+      <strong>{{ .Title }}</strong>
+      {{ else }}
+      <a href="/posts/{{ .Slug }}">{{ .Title }}</a>
+      {{ end }}
+    </li>
+    {{ end }}
+  </ul>
+</section>

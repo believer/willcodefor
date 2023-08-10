@@ -1,0 +1,9 @@
+<li>
+  ←
+  <a
+    href="/posts/{{ .Slug }}"
+    hx-trigger="click, keyup[ctrlKey && key == 'n'] from:body"
+  >
+    {{ .Title }}
+  </a>
+</li>

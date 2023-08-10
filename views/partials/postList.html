@@ -8,12 +8,36 @@
     <hr
       class="m-0 hidden flex-1 border-dashed border-gray-300 dark:border-gray-600 sm:block"
     />
-    {{ if $.IsTimeSort }} {{ template "partials/timeSort" . }} {{ else }}
+    {{ if eq $.SortOrder "views" }}
     <div
       class="font-mono text-xs tabular-nums text-gray-500 dark:text-gray-400"
     >
       {{ .Views }} views
     </div>
+    {{ else if eq $.SortOrder "updatedAt" }}
+    <time
+      class="font-mono text-xs tabular-nums text-gray-500 dark:text-gray-400"
+      datetime="{{ .UpdatedAt.Format "2006-01-02T15:04:05Z" }}"
+    >
+      <span class="hidden sm:block">
+        {{ .UpdatedAt.Format "2006-01-02 15:04" }}
+      </span>
+      <span class="block sm:hidden">
+        {{ .UpdatedAt.Format "2006-01-02" }}
+      </span>
+    </time>
+    {{ else }}
+    <time
+      class="font-mono text-xs tabular-nums text-gray-500 dark:text-gray-400"
+      datetime="{{ .CreatedAt.Format "2006-01-02T15:04:05Z" }}"
+    >
+      <span class="hidden sm:block">
+        {{ .CreatedAt.Format "2006-01-02 15:04" }}
+      </span>
+      <span class="block sm:hidden">
+        {{ .CreatedAt.Format "2006-01-02" }}
+      </span>
+    </time>
     {{end}}
   </li>
   {{ end }}

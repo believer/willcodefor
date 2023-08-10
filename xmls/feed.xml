@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{{  Metadata.Title  }}}</title>
+  <subtitle>{{ Metadata.Description }}</subtitle>
+  <link href="{{ URL }}/feed.xml" rel="self"/>
+  <link href="{{ URL }}"/>
+  <updated>{{ LatestPostUpdate }}</updated>
+  <id>{{ URL }}</id>
+  <author>
+    <name>{{ Metadata.Author.Name }}</name>
+    <email>{{ Metadata.Author.Email }}</email>
+  </author>
+  {{#Posts}}
+  <entry>
+    <title>{{ Title }}</title>
+    <link href="{{ Metadata.URL }}posts/{{ Slug }}" />
+    <updated>{{ UpdatedAtParsed }}</updated>
+    <id>{{ Metadata.URL }}posts/{{ Slug }}</id>
+    <content type="html">{{{ Body }}}</content>
+  </entry>
+  {{/Posts}}
+</feed>
+

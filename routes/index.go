@@ -6,13 +6,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 	_ "github.com/lib/pq"
 	"log"
-	"time"
 )
 
-func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
-	var posts []PostWithDates
+type NavigationItem struct {
+	Title    string
+	URL      string
+	IsActive bool
+}
 
-	rows, err := db.Query("SELECT title, til_id, created_at FROM post ORDER BY id DESC LIMIT 5")
+func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
+	var posts []Post
+
+	rows, err := db.Query("SELECT title, til_id, slug, created_at FROM post ORDER BY id DESC LIMIT 5")
 	defer rows.Close()
 
 	if err != nil {
@@ -21,23 +26,17 @@ func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
 	}
 
 	for rows.Next() {
-		var post PostWithDates
-		var createdAt string
+		var post Post
 
-		rows.Scan(&post.Title, &post.TILID, &createdAt)
-
-		parsedCreatedAt, _ := time.Parse(time.RFC3339, createdAt)
-		post.DateTime = parsedCreatedAt.Format("2006-01-02 15:04")
-		post.Date = parsedCreatedAt.Format("2006-01-02")
+		rows.Scan(&post.Title, &post.TILID, &post.Slug, &post.CreatedAt)
 
 		posts = append(posts, post)
 	}
 
 	return c.Render("index", fiber.Map{
-		"Posts":      posts,
-		"Projects":   data.Projects,
-		"Work":       data.Positions,
-		"IsTimeSort": true,
+		"Posts":    posts,
+		"Projects": data.Projects,
+		"Work":     data.Positions,
 	})
 }
 
