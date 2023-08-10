@@ -1,0 +1,61 @@
+<section class="mx-auto max-w-prose">
+  <article class="prose dark:prose-invert dark:prose-dark">
+    <h1 class="mb-5 flex text-2xl">
+      <span class="not-prose font-medium">
+        <a href="/posts">til</a>
+      </span>
+      <span class="mx-1 font-normal text-gray-400">/</span>
+      <span>{{ .Title }}</span>
+    </h1>
+    <div id="body">{{ unescape .Body }}</div>
+  </article>
+  {{ if .Series }}
+  <div
+    hx-get="/posts/series/{{ .Series }}?title={{ .Title }}"
+    hx-trigger="load"
+    hx-swap="outerHTML"
+  />
+  {{ end }}
+  <hr />
+  <ul
+    class="flex flex-col items-center justify-between gap-5 space-y-3 text-sm sm:flex-row sm:space-y-0"
+  >
+    <div
+      class="h-5"
+      hx-get="/posts/next/{{ .ID }}"
+      hx-trigger="revealed"
+      hx-swap="outerHTML"
+    >
+      <div class="htmx-indicator">Loading next post...</div>
+    </div>
+    <div
+      class="h-5"
+      hx-get="/posts/previous/{{ .ID }}"
+      hx-trigger="revealed"
+      hx-swap="outerHTML"
+    >
+      <div class="htmx-indicator">Loading previous post...</div>
+    </div>
+  </ul>
+  <footer class="mt-8 text-center text-xs text-gray-600">
+    This til was created
+    <time class="font-semibold" datetime="{createdAt}">
+      {{ .CreatedAt.Format "2006-01-02 15:04" }}
+    </time>
+    {{ if ne .CreatedAt .UpdatedAt }}
+    <span>
+      and last modified
+      <time class="font-semibold" datetime="{updatedAt}"
+        >{{ .UpdatedAt.Format "2006-01-02 15:04" }}</time
+      ></span
+    >{{ end }}. It has been viewed
+    <span
+      hx-post="/posts/stats/{{ .ID }}"
+      hx-trigger="intersect"
+      hx-swap="outerHTML"
+    >
+      0
+    </span>
+    times. CC BY-NC-SA 4.0 2023-PRESENT © Rickard Natt och Dag
+  </footer>
+</section>

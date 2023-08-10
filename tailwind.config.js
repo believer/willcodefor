@@ -1,5 +1,5 @@
 export default {
-  content: ["./views/**/*.html"],
+  content: ["./views/**/*.html", "./**/*.go"],
   darkMode: "media",
   theme: {
     extend: {

@@ -58,6 +58,10 @@ func main() {
 		}
 	})
 
+	app.Get("/posts/:slug", func(c *fiber.Ctx) error {
+		return routes.PostHandler(c, db)
+	})
+
 	// Define port if it doesn't exist in env
 	port := os.Getenv("PORT")
 

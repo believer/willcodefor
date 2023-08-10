@@ -1,2 +1,2 @@
 [build]
-exclude_dir = ["public", "tmp", "vendor", "node_modules", "views"]
+exclude_dir = ["public", "tmp", "vendor", "node_modules"]

@@ -1,7 +1,21 @@
+{{ if eq .SortOrder "createdAt" }}
 <time
   class="font-mono text-xs tabular-nums text-gray-500 dark:text-gray-400"
   datetime="{{ .DateTime }}"
 >
-  <span class="hidden sm:block"> {{ .DateTime }} </span>
-  <span class="block sm:hidden"> {{ .Date }} </span>
+  <span class="hidden sm:block">
+    {{ .CreatedAt.Format "2006-01-02 15:04" }}
+  </span>
+  <span class="block sm:hidden"> {{ .CreatedAt.Format "2006-01-02" }} </span>
 </time>
+{{ else }}
+<time
+  class="font-mono text-xs tabular-nums text-gray-500 dark:text-gray-400"
+  datetime="{{ .DateTime }}"
+>
+  <span class="hidden sm:block">
+    {{ .UpdatedAt.Format "2006-01-02 15:04" }}
+  </span>
+  <span class="block sm:hidden"> {{ .UpdatedAt.Format "2006-01-02" }} </span>
+</time>
+{{ end }}

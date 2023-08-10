@@ -4,11 +4,11 @@
     class="til-counter grid-post relative grid w-full items-baseline gap-4 sm:inline-flex sm:gap-5"
     data-til="{{ .TILID }}"
   >
-    <a href="/posts/post.slug">{{ .Title }}</a>
+    <a href="/posts/{{ .Slug }}">{{ .Title }}</a>
     <hr
       class="m-0 hidden flex-1 border-dashed border-gray-300 dark:border-gray-600 sm:block"
     />
-    {{ if $.IsTimeSort }} {{template "partials/timeSort" .}} {{ else }}
+    {{ if $.IsTimeSort }} {{ template "partials/timeSort" . }} {{ else }}
     <div
       class="font-mono text-xs tabular-nums text-gray-500 dark:text-gray-400"
     >
