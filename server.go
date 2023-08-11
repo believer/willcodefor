@@ -112,12 +112,14 @@ func main() {
 		return c.Redirect("https://willcodefor-htmx.fly.dev/admin", fiber.StatusTemporaryRedirect)
 	})
 
-	app.Get("/robots.txt", func(c *fiber.Ctx) error {
-		return c.SendFile("./public/robots.txt")
-	})
+	app.Get("/:slug", func(c *fiber.Ctx) error {
+		_, err := os.Stat(fmt.Sprintf("./public/%s", c.Params("slug")))
 
-	app.Get("/humans.txt", func(c *fiber.Ctx) error {
-		return c.SendFile("./public/humans.txt")
+		if err == nil {
+			return c.SendFile(fmt.Sprintf("./public/%s", c.Params("slug")))
+		}
+
+		return c.Redirect("/posts/"+c.Params("slug"), fiber.StatusTemporaryRedirect)
 	})
 
 	// Define port if it doesn't exist in env

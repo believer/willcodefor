@@ -174,6 +174,12 @@ func PostHandler(c *fiber.Ctx, db *sql.DB) error {
 	 `
 
 	if err := db.QueryRow(q, slug).Scan(&post.Title, &post.TILID, &post.Slug, &post.ID, &post.Body, &post.CreatedAt, &post.UpdatedAt, &post.Series, &post.Excerpt); err != nil {
+		if err == sql.ErrNoRows {
+			return c.Render("404", fiber.Map{
+				"Slug": slug,
+			})
+		}
+
 		log.Fatal(err)
 		c.JSON("Oh no")
 	}
