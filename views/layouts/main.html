@@ -2,15 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    {{ if .Metadata.Title }}
+    <title>{{ .Metadata.Title }}</title>
+    {{else}}
     <title>Rickard Natt och Dag</title>
+    {{ end }} {{ if .Metadata.Excerpt }}
+    <meta name="description" content="{{ .Metadata.Excerpt }}" />
+    {{ else }}
+    <meta
+      name="description"
+      content="I am a developer from Sweden. I enjoy making user-friendly websites and creating tools that make life easier for other developers."
+    />
+    {{ end }}
+
     <link href="/public/styles.css" rel="stylesheet" />
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon" />
     <script src="/public/htmx.min.js"></script>
+    <script src="/public/htmx-head-support.js"></script>
     <script src="/public/command-menu.js"></script>
+    {{ if .Metadata }}
+    <meta property="og:title" content="{{ .Metadata.Title }}" />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://willcodefor.beer/{{ .Metadata.Slug }}"
+    />
+    <meta
+      property="og:image"
+      content="https://willcodefor.beer/public/ogimage.png"
+    />
+    <meta property="og:description" content="{{ .Metadata.Excerpt }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@rnattochdag" />
+    <meta name="twitter:creator" content="@rnattochdag" />
+    {{ end }}
   </head>
   <body
     class="bg-white dark:bg-tokyoNight-bg dark:text-gray-200"
     hx-boost="true"
+    hx-ext="head-support"
   >
     <main class="grid py-5 grid-template-main">
       <div

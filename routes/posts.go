@@ -181,7 +181,14 @@ func PostHandler(c *fiber.Ctx, db *sql.DB) error {
 	body := utils.MarkdownToHTML([]byte(post.Body))
 	post.Body = body.String()
 
-	return c.Render("post", post)
+	return c.Render("post", fiber.Map{
+		"Post": post,
+		"Metadata": fiber.Map{
+			"Excerpt": post.Excerpt,
+			"Slug":    post.Slug,
+			"Title":   post.Title,
+		},
+	})
 }
 
 func PostNextHandler(c *fiber.Ctx, db *sql.DB) error {

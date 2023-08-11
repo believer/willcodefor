@@ -5,13 +5,13 @@
         <a href="/posts">til</a>
       </span>
       <span class="mx-1 font-normal text-gray-400">/</span>
-      <span>{{ .Title }}</span>
+      <span>{{ .Post.Title }}</span>
     </h1>
-    <div id="body">{{ unescape .Body }}</div>
+    <div id="body">{{ unescape .Post.Body }}</div>
   </article>
-  {{ if .Series }}
+  {{ if .Post.Series }}
   <div
-    hx-get="/series/{{ .Series }}?slug={{ .Slug }}"
+    hx-get="/series/{{ .Post.Series }}?slug={{ .Post.Slug }}"
     hx-trigger="load"
     hx-swap="outerHTML"
   ></div>
@@ -22,7 +22,7 @@
   >
     <li
       class="h-5"
-      hx-get="/posts/{{ .ID }}/next"
+      hx-get="/posts/{{ .Post.ID }}/next"
       hx-trigger="revealed"
       hx-swap="outerHTML"
     >
@@ -30,7 +30,7 @@
     </li>
     <li
       class="h-5"
-      hx-get="/posts/{{ .ID }}/previous"
+      hx-get="/posts/{{ .Post.ID }}/previous"
       hx-trigger="revealed"
       hx-swap="outerHTML"
     >
@@ -39,18 +39,18 @@
   </ul>
   <footer class="mt-8 text-center text-xs text-gray-600">
     This til was created
-    <time class="font-semibold" datetime="{createdAt}">
-      {{ .CreatedAt.Format "2006-01-02 15:04" }}
+    <time class="font-semibold" datetime="{{ .Post.CreatedAt.Format "2006-01-02T15:04:05Z" }}">
+      {{ .Post.CreatedAt.Format "2006-01-02 15:04" }}
     </time>
-    {{ if ne .CreatedAt .UpdatedAt }}
+    {{ if ne .Post.CreatedAt .Post.UpdatedAt }}
     <span>
       and last modified
-      <time class="font-semibold" datetime="{updatedAt}"
-        >{{ .UpdatedAt.Format "2006-01-02 15:04" }}</time
+      <time class="font-semibold" datetime="{{ .Post.UpdatedAt.Format "2006-01-02T15:04:05Z" }}"
+        >{{ .Post.UpdatedAt.Format "2006-01-02 15:04" }}</time
       ></span
     >{{ end }}. It has been viewed
     <span
-      hx-post="/posts/{{ .ID }}/stats"
+      hx-post="/posts/{{ .Post.ID }}/stats"
       hx-trigger="intersect"
       hx-swap="outerHTML"
     >
