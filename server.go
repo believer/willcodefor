@@ -121,7 +121,10 @@ func main() {
 	}
 
 	// Serve static files
-	app.Static("/public", "./public")
+	app.Static("/public", "./public", fiber.Static{
+		Compress: true,
+		MaxAge:   86400,
+	})
 
 	// Start server
 	log.Fatalln(app.Listen(fmt.Sprintf(":%v", port)))
