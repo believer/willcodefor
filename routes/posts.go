@@ -324,7 +324,7 @@ func PostSeriesHandler(c *fiber.Ctx, db *sql.DB) error {
     SELECT slug, title
     FROM post
     WHERE series = $1 AND published = true
-    ORDER BY id DESC
+    ORDER BY id ASC
   `
 
 	rows, err := db.Query(q, series)
