@@ -110,7 +110,7 @@ func main() {
 			return c.SendFile(fmt.Sprintf("./public/%s", c.Params("slug")))
 		}
 
-		return c.Redirect("/posts/"+c.Params("slug"), fiber.StatusTemporaryRedirect)
+		return c.Redirect("/posts/"+c.Params("slug"), fiber.StatusSeeOther)
 	})
 
 	// Define port if it doesn't exist in env
