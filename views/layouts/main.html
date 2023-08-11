@@ -46,8 +46,8 @@
       <div
         class="col-start-3 col-end-4 flex flex-col space-y-2 border-b border-gray-200 pb-8 md:flex-row md:items-center md:justify-end md:space-y-0 md:space-x-8 md:border-0 md:pb-0"
       >
-      <a class="font-bold no-underline hover:underline{{ if eq .Path "/"}} text-gray-700 dark:text-white{{end}}" href="/">Home</a>
-      <a class="font-bold no-underline hover:underline{{ if eq .Path "/posts"}} text-gray-700 dark:text-white{{end}}" href="/posts">
+      <a class="font-bold {{ if eq .Path "/"}} no-underline text-gray-700 dark:text-white{{end}}" href="/">Home</a>
+      <a class="font-bold {{ if eq .Path "/posts"}} no-underline text-gray-700 dark:text-white{{end}}" href="/posts">
           Writing
         </a>
       </div>
