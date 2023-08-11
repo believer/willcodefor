@@ -19,7 +19,7 @@
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon" />
     <script src="/public/htmx.fc88c6.min.js"></script>
     <script src="/public/htmx-head-support.93484a.js"></script>
-    <script src="/public/command-menu.4e6ce0.js"></script>
+    <script async src="/public/command-menu.4e6ce0.js"></script>
     {{ if .Metadata }}
     <meta property="og:title" content="{{ .Metadata.Title }}" />
     <meta property="og:type" content="article" />
@@ -53,6 +53,6 @@
       </div>
       <div class="col-start-3 col-end-4 my-10 md:my-12">{{embed}}</div>
     </main>
-    <dialog data-command-menu hx-get="/command-menu" hx-trigger="load"></dialog>
+    <dialog data-command-menu hx-get="/command-menu" hx-trigger="keydown[metaKey && key == 'k'] from:body once"></dialog>
   </body>
 </html>
