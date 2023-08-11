@@ -60,6 +60,9 @@ func main() {
 	})
 
 	app.Get("/posts", func(c *fiber.Ctx) error {
+		if c.Query("search", "") != "" {
+			return routes.PostsSearchHandler(c, db)
+		}
 		switch c.Query("sort", "createdAt") {
 		case "views":
 			return routes.PostsViewsHandler(c, db)

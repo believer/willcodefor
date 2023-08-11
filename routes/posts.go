@@ -88,6 +88,43 @@ func PostsHandler(c *fiber.Ctx, db *sql.DB) error {
 	})
 }
 
+func PostsSearchHandler(c *fiber.Ctx, db *sql.DB) error {
+	var posts []Post
+
+	search := c.Query("search")
+	q := `
+    SELECT title, til_id, created_at, updated_at, slug
+    FROM post
+    WHERE
+      title ILIKE '%' || $1 || '%'
+      OR body ILIKE '%' || $1 || '%'
+      AND published = TRUE
+    ORDER BY created_at DESC
+  `
+
+	rows, err := db.Query(q, search)
+	defer rows.Close()
+
+	if err != nil {
+		log.Fatal(err)
+		c.JSON("Oh no")
+	}
+
+	for rows.Next() {
+		var post Post
+
+		rows.Scan(&post.Title, &post.TILID, &post.CreatedAt, &post.UpdatedAt, &post.Slug)
+
+		posts = append(posts, post)
+	}
+
+	return c.Render("posts", fiber.Map{
+		"Posts":     posts,
+		"SortOrder": "createdAt",
+		"Search":    search,
+	})
+}
+
 func PostsViewsHandler(c *fiber.Ctx, db *sql.DB) error {
 	var posts []PostWithViews
 
