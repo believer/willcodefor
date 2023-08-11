@@ -122,8 +122,7 @@ func main() {
 
 	// Serve static files
 	app.Static("/public", "./public", fiber.Static{
-		Compress: true,
-		MaxAge:   86400,
+		MaxAge: 86400,
 	})
 
 	// Start server
