@@ -37,15 +37,6 @@ func main() {
 		},
 	)
 
-	engine.AddFunc(
-		"navigationItems", func() []routes.NavigationItem {
-			return []routes.NavigationItem{
-				{Title: "Home", URL: "/"},
-				{Title: "Writing", URL: "/posts"},
-			}
-		},
-	)
-
 	app := fiber.New(fiber.Config{
 		Views:       engine,
 		ViewsLayout: "layouts/main",

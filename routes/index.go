@@ -8,12 +8,6 @@ import (
 	"log"
 )
 
-type NavigationItem struct {
-	Title    string
-	URL      string
-	IsActive bool
-}
-
 func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
 	var posts []Post
 
@@ -34,6 +28,7 @@ func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
 	}
 
 	return c.Render("index", fiber.Map{
+		"Path":     "/",
 		"Posts":    posts,
 		"Projects": data.Projects,
 		"Work":     data.Positions,

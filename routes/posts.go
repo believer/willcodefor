@@ -83,6 +83,7 @@ func PostsHandler(c *fiber.Ctx, db *sql.DB) error {
 	}
 
 	return c.Render("posts", fiber.Map{
+		"Path":      "/posts",
 		"Posts":     posts,
 		"SortOrder": sortOrder,
 	})
@@ -188,6 +189,7 @@ func PostHandler(c *fiber.Ctx, db *sql.DB) error {
 	post.Body = body.String()
 
 	return c.Render("post", fiber.Map{
+		"Path": "/posts",
 		"Post": post,
 		"Metadata": fiber.Map{
 			"Excerpt": post.Excerpt,
