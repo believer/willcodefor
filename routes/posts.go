@@ -36,6 +36,16 @@ type PostWithViews struct {
 	Views int
 }
 
+func NewNullString(s string) sql.NullString {
+	if len(s) == 0 {
+		return sql.NullString{}
+	}
+	return sql.NullString{
+		String: s,
+		Valid:  true,
+	}
+}
+
 func PostsHandler(c *fiber.Ctx, db *sql.DB) error {
 	var posts []Post
 
@@ -193,25 +203,56 @@ func PostStatsHandler(c *fiber.Ctx, db *sql.DB) error {
 	userAgent := c.GetReqHeaders()["User-Agent"]
 
 	if userAgent != "" && env == "production" {
+		engine := ""
+		deviceModel := ""
+		deviceVendor := ""
 		ua := useragent.Parse(userAgent)
 
-		db.Exec(`
+		switch ua.Name {
+		case "Firefox":
+			engine = "Gecko"
+		case "Edge":
+		case "Chrome":
+			engine = "Blink"
+		case "Safari":
+			engine = "WebKit"
+		}
+
+		switch ua.OS {
+		case "macOS":
+			deviceModel = "Macintosh"
+			deviceVendor = "Apple"
+		case "iOS":
+			deviceVendor = "Apple"
+		}
+
+		_, err := db.Exec(`
 		    INSERT INTO post_view (
 		      user_agent, post_id, is_bot,
 		      browser_name, browser_version,
-		      device_type, os_name, os_version,
+		      device_type, device_model, device_vendor,
+          os_name, os_version,
+          engine_version, engine_name
 		    )
-		    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 		  `,
 			ua.String,
 			id,
 			ua.Bot,
 			ua.Name,
 			ua.Version,
-			ua.Device,
+			NewNullString(ua.Device),
+			NewNullString(deviceModel),
+			NewNullString(deviceVendor),
 			ua.OS,
 			ua.OSVersion,
+			ua.Version,
+			NewNullString(engine),
 		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	q := `SELECT COUNT(*) FROM post_view WHERE post_id = $1`
