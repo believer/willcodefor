@@ -89,7 +89,9 @@
         <span class="flex-none text-gray-600 dark:text-gray-400">
           {{ .Title }}
         </span>
-        <span class="flex-none font-mono text-sm tabular-nums text-gray-500">
+        <span
+          class="flex-none font-mono text-xs tabular-nums text-gray-500 dark:text-gray-400"
+        >
           <time datetime="{{ .StartDate }}">{{ .StartDate }}</time>-{{ if
           .EndDate }}<time datetime="{{ .EndDate }}">{{ .EndDate }}</time>{{
           else }}<span>&nbsp;&nbsp;</span>{{ end }}
