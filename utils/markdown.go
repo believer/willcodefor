@@ -69,6 +69,7 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 		),
 		goldmark.WithRendererOptions(
 			html.WithXHTML(),
+			html.WithUnsafe(),
 		),
 	)
 
