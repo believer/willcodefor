@@ -1,30 +1,21 @@
 package routes
 
 import (
-	"database/sql"
+	"log"
+
 	"github.com/believer/willcodefor-go/data"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"log"
 )
 
-func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
-	var posts []Post
-
-	rows, err := db.Query("SELECT title, til_id, slug, created_at FROM post ORDER BY id DESC LIMIT 5")
-	defer rows.Close()
+func IndexHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	posts := []Post{}
+	err := db.Select(&posts, `SELECT title, til_id, slug, created_at FROM post ORDER BY id DESC LIMIT 5`)
 
 	if err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
-	}
-
-	for rows.Next() {
-		var post Post
-
-		rows.Scan(&post.Title, &post.TILID, &post.Slug, &post.CreatedAt)
-
-		posts = append(posts, post)
 	}
 
 	return c.Render("index", fiber.Map{
@@ -35,9 +26,9 @@ func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
 	})
 }
 
-func CommandMenuHandler(c *fiber.Ctx, db *sql.DB) error {
+func CommandMenuHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	search := c.Query("search")
-	var posts []Post
+	posts := []Post{}
 
 	q := `
     SELECT title, slug
@@ -50,20 +41,11 @@ func CommandMenuHandler(c *fiber.Ctx, db *sql.DB) error {
     ORDER BY id DESC
     LIMIT 5
   `
-	rows, err := db.Query(q, "%"+search+"%")
-	defer rows.Close()
+	err := db.Select(&posts, q, "%"+search+"%")
 
 	if err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
-	}
-
-	for rows.Next() {
-		var post Post
-
-		rows.Scan(&post.Title, &post.Slug)
-
-		posts = append(posts, post)
 	}
 
 	return c.Render("command-menu", fiber.Map{

@@ -8,6 +8,7 @@ import (
 
 	"github.com/believer/willcodefor-go/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jmoiron/sqlx"
 	"github.com/mileusna/useragent"
 
 	_ "github.com/lib/pq"
@@ -15,14 +16,14 @@ import (
 
 type Post struct {
 	Body      string
-	CreatedAt time.Time
+	CreatedAt time.Time `db:"created_at"`
 	Excerpt   string
 	ID        int
 	Series    string
 	Slug      string
-	TILID     int
+	TILID     int `db:"til_id"`
 	Title     string
-	UpdatedAt time.Time
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 type PostWithDates struct {
@@ -46,9 +47,8 @@ func NewNullString(s string) sql.NullString {
 	}
 }
 
-func PostsHandler(c *fiber.Ctx, db *sql.DB) error {
-	var posts []Post
-
+func PostsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	posts := []Post{}
 	sortOrder := c.Query("sort", "createdAt")
 	q := `
     SELECT title, til_id, created_at, updated_at, slug
@@ -66,20 +66,11 @@ func PostsHandler(c *fiber.Ctx, db *sql.DB) error {
   `
 	}
 
-	rows, err := db.Query(q)
-	defer rows.Close()
+	err := db.Select(&posts, q)
 
 	if err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
-	}
-
-	for rows.Next() {
-		var post Post
-
-		rows.Scan(&post.Title, &post.TILID, &post.CreatedAt, &post.UpdatedAt, &post.Slug)
-
-		posts = append(posts, post)
 	}
 
 	return c.Render("posts", fiber.Map{
@@ -89,9 +80,8 @@ func PostsHandler(c *fiber.Ctx, db *sql.DB) error {
 	})
 }
 
-func PostsSearchHandler(c *fiber.Ctx, db *sql.DB) error {
-	var posts []Post
-
+func PostsSearchHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	posts := []Post{}
 	search := c.Query("search")
 	q := `
     SELECT title, til_id, created_at, updated_at, slug
@@ -103,20 +93,11 @@ func PostsSearchHandler(c *fiber.Ctx, db *sql.DB) error {
     ORDER BY created_at DESC
   `
 
-	rows, err := db.Query(q, search)
-	defer rows.Close()
+	err := db.Select(&posts, q, search)
 
 	if err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
-	}
-
-	for rows.Next() {
-		var post Post
-
-		rows.Scan(&post.Title, &post.TILID, &post.CreatedAt, &post.UpdatedAt, &post.Slug)
-
-		posts = append(posts, post)
 	}
 
 	return c.Render("posts", fiber.Map{
@@ -126,9 +107,8 @@ func PostsSearchHandler(c *fiber.Ctx, db *sql.DB) error {
 	})
 }
 
-func PostsViewsHandler(c *fiber.Ctx, db *sql.DB) error {
-	var posts []PostWithViews
-
+func PostsViewsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	posts := []PostWithViews{}
 	q := `
     SELECT
       p.title,
@@ -142,20 +122,11 @@ func PostsViewsHandler(c *fiber.Ctx, db *sql.DB) error {
     ORDER BY views DESC
   `
 
-	rows, err := db.Query(q)
-	defer rows.Close()
+	err := db.Select(&posts, q)
 
 	if err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
-	}
-
-	for rows.Next() {
-		var post PostWithViews
-
-		rows.Scan(&post.Title, &post.TILID, &post.Slug, &post.Views)
-
-		posts = append(posts, post)
 	}
 
 	return c.Render("posts", fiber.Map{
@@ -165,17 +136,17 @@ func PostsViewsHandler(c *fiber.Ctx, db *sql.DB) error {
 	})
 }
 
-func PostHandler(c *fiber.Ctx, db *sql.DB) error {
+func PostHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	slug := c.Params("slug")
-	var post Post
+	post := Post{}
 
 	q := `
-	   SELECT title, til_id, slug, id, body, created_at, updated_at, COALESCE(series, ''), excerpt
+	   SELECT title, til_id, slug, id, body, created_at, updated_at, COALESCE(series, '') as series, excerpt
 	   FROM post
 	   WHERE slug = $1 OR long_slug = $1
 	 `
 
-	if err := db.QueryRow(q, slug).Scan(&post.Title, &post.TILID, &post.Slug, &post.ID, &post.Body, &post.CreatedAt, &post.UpdatedAt, &post.Series, &post.Excerpt); err != nil {
+	if err := db.Get(&post, q, slug); err != nil {
 		if err == sql.ErrNoRows {
 			return c.Render("404", fiber.Map{
 				"Slug": slug,
@@ -200,10 +171,9 @@ func PostHandler(c *fiber.Ctx, db *sql.DB) error {
 	})
 }
 
-func PostNextHandler(c *fiber.Ctx, db *sql.DB) error {
+func PostNextHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	id := c.Params("id")
-	var nextPost Post
-
+	nextPost := Post{}
 	q := `
     SELECT title, slug
     FROM post
@@ -212,7 +182,7 @@ func PostNextHandler(c *fiber.Ctx, db *sql.DB) error {
     LIMIT 1
    `
 
-	if err := db.QueryRow(q, id).Scan(&nextPost.Title, &nextPost.Slug); err != nil {
+	if err := db.Get(&nextPost, q, id); err != nil {
 		if err == sql.ErrNoRows {
 			return c.SendString("<li></li>")
 		}
@@ -224,10 +194,9 @@ func PostNextHandler(c *fiber.Ctx, db *sql.DB) error {
 	return c.Render("partials/postNext", nextPost, "")
 }
 
-func PostPreviousHandler(c *fiber.Ctx, db *sql.DB) error {
-	var prevPost Post
-
+func PostPreviousHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	id := c.Params("id")
+	prevPost := Post{}
 	q := `
     SELECT title, slug
     FROM post
@@ -236,7 +205,7 @@ func PostPreviousHandler(c *fiber.Ctx, db *sql.DB) error {
     LIMIT 1
    `
 
-	if err := db.QueryRow(q, id).Scan(&prevPost.Title, &prevPost.Slug); err != nil {
+	if err := db.Get(&prevPost, q, id); err != nil {
 		if err == sql.ErrNoRows {
 			return c.SendString("<li></li>")
 		}
@@ -248,7 +217,7 @@ func PostPreviousHandler(c *fiber.Ctx, db *sql.DB) error {
 	return c.Render("partials/postPrev", prevPost, "")
 }
 
-func PostStatsHandler(c *fiber.Ctx, db *sql.DB) error {
+func PostStatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	var postViews string
 
 	id := c.Params("id")
@@ -310,7 +279,7 @@ func PostStatsHandler(c *fiber.Ctx, db *sql.DB) error {
 
 	q := `SELECT COUNT(*) FROM post_view WHERE post_id = $1`
 
-	if err := db.QueryRow(q, id).Scan(&postViews); err != nil {
+	if err := db.Get(&postViews, q, id); err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
 	}
@@ -318,9 +287,8 @@ func PostStatsHandler(c *fiber.Ctx, db *sql.DB) error {
 	return c.SendString(postViews)
 }
 
-func PostSeriesHandler(c *fiber.Ctx, db *sql.DB) error {
-	var posts []Post
-
+func PostSeriesHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	posts := []Post{}
 	series := c.Params("series")
 	slug := c.Query("slug")
 	q := `
@@ -330,20 +298,11 @@ func PostSeriesHandler(c *fiber.Ctx, db *sql.DB) error {
     ORDER BY id ASC
   `
 
-	rows, err := db.Query(q, series)
-	defer rows.Close()
+	err := db.Select(&posts, q, series)
 
 	if err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
-	}
-
-	for rows.Next() {
-		var post Post
-
-		rows.Scan(&post.Slug, &post.Title)
-
-		posts = append(posts, post)
 	}
 
 	seriesNames := map[string]string{

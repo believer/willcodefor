@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
+	"github.com/jmoiron/sqlx"
 
 	_ "github.com/lib/pq"
 
@@ -17,7 +17,7 @@ import (
 
 func main() {
 	connectionString := os.Getenv("DATABASE_URL")
-	db, err := sql.Open("postgres", connectionString)
+	db, err := sqlx.Connect("postgres", connectionString)
 
 	if err != nil {
 		log.Fatal(err)

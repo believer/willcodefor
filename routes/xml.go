@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"database/sql"
 	"log"
 	"time"
 
 	"github.com/believer/willcodefor-go/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/mustache/v2"
+	"github.com/jmoiron/sqlx"
 )
 
 type PostWithParsedDate struct {
@@ -15,9 +15,8 @@ type PostWithParsedDate struct {
 	UpdatedAtParsed string
 }
 
-func FeedHandler(c *fiber.Ctx, db *sql.DB) error {
-	var posts []PostWithParsedDate
-
+func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	posts := []PostWithParsedDate{}
 	engineXML := mustache.New("./xmls", ".xml")
 
 	if err := engineXML.Load(); err != nil {
@@ -25,35 +24,23 @@ func FeedHandler(c *fiber.Ctx, db *sql.DB) error {
 	}
 
 	q := `
-    SELECT
-      title,
-      slug,
-      body,
-      updated_at
+    SELECT title, slug, body, updated_at
     FROM post
     WHERE published = true
     ORDER BY created_at DESC
   `
 
-	rows, err := db.Query(q)
+	err := db.Select(&posts, q)
+
 	if err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
 	}
 
-	for rows.Next() {
-		var post PostWithParsedDate
-
-		if err := rows.Scan(&post.Title, &post.Slug, &post.Body, &post.UpdatedAt); err != nil {
-			log.Fatal(err)
-			c.JSON("Oh no")
-		}
-
+	for _, post := range posts {
 		body := utils.MarkdownToHTML([]byte(post.Body))
 		post.Body = body.String()
 		post.UpdatedAtParsed = post.UpdatedAt.Format(time.RFC3339)
-
-		posts = append(posts, post)
 	}
 
 	c.Type("xml")
@@ -73,39 +60,23 @@ func FeedHandler(c *fiber.Ctx, db *sql.DB) error {
 	})
 }
 
-func SitemapHandler(c *fiber.Ctx, db *sql.DB) error {
-	var posts []PostWithParsedDate
-
+func SitemapHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	posts := []PostWithParsedDate{}
 	engineXML := mustache.New("./xmls", ".xml")
 
 	if err := engineXML.Load(); err != nil {
 		log.Fatal(err)
 	}
 
-	q := `
-    SELECT slug, updated_at
-    FROM post
-    WHERE published = true
-    ORDER BY created_at DESC
-  `
+	err := db.Select(&posts, "SELECT slug, updated_at FROM post WHERE published = true ORDER BY created_at DESC")
 
-	rows, err := db.Query(q)
 	if err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
 	}
 
-	for rows.Next() {
-		var post PostWithParsedDate
-
-		if err := rows.Scan(&post.Slug, &post.UpdatedAt); err != nil {
-			log.Fatal(err)
-			c.JSON("Oh no")
-		}
-
+	for _, post := range posts {
 		post.UpdatedAtParsed = post.UpdatedAt.Format(time.RFC3339)
-
-		posts = append(posts, post)
 	}
 
 	c.Type("xml")
