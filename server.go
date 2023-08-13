@@ -42,11 +42,6 @@ func main() {
 		ViewsLayout: "layouts/main",
 	})
 
-	app.Use(func(c *fiber.Ctx) error {
-		c.Set("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' user-images.githubusercontent.com;")
-		return c.Next()
-	})
-
 	app.Get("/", func(c *fiber.Ctx) error {
 		return routes.IndexHandler(c, db)
 	})
