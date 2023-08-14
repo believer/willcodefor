@@ -42,6 +42,9 @@ func main() {
 		ViewsLayout: "layouts/main",
 	})
 
+	// Index routes
+	// ––––––––––––––––––––––––––––––––––––––––
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		return routes.IndexHandler(c, db)
 	})
@@ -50,7 +53,12 @@ func main() {
 		return routes.CommandMenuHandler(c, db)
 	})
 
-	app.Get("/posts", func(c *fiber.Ctx) error {
+	// Posts routes
+	// ––––––––––––––––––––––––––––––––––––––––
+
+	posts := app.Group("/posts")
+
+	posts.Get("/", func(c *fiber.Ctx) error {
 		if c.Query("search", "") != "" {
 			return routes.PostsSearchHandler(c, db)
 		}
@@ -62,25 +70,31 @@ func main() {
 		}
 	})
 
-	app.Get("/posts/:slug", func(c *fiber.Ctx) error {
+	posts.Get("/:slug", func(c *fiber.Ctx) error {
 		return routes.PostHandler(c, db)
 	})
 
-	app.Get("/posts/:id/next", func(c *fiber.Ctx) error {
+	posts.Get("/:id/next", func(c *fiber.Ctx) error {
 		return routes.PostNextHandler(c, db)
 	})
 
-	app.Get("/posts/:id/previous", func(c *fiber.Ctx) error {
+	posts.Get("/:id/previous", func(c *fiber.Ctx) error {
 		return routes.PostPreviousHandler(c, db)
 	})
 
-	app.Post("/posts/:id/stats", func(c *fiber.Ctx) error {
+	posts.Post("/:id/stats", func(c *fiber.Ctx) error {
 		return routes.PostStatsHandler(c, db)
 	})
 
-	app.Get("/series/:series", func(c *fiber.Ctx) error {
+	// Series
+	// ––––––––––––––––––––––––––––––––––––––––
+
+	app.Get("/seies/:series", func(c *fiber.Ctx) error {
 		return routes.PostSeriesHandler(c, db)
 	})
+
+	// XML
+	// ––––––––––––––––––––––––––––––––––––––––
 
 	app.Get("/feed.xml", func(c *fiber.Ctx) error {
 		return routes.FeedHandler(c, db)
@@ -95,6 +109,8 @@ func main() {
 	})
 
 	// Redirects to old page
+	// ––––––––––––––––––––––––––––––––––––––––
+
 	app.Get("/stats", func(c *fiber.Ctx) error {
 		return c.Redirect("https://willcodefor-htmx.fly.dev/stats", fiber.StatusTemporaryRedirect)
 	})
@@ -103,6 +119,8 @@ func main() {
 		return c.Redirect("https://willcodefor-htmx.fly.dev/admin", fiber.StatusTemporaryRedirect)
 	})
 
+	// Handle short URLs and old posts where images were linked
+	// from the root folder.
 	app.Get("/:slug", func(c *fiber.Ctx) error {
 		_, err := os.Stat(fmt.Sprintf("./public/%s", c.Params("slug")))
 
@@ -113,7 +131,6 @@ func main() {
 		return c.Redirect("/posts/"+c.Params("slug"), fiber.StatusSeeOther)
 	})
 
-	// Define port if it doesn't exist in env
 	port := os.Getenv("PORT")
 
 	if port == "" {
