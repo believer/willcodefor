@@ -122,10 +122,10 @@ func main() {
 	// Handle short URLs and old posts where images were linked
 	// from the root folder.
 	app.Get("/:slug", func(c *fiber.Ctx) error {
-		_, err := os.Stat(fmt.Sprintf("./public/%s", c.Params("slug")))
+		filename := fmt.Sprintf("./public/%s", c.Params("slug"))
 
-		if err == nil {
-			return c.SendFile(fmt.Sprintf("./public/%s", c.Params("slug")))
+		if _, err := os.Stat(filename); err == nil {
+			return c.SendFile(filename)
 		}
 
 		return c.Redirect("/posts/"+c.Params("slug"), fiber.StatusSeeOther)
