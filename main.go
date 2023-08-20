@@ -108,12 +108,22 @@ func main() {
 		return c.Render("iteam", fiber.Map{})
 	})
 
-	// Redirects to old page
-	// ––––––––––––––––––––––––––––––––––––––––
+	// Stats
 
 	app.Get("/stats", func(c *fiber.Ctx) error {
-		return c.Redirect("https://willcodefor-htmx.fly.dev/stats", fiber.StatusTemporaryRedirect)
+		return routes.StatsHandler(c, db)
 	})
+
+	app.Get("/stats/most-viewed", func(c *fiber.Ctx) error {
+		return routes.MostViewedHandler(c, db)
+	})
+
+	app.Get("/stats/most-viewed-today", func(c *fiber.Ctx) error {
+		return routes.MostViewedTodayHandler(c, db)
+	})
+
+	// Redirects to old page
+	// ––––––––––––––––––––––––––––––––––––––––
 
 	app.Get("/admin", func(c *fiber.Ctx) error {
 		return c.Redirect("https://willcodefor-htmx.fly.dev/admin", fiber.StatusTemporaryRedirect)

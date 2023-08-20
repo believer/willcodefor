@@ -1,0 +1,60 @@
+<div class="mb-10 grid grid-cols-1 gap-8 sm:grid-cols-2 items-start">
+  <div class="text-center text-8xl font-bold space-y-8">
+    <div>
+      {{ .Count }}
+      <div
+        class="mt-2 text-sm font-normal uppercase text-gray-600 dark:text-gray-700"
+      >
+        Total views
+      </div>
+    </div>
+    <div>
+      {{ .ViewsPerDay }}
+      <div
+        class="mt-2 text-sm font-normal uppercase text-gray-600 dark:text-gray-700"
+      >
+        Views per day (average)
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3 class="mb-2 font-semibold uppercase text-gray-500">User agents</h3>
+    <ul class="space-y-1">
+      {{ range .UserAgents }}
+      <li class="grid grid-cols-[auto_1fr_1fr_52px] items-center gap-2">
+        <span>{{ .BrowserName }}</span>
+        <span class="text-gray-500 text-sm">{{ .OsName }}</span>
+        <span
+          class="ml-auto text-sm text-gray-500 dark:text-gray-400 tabular-nums"
+        >
+          {{ .Count }}
+        </span>
+        <span
+          class="text-right font-mono text-xs tabular-nums text-gray-400 dark:text-gray-600"
+        >
+          ({{ .Percent }})
+        </span>
+      </li>
+      {{ end }}
+    </ul>
+    <div class="mt-2 text-xs text-gray-700 text-right">
+      User agents with less than 1% of total are omitted ({{ .LessThanOnePercent
+      }} views)<br />
+      Also, {{ .Bots}} bots are not included.
+    </div>
+  </div>
+</div>
+
+<div class="mb-10">
+  <h3 class="mb-4 font-semibold uppercase text-gray-500">Most viewed</h3>
+  <div hx-trigger="load" hx-get="/stats/most-viewed" hx-swap="outerHTML"></div>
+</div>
+
+<div class="mb-10">
+  <h3 class="mb-4 font-semibold uppercase text-gray-500">Most viewed today</h3>
+  <div
+    hx-trigger="load"
+    hx-get="/stats/most-viewed-today"
+    hx-swap="outerHTML"
+  ></div>
+</div>
