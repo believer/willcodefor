@@ -140,13 +140,17 @@ func PostHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	slug := c.Params("slug")
 	post := Post{}
 
-	q := `
-	   SELECT title, til_id, slug, id, body, created_at, updated_at, COALESCE(series, '') as series, excerpt
-	   FROM post
-	   WHERE slug = $1 OR long_slug = $1
-	 `
+	stmt, err := db.Preparex(`
+ SELECT title, til_id, slug, id, body, created_at, updated_at, COALESCE(series, '') as series, excerpt
+ FROM post
+ WHERE slug = $1 OR long_slug = $1
+  `)
 
-	if err := db.Get(&post, q, slug); err != nil {
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := stmt.Get(&post, slug); err != nil {
 		if err == sql.ErrNoRows {
 			return c.Render("404", fiber.Map{
 				"Slug": slug,
@@ -174,15 +178,19 @@ func PostHandler(c *fiber.Ctx, db *sqlx.DB) error {
 func PostNextHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	id := c.Params("id")
 	nextPost := Post{}
-	q := `
+	stmt, err := db.Preparex(`
     SELECT title, slug
     FROM post
     WHERE id > $1 AND published = true
     ORDER BY id ASC
     LIMIT 1
-   `
+   `)
 
-	if err := db.Get(&nextPost, q, id); err != nil {
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := stmt.Get(&nextPost, id); err != nil {
 		if err == sql.ErrNoRows {
 			return c.SendString("<li></li>")
 		}
@@ -197,15 +205,19 @@ func PostNextHandler(c *fiber.Ctx, db *sqlx.DB) error {
 func PostPreviousHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	id := c.Params("id")
 	prevPost := Post{}
-	q := `
+	stmt, err := db.Preparex(`
     SELECT title, slug
     FROM post
     WHERE id < $1 AND published = true
     ORDER BY id DESC
     LIMIT 1
-   `
+   `)
 
-	if err := db.Get(&prevPost, q, id); err != nil {
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := stmt.Get(&prevPost, id); err != nil {
 		if err == sql.ErrNoRows {
 			return c.SendString("<li></li>")
 		}
