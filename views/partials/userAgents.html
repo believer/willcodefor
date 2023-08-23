@@ -1,0 +1,16 @@
+<ul class="space-y-1">
+  {{ range .UserAgents }}
+  <li class="grid grid-cols-[auto_1fr_1fr_52px] items-center gap-2">
+    <span>{{ .BrowserName }}</span>
+    <span class="text-gray-500 text-sm">{{ .OsName }}</span>
+    <span class="ml-auto text-sm text-gray-500 dark:text-gray-400 tabular-nums">
+      {{ .Count }}
+    </span>
+    <span
+      class="text-right font-mono text-xs tabular-nums text-gray-400 dark:text-gray-600"
+    >
+      ({{ .Percent }})
+    </span>
+  </li>
+  {{ end }}
+</ul>

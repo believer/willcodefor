@@ -1,7 +1,34 @@
+<div class="flex gap-4 items-center justify-center">
+  <a
+    href="/stats?time=today"
+    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "today" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    >Today</a>
+  <a
+    href="/stats?time=week"
+    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "week" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    >Week</a>
+  <a
+    href="/stats?time=thirty-days"
+    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "thirty-days" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    >30 days</a>
+  <a
+    href="/stats?time=this-year"
+    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "this-year" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    >This year</a>
+  <a
+    href="/stats?time=cumulative"
+    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "cumulative" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    >Cumulative</a>
+</div>
+
+<hr class="my-8" />
+
 <div class="mb-10 grid grid-cols-1 gap-8 sm:grid-cols-2 items-start">
   <div class="text-center text-8xl font-bold space-y-8">
     <div>
-      {{ .Count }}
+      <span hx-get="/stats/total-views?time={{ .Time }}" hx-trigger="load">
+        {{ .Count }}</span
+      >
       <div
         class="mt-2 text-sm font-normal uppercase text-gray-600 dark:text-gray-700"
       >
@@ -19,24 +46,7 @@
   </div>
   <div>
     <h3 class="mb-2 font-semibold uppercase text-gray-500">User agents</h3>
-    <ul class="space-y-1">
-      {{ range .UserAgents }}
-      <li class="grid grid-cols-[auto_1fr_1fr_52px] items-center gap-2">
-        <span>{{ .BrowserName }}</span>
-        <span class="text-gray-500 text-sm">{{ .OsName }}</span>
-        <span
-          class="ml-auto text-sm text-gray-500 dark:text-gray-400 tabular-nums"
-        >
-          {{ .Count }}
-        </span>
-        <span
-          class="text-right font-mono text-xs tabular-nums text-gray-400 dark:text-gray-600"
-        >
-          ({{ .Percent }})
-        </span>
-      </li>
-      {{ end }}
-    </ul>
+    <div hx-get="/stats/user-agents?time={{ .Time }}" hx-trigger="load"></div>
     <div class="mt-2 text-xs text-gray-700 text-right">
       User agents with less than 1% of total are omitted ({{ .LessThanOnePercent
       }} views)<br />
@@ -47,10 +57,10 @@
 
 <div class="mb-10">
   <h3 class="mb-4 font-semibold uppercase text-gray-500">Most viewed</h3>
-  <div hx-trigger="load" hx-get="/stats/most-viewed" hx-swap="outerHTML"></div>
+  <div hx-trigger="load" hx-get="/stats/most-viewed?time={{ .Time }}"></div>
 </div>
 
-<div class="mb-10">
+<div class="mb-10" hx-preserve id="most-viewed-today">
   <h3 class="mb-4 font-semibold uppercase text-gray-500">Most viewed today</h3>
   <div
     hx-trigger="load"

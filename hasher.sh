@@ -19,7 +19,9 @@ mv ./public/styles.css ./public/styles.$hash.css
 
 # Replace the old CSS file with the new one
 # The first argument is an empty string to skip backup in macOS
-sed -i "" "s/styles\.[a-z0-9]\{6\}\.css/styles\.$hash\.css/g" ./views/layouts/main.html
+# Uses a counted range, {0,1}, to simulate a ? operator for the hash
+# This matches both styles.css and styles.hash.css
+sed -i "" "s/styles\(\.[a-z0-9]\{6\}\)\{0,1\}\.css/styles\.$hash\.css/g" ./views/layouts/main.html
 
 echo "Tailwind generated and updated"
 
