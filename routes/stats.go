@@ -79,8 +79,6 @@ WHERE percent_as_number <= 1
 func MostViewedHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	var posts []PostWithViews
 
-	timeQuery := timeToQuery(c.Query("time", "today"))
-
 	err := db.Select(&posts, `
 SELECT
   COUNT(*) as views,
@@ -92,11 +90,11 @@ SELECT
   p.til_id
 FROM post_view AS pv
 INNER JOIN post AS p ON p.id = pv.post_id
-WHERE pv.is_bot = false AND pv.created_at >= $1
+WHERE pv.is_bot = false
 GROUP BY p.id
 ORDER BY views DESC
 LIMIT 10
-`, timeQuery)
+`)
 
 	if err != nil {
 		log.Fatal(err)

@@ -55,9 +55,9 @@
   </div>
 </div>
 
-<div class="mb-10">
+<div class="mb-10" hx-preserve id="total-views">
   <h3 class="mb-4 font-semibold uppercase text-gray-500">Most viewed</h3>
-  <div hx-trigger="load" hx-get="/stats/most-viewed?time={{ .Time }}"></div>
+  <div hx-trigger="load" hx-get="/stats/most-viewed"></div>
 </div>
 
 <div class="mb-10" hx-preserve id="most-viewed-today">
