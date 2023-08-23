@@ -106,12 +106,11 @@ LIMIT 10
 	}, "")
 }
 
-func UserAgentsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func BrowsersHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	var userAgents []struct {
-		BrowserName string `db:"browser_name"`
-		OsName      string `db:"os_name"`
-		Count       int    `db:"count"`
-		Percent     string `db:"percent"`
+		Name    string `db:"browser_name"`
+		Count   int    `db:"count"`
+		Percent string `db:"percent"`
 	}
 
 	timeQuery := timeToQuery(c.Query("time", "today"))
@@ -120,17 +119,15 @@ func UserAgentsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 WITH views_with_percentage AS(
 	SELECT
 		browser_name,
-		os_name,
-		COUNT(*) AS "count",
+		COUNT(*) AS count,
 		COUNT(*) / SUM(COUNT(*)) OVER() * 100 AS percent_as_number
 	FROM post_view
 	WHERE is_bot = FALSE AND created_at >= $1
-	GROUP BY browser_name, os_name
-	ORDER BY COUNT DESC
+	GROUP BY browser_name
+	ORDER BY count DESC
 )
 SELECT
 	v.browser_name,
-	v.os_name,
 	v.count,
 	TO_CHAR(percent_as_number, 'fm99%') as percent
 FROM views_with_percentage AS v
@@ -143,6 +140,43 @@ WHERE percent_as_number > 1
 
 	return c.Render("partials/userAgents", fiber.Map{
 		"UserAgents": userAgents,
+	}, "")
+}
+
+func OSHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	var os []struct {
+		Name    string `db:"os_name"`
+		Count   int    `db:"count"`
+		Percent string `db:"percent"`
+	}
+
+	timeQuery := timeToQuery(c.Query("time", "today"))
+
+	err := db.Select(&os, `
+WITH views_with_percentage AS(
+  SELECT
+    os_name,
+    COUNT(*) AS count,
+    COUNT(*) / SUM(COUNT(*)) OVER() * 100 AS percent_as_number
+  FROM post_view
+  WHERE is_bot = FALSE AND created_at >= $1
+  GROUP BY os_name
+  ORDER BY count DESC
+)
+SELECT
+  v.os_name,
+  v.count,
+  TO_CHAR(percent_as_number, 'fm99%') as percent
+FROM views_with_percentage AS v
+WHERE percent_as_number > 1
+    `, timeQuery)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return c.Render("partials/userAgents", fiber.Map{
+		"UserAgents": os,
 	}, "")
 }
 

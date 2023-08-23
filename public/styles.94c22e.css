@@ -1382,8 +1382,8 @@ abbr[title]:focus::after,
   grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 
-.grid-cols-\[auto_1fr_1fr_52px\] {
-  grid-template-columns: auto 1fr 1fr 52px;
+.grid-cols-\[auto_1fr_52px\] {
+  grid-template-columns: auto 1fr 52px;
 }
 
 .flex-col {

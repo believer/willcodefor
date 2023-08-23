@@ -118,8 +118,12 @@ func main() {
 		return routes.TotalViewsHandler(c, db)
 	})
 
-	app.Get("/stats/user-agents", func(c *fiber.Ctx) error {
-		return routes.UserAgentsHandler(c, db)
+	app.Get("/stats/browsers", func(c *fiber.Ctx) error {
+		return routes.BrowsersHandler(c, db)
+	})
+
+	app.Get("/stats/os", func(c *fiber.Ctx) error {
+		return routes.OSHandler(c, db)
 	})
 
 	app.Get("/stats/most-viewed", func(c *fiber.Ctx) error {

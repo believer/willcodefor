@@ -44,10 +44,18 @@
       </div>
     </div>
   </div>
-  <div>
-    <h3 class="mb-2 font-semibold uppercase text-gray-500">User agents</h3>
-    <div hx-get="/stats/user-agents?time={{ .Time }}" hx-trigger="load"></div>
-    <div class="mt-2 text-xs text-gray-700 text-right">
+  <div class="flex flex-col gap-y-4">
+    <div>
+      <h3 class="mb-2 font-semibold uppercase text-gray-500">Browsers</h3>
+      <div hx-get="/stats/browsers?time={{ .Time }}" hx-trigger="load"></div>
+    </div>
+
+    <div>
+      <h3 class="mb-2 font-semibold uppercase text-gray-500">OS</h3>
+      <div hx-get="/stats/os?time={{ .Time }}" hx-trigger="load"></div>
+    </div>
+
+    <div class="text-xs text-gray-700 text-right">
       User agents with less than 1% of total are omitted ({{ .LessThanOnePercent
       }} views)<br />
       Also, {{ .Bots}} bots are not included.
