@@ -1,23 +1,23 @@
-<div class="flex gap-4 items-center justify-center">
+<div class="flex gap-4 items-center justify-center flex-wrap">
   <a
     href="/stats?time=today"
-    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "today" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "today" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
     >Today</a>
   <a
     href="/stats?time=week"
-    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "week" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "week" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
     >Week</a>
   <a
     href="/stats?time=thirty-days"
-    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "thirty-days" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "thirty-days" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
     >30 days</a>
   <a
     href="/stats?time=this-year"
-    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "this-year" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "this-year" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
     >This year</a>
   <a
     href="/stats?time=cumulative"
-    class="px-4 py-2 rounded-md no-underline{{ if eq .Time "cumulative" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "cumulative" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
     >Cumulative</a>
 </div>
 
