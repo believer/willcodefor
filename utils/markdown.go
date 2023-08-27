@@ -58,6 +58,9 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 				Texter: anchor.Text("#"),
 			},
 			extension.Strikethrough,
+			extension.NewFootnote(
+				extension.WithFootnoteBacklinkClass([]byte("font-mono no-underline")),
+			),
 			extension.Table,
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("base16-snazzy"),

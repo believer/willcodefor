@@ -16,7 +16,8 @@ type PostWithParsedDate struct {
 }
 
 func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
-	posts := []PostWithParsedDate{}
+	posts := []Post{}
+	parsedPosts := []PostWithParsedDate{}
 	engineXML := mustache.New("./xmls", ".xml")
 
 	if err := engineXML.Load(); err != nil {
@@ -38,9 +39,15 @@ func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	}
 
 	for _, post := range posts {
+		var parsedPost PostWithParsedDate
 		body := utils.MarkdownToHTML([]byte(post.Body))
-		post.Body = body.String()
-		post.UpdatedAtParsed = post.UpdatedAt.Format(time.RFC3339)
+
+		parsedPost.Title = post.Title
+		parsedPost.Slug = post.Slug
+		parsedPost.Body = body.String()
+		parsedPost.UpdatedAtParsed = post.UpdatedAt.Format(time.RFC3339)
+
+		parsedPosts = append(parsedPosts, parsedPost)
 	}
 
 	c.Type("xml")
@@ -55,8 +62,8 @@ func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
 				"Email": "rickard@willcodefor.dev",
 			},
 		},
-		"Posts":            posts,
-		"LatestPostUpdate": posts[0].UpdatedAt.Format(time.RFC3339),
+		"Posts":            parsedPosts,
+		"LatestPostUpdate": parsedPosts[0].UpdatedAt.Format(time.RFC3339),
 	})
 }
 
