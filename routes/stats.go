@@ -219,15 +219,8 @@ ORDER BY views DESC
 		log.Fatal(err)
 	}
 
-	total := 0
-
-	for _, post := range posts {
-		total += post.Views
-	}
-
 	return c.Render("partials/postList", fiber.Map{
 		"Posts":     posts,
 		"SortOrder": "views",
-		"Total":     total,
 	}, "")
 }
