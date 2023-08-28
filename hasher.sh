@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Calculate the SHA256 hash of a file and return the first 6 characters
+function calculate_hash() {
+    local filename="$1"
+    local hash=$(shasum -a 256 "$filename" | cut -c1-6)
+    echo "$hash"
+}
+
 echo "Running the public hasher"
 
 # Remove the old CSS file
@@ -12,7 +19,7 @@ npx tailwindcss -i ./styles.css -o ./public/styles.css
 # of the generated CSS file. This is to bust the cache of the CSS file.
 
 # Get the hash of the generated CSS file
-hash=$(shasum -a 256 ./public/styles.css | cut -c1-6)
+hash=$(calculate_hash ./public/styles.css)
 
 # Rename the generated CSS file
 mv ./public/styles.css ./public/styles.$hash.css
@@ -27,11 +34,11 @@ echo "Tailwind generated and updated"
 
 # Fixing HTMX scripts
 
-hash=$(shasum -a 256 ./public/htmx.*.min.js | cut -c1-6)
+hash=$(calculate_hash ./public/htmx.*.min.js)
 mv ./public/htmx.*.min.js ./public/htmx.$hash.min.js
 sed -i "" "s/htmx\.[a-z0-9]\{6\}\.min/htmx\.$hash\.min/g" ./views/layouts/main.html
 
-hash=$(shasum -a 256 ./public/htmx-head-support.*.js | cut -c1-6)
+hash=$(calculate_hash ./public/htmx-head-support.*.js)
 mv ./public/htmx-head-support.*.js ./public/htmx-head-support.$hash.js
 sed -i "" "s/htmx-head-support\.[a-z0-9]\{6\}/htmx-head-support\.$hash/g" ./views/layouts/main.html
 
@@ -39,7 +46,7 @@ echo "HTMX scripts fixed"
 
 # Fixing Command menu script
 
-hash=$(shasum -a 256 ./public/command-menu.*.js | cut -c1-6)
+hash=$(calculate_hash ./public/command-menu.*.js)
 mv ./public/command-menu.*.js ./public/command-menu.$hash.js
 sed -i "" "s/command-menu\.[a-z0-9]\{6\}/command-menu\.$hash/g" ./views/layouts/main.html
 
