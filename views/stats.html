@@ -1,24 +1,30 @@
 <div class="flex gap-4 items-center justify-center flex-wrap">
-  <a
-    href="/stats?time=today"
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "today" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
-    >Today</a>
-  <a
-    href="/stats?time=week"
+  <button
+    class="text-sm px-4 py-2 rounded-md no-underline"
+    data-time="today"
+    onclick="updateTime('today')">
+    Today
+  </button>
+
+  <button
     class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "week" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
-    >Week</a>
-  <a
-    href="/stats?time=thirty-days"
+    data-time="week"
+    onclick="updateTime('week')">Week</button>
+
+  <button
     class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "thirty-days" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
-    >30 days</a>
-  <a
-    href="/stats?time=this-year"
+    data-time="thirty-days"
+    onclick="updateTime('thirty-days')">30 days</button>
+
+  <button
     class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "this-year" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
-    >This year</a>
-  <a
-    href="/stats?time=cumulative"
+    data-time="this-year"
+    onclick="updateTime('this-year')">This year</button>
+
+  <button
     class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "cumulative" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
-    >Cumulative</a>
+    data-time="cumulative"
+    onclick="updateTime('cumulative')">Cumulative</button>
 </div>
 
 <hr class="my-8" />
@@ -26,9 +32,9 @@
 <div class="mb-10 grid grid-cols-1 gap-8 sm:grid-cols-2 items-start">
   <div class="text-center text-8xl font-bold space-y-8">
     <div>
-      <span hx-get="/stats/total-views?time={{ .Time }}" hx-trigger="load">
-        {{ .Count }}</span
-      >
+      <span hx-get="/stats/total-views" hx-trigger="load, update-time from:body" hx-vals="js:{ time: time }" hx-swap="innerHTML transition:true">
+        {{ .Count }}
+      </span>
       <div
         class="mt-2 text-sm font-normal uppercase text-gray-600 dark:text-gray-700"
       >
@@ -47,12 +53,12 @@
   <div class="flex flex-col gap-y-4">
     <div>
       <h3 class="mb-2 font-semibold uppercase text-gray-500">Browsers</h3>
-      <div hx-get="/stats/browsers?time={{ .Time }}" hx-trigger="load"></div>
+      <div hx-get="/stats/browsers" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
     </div>
 
     <div>
       <h3 class="mb-2 font-semibold uppercase text-gray-500">OS</h3>
-      <div hx-get="/stats/os?time={{ .Time }}" hx-trigger="load"></div>
+      <div hx-get="/stats/os" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
     </div>
 
     <div class="text-xs text-gray-700 text-right">
@@ -75,3 +81,35 @@
     hx-swap="outerHTML"
   ></div>
 </div>
+
+<script>
+  var time = {{ .Time }}
+
+  function updateTime(interval) {
+    const url = new URL(window.location.href)
+
+    url.searchParams.set('time', interval)
+    time = interval
+
+    window.history.pushState({}, '', url)
+
+    document.body.dispatchEvent(new Event('update-time'))
+    updateClasses()
+  }
+
+  function updateClasses() {
+    [...document.querySelectorAll('[data-time]')].forEach(el => {
+      const t = el.dataset.time
+
+      if (t === time) {
+        el.classList.add('text-blue-900', 'bg-blue-800', 'dark:bg-blue-300')
+        el.classList.remove('bg-gray-200', 'text-gray-800', 'dark:bg-gray-800', 'dark:text-gray-300')
+      } else {
+        el.classList.add('bg-gray-200', 'text-gray-800', 'dark:bg-gray-800', 'dark:text-gray-300')
+        el.classList.remove('text-blue-900', 'bg-blue-800', 'dark:bg-blue-300')
+      }
+    })
+  }
+
+  updateClasses()
+</script>
