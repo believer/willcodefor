@@ -1329,6 +1329,10 @@ abbr[title]:focus::after,
   height: 1.5rem;
 }
 
+.min-h-\[140px\] {
+  min-height: 140px;
+}
+
 .w-6 {
   width: 1.5rem;
 }

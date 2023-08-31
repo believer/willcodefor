@@ -116,22 +116,15 @@ func BrowsersHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	timeQuery := timeToQuery(c.Query("time", "today"))
 
 	err := db.Select(&userAgents, `
-WITH views_with_percentage AS(
-	SELECT
+  SELECT
 		browser_name,
 		COUNT(*) AS count,
-		COUNT(*) / SUM(COUNT(*)) OVER() * 100 AS percent_as_number
+		TO_CHAR(COUNT(*) / SUM(COUNT(*)) OVER() * 100, 'fm99%') as percent
 	FROM post_view
 	WHERE is_bot = FALSE AND created_at >= $1
 	GROUP BY browser_name
 	ORDER BY count DESC
-)
-SELECT
-	v.browser_name,
-	v.count,
-	TO_CHAR(percent_as_number, 'fm99%') as percent
-FROM views_with_percentage AS v
-WHERE percent_as_number > 1
+	LIMIT 5
     `, timeQuery)
 
 	if err != nil {
@@ -153,22 +146,15 @@ func OSHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	timeQuery := timeToQuery(c.Query("time", "today"))
 
 	err := db.Select(&os, `
-WITH views_with_percentage AS(
   SELECT
     os_name,
     COUNT(*) AS count,
-    COUNT(*) / SUM(COUNT(*)) OVER() * 100 AS percent_as_number
+    TO_CHAR(COUNT(*) / SUM(COUNT(*)) OVER() * 100, 'fm99%') as percent
   FROM post_view
   WHERE is_bot = FALSE AND created_at >= $1
   GROUP BY os_name
   ORDER BY count DESC
-)
-SELECT
-  v.os_name,
-  v.count,
-  TO_CHAR(percent_as_number, 'fm99%') as percent
-FROM views_with_percentage AS v
-WHERE percent_as_number > 1
+  LIMIT 5
     `, timeQuery)
 
 	if err != nil {
