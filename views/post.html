@@ -5,7 +5,7 @@
         <a href="/posts">til</a>
       </span>
       <span class="mx-1 font-normal text-gray-400">/</span>
-      <span>{{ .Post.Title }}</span>
+      <span style="view-transition-name: title-{{ .Post.TILID }}">{{ .Post.Title }}</span>
     </h1>
     <div id="body">{{ unescape .Post.Body }}</div>
   </article>

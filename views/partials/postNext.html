@@ -3,6 +3,8 @@
   <a
     href="/posts/{{ .Slug }}"
     hx-trigger="click, keyup[ctrlKey && key == 'n'] from:body"
+    hx-swap="innerHTML transition:true"
+    style="view-transition-name: title-{{ .TILID }}"
   >
     {{ .Title }}
   </a>

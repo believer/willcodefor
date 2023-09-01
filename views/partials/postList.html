@@ -4,7 +4,7 @@
     class="til-counter grid-post relative grid w-full items-baseline gap-4 sm:inline-flex sm:gap-5"
     data-til="{{ .TILID }}"
   >
-    <a href="/posts/{{ .Slug }}">{{ .Title }}</a>
+    <a href="/posts/{{ .Slug }}" hx-swap="innerHTML transition:true" style="view-transition-name: title-{{ .TILID }}">{{ .Title }}</a>
     <hr
       class="m-0 hidden flex-1 border-dashed border-gray-300 dark:border-gray-600 sm:block"
     />

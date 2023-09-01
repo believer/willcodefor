@@ -175,7 +175,7 @@ func PostNextHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	id := c.Params("id")
 	nextPost := Post{}
 	q := `
-    SELECT title, slug
+    SELECT title, slug, til_id
     FROM post
     WHERE id > $1 AND published = true
     ORDER BY id ASC
@@ -198,7 +198,7 @@ func PostPreviousHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	id := c.Params("id")
 	prevPost := Post{}
 	q := `
-    SELECT title, slug
+    SELECT title, slug, til_id
     FROM post
     WHERE id < $1 AND published = true
     ORDER BY id DESC
