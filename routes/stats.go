@@ -232,35 +232,36 @@ function (info) {
 func heatMapBase(data []CountData) *charts.HeatMap {
 	weekDays := [...]string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 	hm := charts.NewHeatMap()
+
 	hm.SetGlobalOptions(
+		charts.WithInitializationOpts(opts.Initialization{
+			Width:  "100%",
+			Height: "250px",
+		}),
 		charts.WithLegendOpts(opts.Legend{
 			Show: false,
-		}),
-		charts.WithXAxisOpts(opts.XAxis{
-			Type:      "category",
-			SplitArea: &opts.SplitArea{Show: true},
 		}),
 		charts.WithGridOpts(opts.Grid{
 			Left:   "8%",
 			Right:  "2%",
-			Bottom: "5%",
+			Bottom: "20%",
 			Top:    "5%",
+		}),
+		charts.WithXAxisOpts(opts.XAxis{
+			Type: "category",
+			SplitArea: &opts.SplitArea{
+				Show: true,
+			},
 		}),
 		charts.WithYAxisOpts(opts.YAxis{
 			Type: "category",
 			Data: weekDays,
 			SplitArea: &opts.SplitArea{
 				Show: true,
-				AreaStyle: &opts.AreaStyle{
-					Color: "#16161e",
-				},
-			},
-			AxisPointer: &opts.AxisPointer{
-				Type: "none",
 			},
 			AxisLine: &opts.AxisLine{
 				LineStyle: &opts.LineStyle{
-					Color: "#ccc",
+					Color: "#374151",
 				},
 			},
 		}),
@@ -315,8 +316,12 @@ func heatMapBase(data []CountData) *charts.HeatMap {
 func ChartHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	var views []CountData
 	var weekData []CountData
+	var err error
 
-	err := db.Select(&views, `WITH days AS (
+	time := c.Query("time", "today")
+
+	if time == "today" {
+		err = db.Select(&views, `WITH days AS (
   SELECT generate_series(CURRENT_DATE, CURRENT_DATE + '1 day'::INTERVAL, '1 hour') AS hour
 )
 
@@ -325,14 +330,96 @@ SELECT
   to_char(days.hour, 'HH24:MI') as label,
   count(pv.id)::int as count
 FROM days
-LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour
+LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour AND pv.is_bot = false
 LEFT JOIN post AS p ON p.id = pv.post_id
 GROUP BY 1
 ORDER BY 1 ASC`,
-	)
+		)
 
-	if err != nil {
-		log.Fatal(err)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if time == "week" {
+		err = db.Select(&views, `WITH days AS (
+  SELECT generate_series(date_trunc('week', current_date), date_trunc('week', current_date) + '6 days'::INTERVAL, '1 day')::DATE as day
+)
+
+SELECT
+	days.day as date,
+  to_char(days.day, 'Mon DD') as label,
+  count(pv.id)::int as count
+FROM days
+LEFT JOIN post_view AS pv ON DATE_TRUNC('day', created_at) = days.day AND pv.is_bot = false
+GROUP BY 1
+ORDER BY 1 ASC`,
+		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if time == "thirty-days" {
+		err = db.Select(&views, `WITH days AS (
+          SELECT generate_series(CURRENT_DATE - '30 days'::INTERVAL, CURRENT_DATE, '1 day')::DATE AS day
+        )
+
+        SELECT
+        	days.day as date,
+          to_char(days.day, 'Mon DD') as label,
+          count(pv.id)::int as count
+        FROM days
+        LEFT JOIN post_view AS pv ON DATE_TRUNC('day', created_at) = days.day AND pv.is_bot = false
+        GROUP BY 1
+        ORDER BY 1 ASC`,
+		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if time == "this-year" {
+		err = db.Select(&views, `WITH months AS (
+	SELECT (DATE_TRUNC('year', NOW()) + (INTERVAL '1' MONTH * GENERATE_SERIES(0,11)))::DATE AS MONTH
+)
+
+SELECT
+  months.month as date,
+	to_char(months.month, 'Mon') as label,
+  COUNT(pv.id)::int as count
+FROM
+	months
+	LEFT JOIN post_view AS pv ON DATE_TRUNC('month', created_at) = months.month AND pv.is_bot = false
+GROUP BY 1
+ORDER BY 1 ASC`,
+		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if time == "cumulative" {
+		err = db.Select(&views, `WITH data AS (
+  SELECT
+    date_trunc('month', created_at) as month,
+    count(1)::int
+  FROM post_view WHERE is_bot = false GROUP BY 1
+)
+
+select
+  month::DATE as date,
+	to_char(month, 'Mon YY') as label,
+  sum(count) over (order by month asc rows between unbounded preceding and current row)::int as count
+from data`,
+		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	err = db.Select(&weekData, `WITH days AS (
@@ -344,7 +431,7 @@ SELECT
   to_char(days.hour, 'HH24')::int as label,
   count(pv.id)::int as count
 FROM days
-LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour
+LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour AND pv.is_bot = false
 LEFT JOIN post AS p ON p.id = pv.post_id
 GROUP BY 1, days.hour
 ORDER BY 1,2 ASC`,
@@ -366,12 +453,25 @@ ORDER BY 1,2 ASC`,
 			Bottom: "5%",
 			Top:    "5%",
 		}),
+		charts.WithXAxisOpts(opts.XAxis{
+			AxisLabel: &opts.AxisLabel{
+				Show: false,
+			},
+		}),
+		charts.WithTooltipOpts(opts.Tooltip{
+			Show:      true,
+			Trigger:   "item",
+			Formatter: "{b}: {c}",
+		}),
 		charts.WithYAxisOpts(opts.YAxis{
+			AxisLabel: &opts.AxisLabel{
+				Show: false,
+			},
 			SplitLine: &opts.SplitLine{
 				Show: true,
 				LineStyle: &opts.LineStyle{
 					Type:  "dashed",
-					Color: "#333",
+					Color: "#374151",
 				},
 			},
 		}),
@@ -384,6 +484,10 @@ ORDER BY 1,2 ASC`,
 		xAxis = append(xAxis, v.Label)
 		yAxis = append(yAxis, opts.BarData{
 			Value: v.Count,
+			Label: &opts.Label{
+				Show:  true,
+				Color: "#374151",
+			},
 			ItemStyle: &opts.ItemStyle{
 				Color: "#65bcff",
 			},
@@ -400,6 +504,9 @@ ORDER BY 1,2 ASC`,
 		)
 
 	page := components.NewPage()
+
+	page.PageTitle = "Rickard Natt och Dag"
+
 	page.AddCharts(
 		heatMapBase(weekData),
 		bar,
