@@ -222,6 +222,13 @@ type CountData struct {
 	Count int    `db:"count"`
 }
 
+var ToolTipFormatter = `
+function (info) {
+  var [,,value] =info.value;
+	return '<div class="tooltip-title">' + value + '</div>';
+}
+`
+
 func heatMapBase(data []CountData) *charts.HeatMap {
 	weekDays := [...]string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 	hm := charts.NewHeatMap()
@@ -233,28 +240,55 @@ func heatMapBase(data []CountData) *charts.HeatMap {
 			Type:      "category",
 			SplitArea: &opts.SplitArea{Show: true},
 		}),
+		charts.WithGridOpts(opts.Grid{
+			Left:   "8%",
+			Right:  "2%",
+			Bottom: "5%",
+			Top:    "5%",
+		}),
 		charts.WithYAxisOpts(opts.YAxis{
-			Type:      "category",
-			Data:      weekDays,
-			SplitArea: &opts.SplitArea{Show: true},
+			Type: "category",
+			Data: weekDays,
+			SplitArea: &opts.SplitArea{
+				Show: true,
+				AreaStyle: &opts.AreaStyle{
+					Color: "#16161e",
+				},
+			},
+			AxisPointer: &opts.AxisPointer{
+				Type: "none",
+			},
+			AxisLine: &opts.AxisLine{
+				LineStyle: &opts.LineStyle{
+					Color: "#ccc",
+				},
+			},
 		}),
 		charts.WithVisualMapOpts(opts.VisualMap{
 			Calculable: true,
 			Min:        0,
 			Max:        10,
 			InRange: &opts.VisualMapInRange{
-				Color: []string{"#50a3ba", "#eac736", "#d94e5d"},
+				Color: []string{
+					"#e5f3ff",
+					"#cce7ff",
+					"#99cfff",
+					"#66b8ff",
+					"#33a0ff",
+					"#0088ff",
+					"#006dcc",
+					"#005299",
+					"#003666",
+					"#001b33",
+				},
 			},
 		}),
 		charts.WithTooltipOpts(opts.Tooltip{
-			Show:    true,
-			Trigger: "item",
+			Show:      true,
+			Trigger:   "item",
+			Formatter: opts.FuncOpts(ToolTipFormatter),
 		}),
 	)
-	dayHrs := [...]string{
-		"12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a",
-		"12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p",
-	}
 
 	var heatmapData []opts.HeatMapData
 
@@ -273,7 +307,7 @@ func heatMapBase(data []CountData) *charts.HeatMap {
 		}
 	}
 
-	hm.SetXAxis(dayHrs).AddSeries("heatmap", heatmapData)
+	hm.AddSeries("Views for hour", heatmapData)
 
 	return hm
 }
