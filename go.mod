@@ -1,12 +1,10 @@
 module github.com/believer/willcodefor-go
 
-go 1.21
-
-toolchain go1.21.0
+go 1.20
 
 require (
 	github.com/alecthomas/chroma/v2 v2.8.0
-	github.com/gofiber/fiber/v2 v2.49.0
+	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/gofiber/template/mustache/v2 v2.0.6
 	github.com/jmoiron/sqlx v1.3.5
