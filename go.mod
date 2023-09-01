@@ -19,8 +19,10 @@ require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/cbroglie/mustache v1.4.0 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
+	github.com/go-echarts/go-echarts/v2 v2.2.7 // indirect
 	github.com/gofiber/template v1.8.2 // indirect
 	github.com/gofiber/utils v1.1.0 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -30,5 +32,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.49.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	github.com/wcharczuk/go-chart v2.0.1+incompatible // indirect
+	golang.org/x/image v0.11.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 )

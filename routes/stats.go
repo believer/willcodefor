@@ -3,8 +3,12 @@ package routes
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
+	"github.com/go-echarts/go-echarts/v2/charts"
+	"github.com/go-echarts/go-echarts/v2/components"
+	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
 )
@@ -72,6 +76,7 @@ WHERE percent_as_number <= 1
 		"LessThanOnePercent": lessThanOnePercent,
 		"Bots":               bots,
 		"Time":               timeQuery,
+		"Path":               "/stats",
 	})
 
 }
@@ -209,4 +214,162 @@ ORDER BY views DESC
 		"Posts":     posts,
 		"SortOrder": "views",
 	}, "")
+}
+
+type CountData struct {
+	Date  string `db:"date"`
+	Label string `db:"label"`
+	Count int    `db:"count"`
+}
+
+func heatMapBase(data []CountData) *charts.HeatMap {
+	weekDays := [...]string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+	hm := charts.NewHeatMap()
+	hm.SetGlobalOptions(
+		charts.WithLegendOpts(opts.Legend{
+			Show: false,
+		}),
+		charts.WithXAxisOpts(opts.XAxis{
+			Type:      "category",
+			SplitArea: &opts.SplitArea{Show: true},
+		}),
+		charts.WithYAxisOpts(opts.YAxis{
+			Type:      "category",
+			Data:      weekDays,
+			SplitArea: &opts.SplitArea{Show: true},
+		}),
+		charts.WithVisualMapOpts(opts.VisualMap{
+			Calculable: true,
+			Min:        0,
+			Max:        10,
+			InRange: &opts.VisualMapInRange{
+				Color: []string{"#50a3ba", "#eac736", "#d94e5d"},
+			},
+		}),
+		charts.WithTooltipOpts(opts.Tooltip{
+			Show:    true,
+			Trigger: "item",
+		}),
+	)
+	dayHrs := [...]string{
+		"12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a",
+		"12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p",
+	}
+
+	var heatmapData []opts.HeatMapData
+
+	for _, v := range data {
+		x, _ := strconv.Atoi(v.Label)
+		y, _ := strconv.Atoi(v.Date)
+
+		if v.Count == 0 {
+			heatmapData = append(heatmapData, opts.HeatMapData{
+				Value: []interface{}{x, y, nil},
+			})
+		} else {
+			heatmapData = append(heatmapData, opts.HeatMapData{
+				Value: []interface{}{x, y, v.Count},
+			})
+		}
+	}
+
+	hm.SetXAxis(dayHrs).AddSeries("heatmap", heatmapData)
+
+	return hm
+}
+
+func ChartHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	var views []CountData
+	var weekData []CountData
+
+	err := db.Select(&views, `WITH days AS (
+  SELECT generate_series(CURRENT_DATE, CURRENT_DATE + '1 day'::INTERVAL, '1 hour') AS hour
+)
+
+SELECT
+	days.hour as date,
+  to_char(days.hour, 'HH24:MI') as label,
+  count(pv.id)::int as count
+FROM days
+LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour
+LEFT JOIN post AS p ON p.id = pv.post_id
+GROUP BY 1
+ORDER BY 1 ASC`,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = db.Select(&weekData, `WITH days AS (
+    SELECT generate_series(date_trunc('week', current_date), date_trunc('week', current_date) + '6 days'::INTERVAL, '1 hour') as hour
+)
+
+SELECT
+	extract(isodow FROM days.hour) - 1 as date,
+  to_char(days.hour, 'HH24')::int as label,
+  count(pv.id)::int as count
+FROM days
+LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour
+LEFT JOIN post AS p ON p.id = pv.post_id
+GROUP BY 1, days.hour
+ORDER BY 1,2 ASC`,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bar := charts.NewBar()
+
+	bar.SetGlobalOptions(
+		charts.WithLegendOpts(opts.Legend{
+			Show: false,
+		}),
+		charts.WithGridOpts(opts.Grid{
+			Left:   "5%",
+			Right:  "2%",
+			Bottom: "5%",
+			Top:    "5%",
+		}),
+		charts.WithYAxisOpts(opts.YAxis{
+			SplitLine: &opts.SplitLine{
+				Show: true,
+				LineStyle: &opts.LineStyle{
+					Type:  "dashed",
+					Color: "#333",
+				},
+			},
+		}),
+	)
+
+	var xAxis []string
+	var yAxis []opts.BarData
+
+	for _, v := range views {
+		xAxis = append(xAxis, v.Label)
+		yAxis = append(yAxis, opts.BarData{
+			Value: v.Count,
+			ItemStyle: &opts.ItemStyle{
+				Color: "#65bcff",
+			},
+		})
+	}
+
+	// Put data into instance
+	bar.SetXAxis(xAxis).AddSeries("Data", yAxis).
+		SetSeriesOptions(
+			charts.WithLabelOpts(opts.Label{
+				Show:     true,
+				Position: "top",
+			}),
+		)
+
+	page := components.NewPage()
+	page.AddCharts(
+		heatMapBase(weekData),
+		bar,
+	)
+
+	return page.Render(c)
 }

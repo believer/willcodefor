@@ -134,6 +134,10 @@ func main() {
 		return routes.MostViewedTodayHandler(c, db)
 	})
 
+	app.Get("/stats/chart", func(c *fiber.Ctx) error {
+		return routes.ChartHandler(c, db)
+	})
+
 	// Redirects to old page
 	// ––––––––––––––––––––––––––––––––––––––––
 

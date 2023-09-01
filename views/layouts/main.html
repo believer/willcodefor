@@ -19,6 +19,7 @@
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon" />
     <script src="/public/htmx.8e774f.min.js"></script>
     <script src="/public/htmx-head-support.93484a.js"></script>
+    {{ if eq .Path "/stats" }}<script src="/public/echarts.min.js"></script>{{end}}
     <script async src="/public/command-menu.4e6ce0.js"></script>
     {{ if .Metadata }}
     <meta property="og:title" content="{{ .Metadata.Title }}" />
