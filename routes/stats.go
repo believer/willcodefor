@@ -444,19 +444,18 @@ ORDER BY 1,2 ASC`,
 	bar := charts.NewBar()
 
 	bar.SetGlobalOptions(
+		charts.WithInitializationOpts(opts.Initialization{
+			Width:  "100%",
+			Height: "250px",
+		}),
 		charts.WithLegendOpts(opts.Legend{
 			Show: false,
 		}),
 		charts.WithGridOpts(opts.Grid{
-			Left:   "5%",
+			Left:   "8%",
 			Right:  "2%",
-			Bottom: "5%",
+			Bottom: "8%",
 			Top:    "5%",
-		}),
-		charts.WithXAxisOpts(opts.XAxis{
-			AxisLabel: &opts.AxisLabel{
-				Show: false,
-			},
 		}),
 		charts.WithTooltipOpts(opts.Tooltip{
 			Show:      true,
