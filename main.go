@@ -138,6 +138,10 @@ func main() {
 		return routes.ChartHandler(c, db)
 	})
 
+	app.Get("/stats/heatmap", func(c *fiber.Ctx) error {
+		return routes.HeatMapHandler(c, db)
+	})
+
 	// Redirects to old page
 	// ––––––––––––––––––––––––––––––––––––––––
 

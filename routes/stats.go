@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
-	"github.com/go-echarts/go-echarts/v2/components"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
@@ -229,7 +228,28 @@ function (info) {
 }
 `
 
-func heatMapBase(data []CountData) *charts.HeatMap {
+func HeatMapHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	var weekData []CountData
+
+	err := db.Select(&weekData, `WITH days AS (
+    SELECT generate_series(date_trunc('week', current_date), date_trunc('week', current_date) + '6 days'::INTERVAL, '1 hour') as hour
+)
+
+SELECT
+	extract(isodow FROM days.hour) - 1 as date,
+  to_char(days.hour, 'HH24')::int as label,
+  count(pv.id)::int as count
+FROM days
+LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour AND pv.is_bot = false
+LEFT JOIN post AS p ON p.id = pv.post_id
+GROUP BY 1, days.hour
+ORDER BY 1,2 ASC`,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	weekDays := [...]string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 	hm := charts.NewHeatMap()
 
@@ -293,7 +313,7 @@ func heatMapBase(data []CountData) *charts.HeatMap {
 
 	var heatmapData []opts.HeatMapData
 
-	for _, v := range data {
+	for _, v := range weekData {
 		x, _ := strconv.Atoi(v.Label)
 		y, _ := strconv.Atoi(v.Date)
 
@@ -310,12 +330,13 @@ func heatMapBase(data []CountData) *charts.HeatMap {
 
 	hm.AddSeries("Views for hour", heatmapData)
 
-	return hm
+	hm.PageTitle = "Rickard Natt och Dag"
+
+	return hm.Render(c)
 }
 
 func ChartHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	var views []CountData
-	var weekData []CountData
 	var err error
 
 	time := c.Query("time", "today")
@@ -422,25 +443,6 @@ from data`,
 		}
 	}
 
-	err = db.Select(&weekData, `WITH days AS (
-    SELECT generate_series(date_trunc('week', current_date), date_trunc('week', current_date) + '6 days'::INTERVAL, '1 hour') as hour
-)
-
-SELECT
-	extract(isodow FROM days.hour) - 1 as date,
-  to_char(days.hour, 'HH24')::int as label,
-  count(pv.id)::int as count
-FROM days
-LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour AND pv.is_bot = false
-LEFT JOIN post AS p ON p.id = pv.post_id
-GROUP BY 1, days.hour
-ORDER BY 1,2 ASC`,
-	)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	bar := charts.NewBar()
 
 	bar.SetGlobalOptions(
@@ -455,7 +457,7 @@ ORDER BY 1,2 ASC`,
 			Left:   "8%",
 			Right:  "2%",
 			Bottom: "8%",
-			Top:    "5%",
+			Top:    "8%",
 		}),
 		charts.WithTooltipOpts(opts.Tooltip{
 			Show:      true,
@@ -502,14 +504,7 @@ ORDER BY 1,2 ASC`,
 			}),
 		)
 
-	page := components.NewPage()
+	bar.PageTitle = "Rickard Natt och Dag"
 
-	page.PageTitle = "Rickard Natt och Dag"
-
-	page.AddCharts(
-		heatMapBase(weekData),
-		bar,
-	)
-
-	return page.Render(c)
+	return bar.Render(c)
 }
