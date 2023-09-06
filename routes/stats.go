@@ -335,6 +335,41 @@ ORDER BY 1,2 ASC`,
 	return hm.Render(c)
 }
 
+func barAxisValues(views []CountData) ([]string, []opts.BarData) {
+	var xAxis []string
+	var yAxis []opts.BarData
+
+	for _, v := range views {
+		xAxis = append(xAxis, v.Label)
+
+		if v.Count == 0 {
+			yAxis = append(yAxis, opts.BarData{
+				Value: nil,
+				Label: &opts.Label{
+					Show:  true,
+					Color: "#374151",
+				},
+				ItemStyle: &opts.ItemStyle{
+					Color: "#65bcff",
+				},
+			})
+		} else {
+			yAxis = append(yAxis, opts.BarData{
+				Value: v.Count,
+				Label: &opts.Label{
+					Show:  true,
+					Color: "#374151",
+				},
+				ItemStyle: &opts.ItemStyle{
+					Color: "#65bcff",
+				},
+			})
+		}
+	}
+
+	return xAxis, yAxis
+}
+
 func ChartHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	var views []CountData
 	var err error
@@ -478,22 +513,7 @@ from data`,
 		}),
 	)
 
-	var xAxis []string
-	var yAxis []opts.BarData
-
-	for _, v := range views {
-		xAxis = append(xAxis, v.Label)
-		yAxis = append(yAxis, opts.BarData{
-			Value: v.Count,
-			Label: &opts.Label{
-				Show:  true,
-				Color: "#374151",
-			},
-			ItemStyle: &opts.ItemStyle{
-				Color: "#65bcff",
-			},
-		})
-	}
+	xAxis, yAxis := barAxisValues(views)
 
 	// Put data into instance
 	bar.SetXAxis(xAxis).AddSeries("Data", yAxis).
@@ -566,22 +586,7 @@ ORDER BY 1
 		}),
 	)
 
-	var xAxis []string
-	var yAxis []opts.BarData
-
-	for _, v := range posts {
-		xAxis = append(xAxis, v.Label)
-		yAxis = append(yAxis, opts.BarData{
-			Value: v.Count,
-			Label: &opts.Label{
-				Show:  true,
-				Color: "#374151",
-			},
-			ItemStyle: &opts.ItemStyle{
-				Color: "#65bcff",
-			},
-		})
-	}
+	xAxis, yAxis := barAxisValues(posts)
 
 	// Put data into instance
 	bar.SetXAxis(xAxis).AddSeries("Data", yAxis).
