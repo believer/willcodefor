@@ -68,8 +68,12 @@
   </div>
 </div>
 
+<h3 class="font-semibold uppercase text-gray-500">Post views</h3>
 <div class="mb-10 hidden sm:block" hx-get="/stats/chart" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
-<div class="mb-10 hidden sm:block" hx-get="/stats/heatmap" hx-trigger="load" hx-swap="innerHTML transition:true" ></div>
+<h3 class="font-semibold uppercase text-gray-500">Week Heatmap</h3>
+<div class="hidden sm:block" hx-get="/stats/heatmap" hx-trigger="load"></div>
+<h3 class="font-semibold uppercase text-gray-500">Posts created</h3>
+<div class="mb-10 hidden sm:block" hx-get="/stats/posts" hx-trigger="load"></div>
 
 <div class="mb-10" hx-preserve id="total-views">
   <h3 class="mb-4 font-semibold uppercase text-gray-500">Most viewed</h3>

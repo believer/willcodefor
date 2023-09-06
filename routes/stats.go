@@ -508,3 +508,91 @@ from data`,
 
 	return bar.Render(c)
 }
+
+func PostsStatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+	var posts []CountData
+
+	err := db.Select(&posts, `
+WITH months AS (
+	SELECT GENERATE_SERIES('2020-01-01', CURRENT_DATE, '1 month') AS MONTH
+)
+SELECT
+	months.month AS date,
+	TO_CHAR(months.month, 'Mon YY') AS label,
+	COUNT(p.id) AS count
+FROM
+	months
+	LEFT JOIN post AS p ON DATE_TRUNC('month', p.created_at) = months.month
+GROUP BY 1
+ORDER BY 1
+  `)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bar := charts.NewBar()
+
+	bar.SetGlobalOptions(
+		charts.WithInitializationOpts(opts.Initialization{
+			Width:  "100%",
+			Height: "250px",
+		}),
+		charts.WithLegendOpts(opts.Legend{
+			Show: false,
+		}),
+		charts.WithGridOpts(opts.Grid{
+			Left:   "8%",
+			Right:  "2%",
+			Bottom: "8%",
+			Top:    "8%",
+		}),
+		charts.WithTooltipOpts(opts.Tooltip{
+			Show:      true,
+			Trigger:   "item",
+			Formatter: "{b}: {c}",
+		}),
+		charts.WithYAxisOpts(opts.YAxis{
+			AxisLabel: &opts.AxisLabel{
+				Show: false,
+			},
+			SplitLine: &opts.SplitLine{
+				Show: true,
+				LineStyle: &opts.LineStyle{
+					Type:  "dashed",
+					Color: "#374151",
+				},
+			},
+		}),
+	)
+
+	var xAxis []string
+	var yAxis []opts.BarData
+
+	for _, v := range posts {
+		xAxis = append(xAxis, v.Label)
+		yAxis = append(yAxis, opts.BarData{
+			Value: v.Count,
+			Label: &opts.Label{
+				Show:  true,
+				Color: "#374151",
+			},
+			ItemStyle: &opts.ItemStyle{
+				Color: "#65bcff",
+			},
+		})
+	}
+
+	// Put data into instance
+	bar.SetXAxis(xAxis).AddSeries("Data", yAxis).
+		SetSeriesOptions(
+			charts.WithLabelOpts(opts.Label{
+				Show:     true,
+				Position: "top",
+			}),
+		)
+
+	bar.PageTitle = "Rickard Natt och Dag"
+
+	return bar.Render(c)
+}
