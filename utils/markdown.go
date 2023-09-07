@@ -67,7 +67,6 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 				highlighting.WithStyle("base16-snazzy"),
 				highlighting.WithFormatOptions(
 					chromahtml.WithLineNumbers(true),
-					chromahtml.WithLinkableLineNumbers(true, "L"),
 				),
 			),
 		),
