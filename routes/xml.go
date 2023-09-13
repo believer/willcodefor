@@ -25,7 +25,7 @@ func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	}
 
 	q := `
-    SELECT title, slug, body, updated_at
+    SELECT title, slug, body, updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at
     FROM post
     WHERE published = true
     ORDER BY created_at DESC

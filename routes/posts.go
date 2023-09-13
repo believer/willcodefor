@@ -51,7 +51,12 @@ func PostsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	posts := []Post{}
 	sortOrder := c.Query("sort", "createdAt")
 	q := `
-    SELECT title, til_id, created_at, updated_at, slug
+    SELECT
+      title,
+      til_id,
+      slug,
+      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at,
+      updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at
     FROM post
     WHERE published = true
     ORDER BY created_at DESC
@@ -59,7 +64,12 @@ func PostsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 
 	if sortOrder == "updatedAt" {
 		q = `
-    SELECT title, til_id, created_at, updated_at, slug
+    SELECT
+      title,
+      til_id,
+      slug,
+      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at,
+      updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at
     FROM post
     WHERE published = true
     ORDER BY updated_at DESC
@@ -84,7 +94,12 @@ func PostsSearchHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	posts := []Post{}
 	search := c.Query("search")
 	q := `
-    SELECT title, til_id, created_at, updated_at, slug
+    SELECT
+      title,
+      til_id,
+      slug,
+      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at,
+      updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at
     FROM post
     WHERE
       title ILIKE '%' || $1 || '%'
@@ -141,7 +156,16 @@ func PostHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	post := Post{}
 
 	q := `
-	   SELECT title, til_id, slug, id, body, created_at, updated_at, COALESCE(series, '') as series, excerpt
+	   SELECT
+      title,
+      til_id,
+      slug,
+      id,
+      body,
+      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at,
+      updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at,
+      COALESCE(series, '') as series,
+      excerpt
 	   FROM post
 	   WHERE slug = $1 OR long_slug = $1
 	 `

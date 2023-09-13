@@ -11,7 +11,16 @@ import (
 
 func IndexHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	posts := []Post{}
-	err := db.Select(&posts, `SELECT title, til_id, slug, created_at FROM post ORDER BY id DESC LIMIT 5`)
+	err := db.Select(&posts, `
+    SELECT
+      title,
+      til_id,
+      slug,
+      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at
+    FROM post
+    ORDER BY id DESC
+    LIMIT 5
+  `)
 
 	if err != nil {
 		log.Fatal(err)

@@ -240,7 +240,7 @@ SELECT
   to_char(days.hour, 'HH24')::int as label,
   count(pv.id)::int as count
 FROM days
-LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour AND pv.is_bot = false
+LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at at time zone 'utc' at time zone 'Europe/Stockholm') = days.hour AND pv.is_bot = false
 LEFT JOIN post AS p ON p.id = pv.post_id
 GROUP BY 1, days.hour
 ORDER BY 1,2 ASC`,
@@ -386,7 +386,7 @@ SELECT
   to_char(days.hour, 'HH24:MI') as label,
   count(pv.id)::int as count
 FROM days
-LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at) = days.hour AND pv.is_bot = false
+LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at at time zone 'utc' at time zone 'Europe/Stockholm') = days.hour AND pv.is_bot = false
 LEFT JOIN post AS p ON p.id = pv.post_id
 GROUP BY 1
 ORDER BY 1 ASC`,
