@@ -82,3 +82,48 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 
 	return buf
 }
+
+// Can't use the same function for both HTML and XML, since Typographer
+// will replace quotes with HTML entities, which will break the XML.
+// There might be other adjustments needed along the way too.
+func MarkdownToXML(input []byte) bytes.Buffer {
+	var buf bytes.Buffer
+
+	md := goldmark.New(
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+			parser.WithASTTransformers(
+				util.Prioritized(&ASTTransformer{}, 1000),
+			),
+		),
+		goldmark.WithExtensions(
+			&anchor.Extender{
+				Attributer: anchor.Attributes{
+					"class": "!text-gray-400 dark:!text-gray-500 no-underline",
+				},
+				Texter: anchor.Text("#"),
+			},
+			extension.Strikethrough,
+			extension.NewFootnote(
+				extension.WithFootnoteBacklinkClass([]byte("font-mono no-underline")),
+			),
+			extension.Table,
+			highlighting.NewHighlighting(
+				highlighting.WithStyle("base16-snazzy"),
+				highlighting.WithFormatOptions(
+					chromahtml.WithLineNumbers(true),
+				),
+			),
+		),
+		goldmark.WithRendererOptions(
+			html.WithXHTML(),
+			html.WithUnsafe(),
+		),
+	)
+
+	if err := md.Convert(input, &buf); err != nil {
+		panic(err)
+	}
+
+	return buf
+}

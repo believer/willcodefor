@@ -40,7 +40,7 @@ func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
 
 	for _, post := range posts {
 		var parsedPost PostWithParsedDate
-		body := utils.MarkdownToHTML([]byte(post.Body))
+		body := utils.MarkdownToXML([]byte(post.Body))
 
 		parsedPost.Title = post.Title
 		parsedPost.Slug = post.Slug
