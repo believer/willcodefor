@@ -68,7 +68,7 @@ func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
 }
 
 func SitemapHandler(c *fiber.Ctx, db *sqlx.DB) error {
-	posts := []PostWithParsedDate{}
+	posts := []Post{}
 	engineXML := mustache.New("./xmls", ".xml")
 
 	if err := engineXML.Load(); err != nil {
@@ -82,15 +82,22 @@ func SitemapHandler(c *fiber.Ctx, db *sqlx.DB) error {
 		c.JSON("Oh no")
 	}
 
+	var updatedPosts []PostWithParsedDate
+
 	for _, post := range posts {
-		post.UpdatedAtParsed = post.UpdatedAt.Format(time.RFC3339)
+		var parsedPost PostWithParsedDate
+
+		parsedPost.Title = post.Title
+		parsedPost.UpdatedAtParsed = post.UpdatedAt.Format(time.RFC3339)
+
+		updatedPosts = append(updatedPosts, parsedPost)
 	}
 
 	c.Type("xml")
 
 	return engineXML.Render(c, "sitemap", fiber.Map{
 		"URL":   "https://willcodefor.beer/",
-		"Posts": posts,
+		"Posts": updatedPosts,
 	})
 
 }
