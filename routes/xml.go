@@ -4,10 +4,10 @@ import (
 	"log"
 	"time"
 
+	"github.com/believer/willcodefor-go/data"
 	"github.com/believer/willcodefor-go/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/mustache/v2"
-	"github.com/jmoiron/sqlx"
 )
 
 type PostWithParsedDate struct {
@@ -15,7 +15,7 @@ type PostWithParsedDate struct {
 	UpdatedAtParsed string
 }
 
-func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func FeedHandler(c *fiber.Ctx) error {
 	posts := []Post{}
 	parsedPosts := []PostWithParsedDate{}
 	engineXML := mustache.New("./xmls", ".xml")
@@ -31,7 +31,7 @@ func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
     ORDER BY created_at DESC
   `
 
-	err := db.Select(&posts, q)
+	err := data.DB.Select(&posts, q)
 
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +67,7 @@ func FeedHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	})
 }
 
-func SitemapHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func SitemapHandler(c *fiber.Ctx) error {
 	posts := []Post{}
 	engineXML := mustache.New("./xmls", ".xml")
 
@@ -75,7 +75,7 @@ func SitemapHandler(c *fiber.Ctx, db *sqlx.DB) error {
 		log.Fatal(err)
 	}
 
-	err := db.Select(&posts, "SELECT slug, updated_at FROM post WHERE published = true ORDER BY created_at DESC")
+	err := data.DB.Select(&posts, "SELECT slug, updated_at FROM post WHERE published = true ORDER BY created_at DESC")
 
 	if err != nil {
 		log.Fatal(err)

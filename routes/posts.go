@@ -6,12 +6,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/believer/willcodefor-go/data"
 	"github.com/believer/willcodefor-go/utils"
 	"github.com/gofiber/fiber/v2"
-	"github.com/jmoiron/sqlx"
 	"github.com/mileusna/useragent"
-
-	_ "github.com/lib/pq"
 )
 
 type Post struct {
@@ -47,7 +45,7 @@ func NewNullString(s string) sql.NullString {
 	}
 }
 
-func PostsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostsHandler(c *fiber.Ctx) error {
 	posts := []Post{}
 	sortOrder := c.Query("sort", "createdAt")
 	q := `
@@ -76,7 +74,7 @@ func PostsHandler(c *fiber.Ctx, db *sqlx.DB) error {
   `
 	}
 
-	err := db.Select(&posts, q)
+	err := data.DB.Select(&posts, q)
 
 	if err != nil {
 		log.Fatal(err)
@@ -90,7 +88,7 @@ func PostsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	})
 }
 
-func PostsSearchHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostsSearchHandler(c *fiber.Ctx) error {
 	posts := []Post{}
 	search := c.Query("search")
 	q := `
@@ -108,7 +106,7 @@ func PostsSearchHandler(c *fiber.Ctx, db *sqlx.DB) error {
     ORDER BY created_at DESC
   `
 
-	err := db.Select(&posts, q, search)
+	err := data.DB.Select(&posts, q, search)
 
 	if err != nil {
 		log.Fatal(err)
@@ -122,7 +120,7 @@ func PostsSearchHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	})
 }
 
-func PostsViewsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostsViewsHandler(c *fiber.Ctx) error {
 	posts := []PostWithViews{}
 	q := `
     SELECT
@@ -137,7 +135,7 @@ func PostsViewsHandler(c *fiber.Ctx, db *sqlx.DB) error {
     ORDER BY views DESC
   `
 
-	err := db.Select(&posts, q)
+	err := data.DB.Select(&posts, q)
 
 	if err != nil {
 		log.Fatal(err)
@@ -151,7 +149,7 @@ func PostsViewsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	})
 }
 
-func PostHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostHandler(c *fiber.Ctx) error {
 	slug := c.Params("slug")
 	post := Post{}
 
@@ -170,7 +168,7 @@ func PostHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	   WHERE slug = $1 OR long_slug = $1
 	 `
 
-	if err := db.Get(&post, q, slug); err != nil {
+	if err := data.DB.Get(&post, q, slug); err != nil {
 		if err == sql.ErrNoRows {
 			return c.Render("404", fiber.Map{
 				"Slug": slug,
@@ -195,7 +193,7 @@ func PostHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	})
 }
 
-func PostNextHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostNextHandler(c *fiber.Ctx) error {
 	id := c.Params("id")
 	nextPost := Post{}
 	q := `
@@ -206,7 +204,7 @@ func PostNextHandler(c *fiber.Ctx, db *sqlx.DB) error {
     LIMIT 1
    `
 
-	if err := db.Get(&nextPost, q, id); err != nil {
+	if err := data.DB.Get(&nextPost, q, id); err != nil {
 		if err == sql.ErrNoRows {
 			return c.SendString("<li></li>")
 		}
@@ -218,7 +216,7 @@ func PostNextHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	return c.Render("partials/postNext", nextPost, "")
 }
 
-func PostPreviousHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostPreviousHandler(c *fiber.Ctx) error {
 	id := c.Params("id")
 	prevPost := Post{}
 	q := `
@@ -229,7 +227,7 @@ func PostPreviousHandler(c *fiber.Ctx, db *sqlx.DB) error {
     LIMIT 1
    `
 
-	if err := db.Get(&prevPost, q, id); err != nil {
+	if err := data.DB.Get(&prevPost, q, id); err != nil {
 		if err == sql.ErrNoRows {
 			return c.SendString("<li></li>")
 		}
@@ -241,7 +239,7 @@ func PostPreviousHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	return c.Render("partials/postPrev", prevPost, "")
 }
 
-func PostStatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostStatsHandler(c *fiber.Ctx) error {
 	var postViews string
 
 	id := c.Params("id")
@@ -272,7 +270,7 @@ func PostStatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 			deviceVendor = "Apple"
 		}
 
-		_, err := db.Exec(`
+		_, err := data.DB.Exec(`
 		    INSERT INTO post_view (
 		      user_agent, post_id, is_bot,
 		      browser_name, browser_version,
@@ -303,7 +301,7 @@ func PostStatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 
 	q := `SELECT COUNT(*) FROM post_view WHERE post_id = $1`
 
-	if err := db.Get(&postViews, q, id); err != nil {
+	if err := data.DB.Get(&postViews, q, id); err != nil {
 		log.Fatal(err)
 		c.JSON("Oh no")
 	}
@@ -311,7 +309,7 @@ func PostStatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	return c.SendString(postViews)
 }
 
-func PostSeriesHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostSeriesHandler(c *fiber.Ctx) error {
 	posts := []Post{}
 	series := c.Params("series")
 	slug := c.Query("slug")
@@ -322,7 +320,7 @@ func PostSeriesHandler(c *fiber.Ctx, db *sqlx.DB) error {
     ORDER BY id ASC
   `
 
-	err := db.Select(&posts, q, series)
+	err := data.DB.Select(&posts, q, series)
 
 	if err != nil {
 		log.Fatal(err)

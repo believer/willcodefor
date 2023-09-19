@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/believer/willcodefor-go/data"
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/gofiber/fiber/v2"
-	"github.com/jmoiron/sqlx"
 )
 
 func timeToQuery(t string) string {
@@ -27,7 +27,7 @@ func timeToQuery(t string) string {
 	}
 }
 
-func StatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func StatsHandler(c *fiber.Ctx) error {
 	var bots int
 	var viewsPerDay float64
 	var lessThanOnePercent int
@@ -35,7 +35,7 @@ func StatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	timeQuery := c.Query("time", "today")
 
 	// Views per day
-	err := db.Get(&viewsPerDay, `
+	err := data.DB.Get(&viewsPerDay, `
     SELECT
     ROUND((COUNT(id) / (max(created_at)::DATE - min(created_at)::DATE + 1)::NUMERIC), 2) as "viewsPerDay"
     FROM post_view
@@ -46,7 +46,7 @@ func StatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
 		log.Fatal(err)
 	}
 
-	err = db.Get(&lessThanOnePercent, `
+	err = data.DB.Get(&lessThanOnePercent, `
 WITH views_with_percentage AS(
 	SELECT
 		COUNT(*) AS "count",
@@ -64,7 +64,7 @@ WHERE percent_as_number <= 1
 		log.Fatal(err)
 	}
 
-	err = db.Get(&bots, `SELECT COUNT(*) FROM post_view WHERE is_bot = true`)
+	err = data.DB.Get(&bots, `SELECT COUNT(*) FROM post_view WHERE is_bot = true`)
 
 	if err != nil {
 		log.Fatal(err)
@@ -80,10 +80,10 @@ WHERE percent_as_number <= 1
 
 }
 
-func MostViewedHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func MostViewedHandler(c *fiber.Ctx) error {
 	var posts []PostWithViews
 
-	err := db.Select(&posts, `
+	err := data.DB.Select(&posts, `
 SELECT
   COUNT(*) as views,
   p.title,
@@ -110,7 +110,7 @@ LIMIT 10
 	}, "")
 }
 
-func BrowsersHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func BrowsersHandler(c *fiber.Ctx) error {
 	var userAgents []struct {
 		Name    string `db:"browser_name"`
 		Count   int    `db:"count"`
@@ -119,7 +119,7 @@ func BrowsersHandler(c *fiber.Ctx, db *sqlx.DB) error {
 
 	timeQuery := timeToQuery(c.Query("time", "today"))
 
-	err := db.Select(&userAgents, `
+	err := data.DB.Select(&userAgents, `
   SELECT
 		browser_name,
 		COUNT(*) AS count,
@@ -140,7 +140,7 @@ func BrowsersHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	}, "")
 }
 
-func OSHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func OSHandler(c *fiber.Ctx) error {
 	var os []struct {
 		Name    string `db:"os_name"`
 		Count   int    `db:"count"`
@@ -149,7 +149,7 @@ func OSHandler(c *fiber.Ctx, db *sqlx.DB) error {
 
 	timeQuery := timeToQuery(c.Query("time", "today"))
 
-	err := db.Select(&os, `
+	err := data.DB.Select(&os, `
   SELECT
     os_name,
     COUNT(*) AS count,
@@ -170,12 +170,12 @@ func OSHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	}, "")
 }
 
-func TotalViewsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func TotalViewsHandler(c *fiber.Ctx) error {
 	var count int
 
 	timeQuery := timeToQuery(c.Query("time", "today"))
 
-	err := db.Get(&count, `
+	err := data.DB.Get(&count, `
 SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
   `, timeQuery)
 
@@ -186,10 +186,10 @@ SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
 	return c.SendString(fmt.Sprint(count))
 }
 
-func MostViewedTodayHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func MostViewedTodayHandler(c *fiber.Ctx) error {
 	var posts []PostWithViews
 
-	err := db.Select(&posts, `
+	err := data.DB.Select(&posts, `
 SELECT
   COUNT(*) as views,
   p.title,
@@ -228,10 +228,10 @@ function (info) {
 }
 `
 
-func HeatMapHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func HeatMapHandler(c *fiber.Ctx) error {
 	var weekData []CountData
 
-	err := db.Select(&weekData, `WITH days AS (
+	err := data.DB.Select(&weekData, `WITH days AS (
     SELECT generate_series(date_trunc('week', current_date), date_trunc('week', current_date) + '6 days'::INTERVAL, '1 hour') as hour
 )
 
@@ -370,14 +370,14 @@ func barAxisValues(views []CountData) ([]string, []opts.BarData) {
 	return xAxis, yAxis
 }
 
-func ChartHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func ChartHandler(c *fiber.Ctx) error {
 	var views []CountData
 	var err error
 
 	time := c.Query("time", "today")
 
 	if time == "today" {
-		err = db.Select(&views, `WITH days AS (
+		err = data.DB.Select(&views, `WITH days AS (
   SELECT generate_series(CURRENT_DATE, CURRENT_DATE + '1 day'::INTERVAL, '1 hour') AS hour
 )
 
@@ -398,7 +398,7 @@ ORDER BY 1 ASC`,
 	}
 
 	if time == "week" {
-		err = db.Select(&views, `WITH days AS (
+		err = data.DB.Select(&views, `WITH days AS (
   SELECT generate_series(date_trunc('week', current_date), date_trunc('week', current_date) + '6 days'::INTERVAL, '1 day')::DATE as day
 )
 
@@ -418,7 +418,7 @@ ORDER BY 1 ASC`,
 	}
 
 	if time == "thirty-days" {
-		err = db.Select(&views, `WITH days AS (
+		err = data.DB.Select(&views, `WITH days AS (
           SELECT generate_series(CURRENT_DATE - '30 days'::INTERVAL, CURRENT_DATE, '1 day')::DATE AS day
         )
 
@@ -438,7 +438,7 @@ ORDER BY 1 ASC`,
 	}
 
 	if time == "this-year" {
-		err = db.Select(&views, `WITH months AS (
+		err = data.DB.Select(&views, `WITH months AS (
 	SELECT (DATE_TRUNC('year', NOW()) + (INTERVAL '1' MONTH * GENERATE_SERIES(0,11)))::DATE AS MONTH
 )
 
@@ -459,7 +459,7 @@ ORDER BY 1 ASC`,
 	}
 
 	if time == "cumulative" {
-		err = db.Select(&views, `WITH data AS (
+		err = data.DB.Select(&views, `WITH data AS (
   SELECT
     date_trunc('month', created_at) as month,
     count(1)::int
@@ -529,10 +529,10 @@ from data`,
 	return bar.Render(c)
 }
 
-func PostsStatsHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func PostsStatsHandler(c *fiber.Ctx) error {
 	var posts []CountData
 
-	err := db.Select(&posts, `
+	err := data.DB.Select(&posts, `
 WITH months AS (
 	SELECT GENERATE_SERIES('2020-01-01', CURRENT_DATE, '1 month') AS MONTH
 )

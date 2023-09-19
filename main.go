@@ -8,20 +8,13 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
-	"github.com/jmoiron/sqlx"
 
-	_ "github.com/lib/pq"
-
+	"github.com/believer/willcodefor-go/data"
 	"github.com/believer/willcodefor-go/routes"
 )
 
 func main() {
-	connectionString := os.Getenv("DATABASE_URL")
-	db, err := sqlx.Connect("postgres", connectionString)
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	data.InitDB()
 
 	// Set up Fiber and view engine
 	engine := html.New("./views", ".html")
@@ -45,13 +38,8 @@ func main() {
 	// Index routes
 	// ––––––––––––––––––––––––––––––––––––––––
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return routes.IndexHandler(c, db)
-	})
-
-	app.Get("/command-menu", func(c *fiber.Ctx) error {
-		return routes.CommandMenuHandler(c, db)
-	})
+	app.Get("/", routes.IndexHandler)
+	app.Get("/command-menu", routes.CommandMenuHandler)
 
 	// Posts routes
 	// ––––––––––––––––––––––––––––––––––––––––
@@ -60,91 +48,50 @@ func main() {
 
 	posts.Get("/", func(c *fiber.Ctx) error {
 		if c.Query("search", "") != "" {
-			return routes.PostsSearchHandler(c, db)
+			return routes.PostsSearchHandler(c)
 		}
+
 		switch c.Query("sort", "createdAt") {
 		case "views":
-			return routes.PostsViewsHandler(c, db)
+			return routes.PostsViewsHandler(c)
 		default:
-			return routes.PostsHandler(c, db)
+			return routes.PostsHandler(c)
 		}
 	})
 
-	posts.Get("/:slug", func(c *fiber.Ctx) error {
-		return routes.PostHandler(c, db)
-	})
+	posts.Get("/:slug", routes.PostHandler)
 
-	posts.Get("/:id/next", func(c *fiber.Ctx) error {
-		return routes.PostNextHandler(c, db)
-	})
-
-	posts.Get("/:id/previous", func(c *fiber.Ctx) error {
-		return routes.PostPreviousHandler(c, db)
-	})
-
-	posts.Post("/:id/stats", func(c *fiber.Ctx) error {
-		return routes.PostStatsHandler(c, db)
-	})
+	posts.Get("/:id/next", routes.PostNextHandler)
+	posts.Get("/:id/previous", routes.PostPreviousHandler)
+	posts.Post("/:id/stats", routes.PostStatsHandler)
 
 	// Series
 	// ––––––––––––––––––––––––––––––––––––––––
-
-	app.Get("/seies/:series", func(c *fiber.Ctx) error {
-		return routes.PostSeriesHandler(c, db)
-	})
+	app.Get("/seies/:series", routes.PostSeriesHandler)
 
 	// XML
 	// ––––––––––––––––––––––––––––––––––––––––
 
-	app.Get("/feed.xml", func(c *fiber.Ctx) error {
-		return routes.FeedHandler(c, db)
-	})
+	app.Get("/feed.xml", routes.FeedHandler)
+	app.Get("/sitemap.xml", routes.SitemapHandler)
 
-	app.Get("/sitemap.xml", func(c *fiber.Ctx) error {
-		return routes.SitemapHandler(c, db)
-	})
-
+	// Other
+	// ––––––––––––––––––––––––––––––––––––––––
 	app.Get("/iteam", func(c *fiber.Ctx) error {
 		return c.Render("iteam", fiber.Map{})
 	})
 
 	// Stats
-
-	app.Get("/stats", func(c *fiber.Ctx) error {
-		return routes.StatsHandler(c, db)
-	})
-
-	app.Get("/stats/total-views", func(c *fiber.Ctx) error {
-		return routes.TotalViewsHandler(c, db)
-	})
-
-	app.Get("/stats/browsers", func(c *fiber.Ctx) error {
-		return routes.BrowsersHandler(c, db)
-	})
-
-	app.Get("/stats/os", func(c *fiber.Ctx) error {
-		return routes.OSHandler(c, db)
-	})
-
-	app.Get("/stats/most-viewed", func(c *fiber.Ctx) error {
-		return routes.MostViewedHandler(c, db)
-	})
-
-	app.Get("/stats/most-viewed-today", func(c *fiber.Ctx) error {
-		return routes.MostViewedTodayHandler(c, db)
-	})
-
-	app.Get("/stats/chart", func(c *fiber.Ctx) error {
-		return routes.ChartHandler(c, db)
-	})
-
-	app.Get("/stats/heatmap", func(c *fiber.Ctx) error {
-		return routes.HeatMapHandler(c, db)
-	})
-
-	app.Get("/stats/posts", func(c *fiber.Ctx) error {
-		return routes.PostsStatsHandler(c, db)
-	})
+	// ––––––––––––––––––––––––––––––––––––––––
+	app.Get("/stats", routes.StatsHandler)
+	app.Get("/stats/total-views", routes.TotalViewsHandler)
+	app.Get("/stats/browsers", routes.BrowsersHandler)
+	app.Get("/stats/os", routes.OSHandler)
+	app.Get("/stats/most-viewed", routes.MostViewedHandler)
+	app.Get("/stats/most-viewed-today", routes.MostViewedTodayHandler)
+	app.Get("/stats/chart", routes.ChartHandler)
+	app.Get("/stats/heatmap", routes.HeatMapHandler)
+	app.Get("/stats/posts", routes.PostsStatsHandler)
 
 	// Redirects to old page
 	// ––––––––––––––––––––––––––––––––––––––––

@@ -5,13 +5,11 @@ import (
 
 	"github.com/believer/willcodefor-go/data"
 	"github.com/gofiber/fiber/v2"
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 )
 
-func IndexHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func IndexHandler(c *fiber.Ctx) error {
 	posts := []Post{}
-	err := db.Select(&posts, `
+	err := data.DB.Select(&posts, `
     SELECT
       title,
       til_id,
@@ -35,7 +33,7 @@ func IndexHandler(c *fiber.Ctx, db *sqlx.DB) error {
 	})
 }
 
-func CommandMenuHandler(c *fiber.Ctx, db *sqlx.DB) error {
+func CommandMenuHandler(c *fiber.Ctx) error {
 	search := c.Query("search")
 	posts := []Post{}
 
@@ -50,7 +48,7 @@ func CommandMenuHandler(c *fiber.Ctx, db *sqlx.DB) error {
     ORDER BY id DESC
     LIMIT 5
   `
-	err := db.Select(&posts, q, "%"+search+"%")
+	err := data.DB.Select(&posts, q, "%"+search+"%")
 
 	if err != nil {
 		log.Fatal(err)
