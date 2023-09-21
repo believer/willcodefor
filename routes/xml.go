@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/believer/willcodefor-go/data"
-	"github.com/believer/willcodefor-go/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/mustache/v2"
 )
@@ -17,7 +16,6 @@ type PostWithParsedDate struct {
 
 func FeedHandler(c *fiber.Ctx) error {
 	posts := []Post{}
-	parsedPosts := []PostWithParsedDate{}
 	engineXML := mustache.New("./xmls", ".xml")
 
 	if err := engineXML.Load(); err != nil {
@@ -38,18 +36,6 @@ func FeedHandler(c *fiber.Ctx) error {
 		c.JSON("Oh no")
 	}
 
-	for _, post := range posts {
-		var parsedPost PostWithParsedDate
-		body := utils.MarkdownToXML([]byte(post.Body))
-
-		parsedPost.Title = post.Title
-		parsedPost.Slug = post.Slug
-		parsedPost.Body = body.String()
-		parsedPost.UpdatedAtParsed = post.UpdatedAt.Format(time.RFC3339)
-
-		parsedPosts = append(parsedPosts, parsedPost)
-	}
-
 	c.Type("xml")
 
 	return engineXML.Render(c, "feed", fiber.Map{
@@ -62,8 +48,8 @@ func FeedHandler(c *fiber.Ctx) error {
 				"Email": "rickard@willcodefor.dev",
 			},
 		},
-		"Posts":            parsedPosts,
-		"LatestPostUpdate": parsedPosts[0].UpdatedAt.Format(time.RFC3339),
+		"Posts":            posts,
+		"LatestPostUpdate": posts[0].UpdatedAt.Format(time.RFC3339),
 	})
 }
 

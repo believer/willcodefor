@@ -14,9 +14,9 @@
   <entry>
     <title>{{ Title }}</title>
     <link href="{{ Metadata.URL }}posts/{{ Slug }}" />
-    <updated>{{ UpdatedAtParsed }}</updated>
+    <updated>{{ UpdatedAtAsISO }}</updated>
     <id>{{ Metadata.URL }}posts/{{ Slug }}</id>
-    <content type="html">{{{ Body }}}</content>
+    <content type="html">{{{ BodyAsXML }}}</content>
   </entry>
   {{/Posts}}
 </feed>

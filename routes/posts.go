@@ -13,26 +13,30 @@ import (
 )
 
 type Post struct {
-	Body      string
+	Body      string    `db:"body"`
 	CreatedAt time.Time `db:"created_at"`
-	Excerpt   string
-	ID        int
-	Series    string
-	Slug      string
-	TILID     int `db:"til_id"`
-	Title     string
+	Excerpt   string    `db:"excerpt"`
+	ID        int       `db:"id"`
+	Series    string    `db:"series"`
+	Slug      string    `db:"slug"`
+	TILID     int       `db:"til_id"`
+	Title     string    `db:"title"`
 	UpdatedAt time.Time `db:"updated_at"`
+	Views     int       `db:"views"`
 }
 
-type PostWithDates struct {
-	Post
-	DateTime string
-	Date     string
+func (p Post) BodyAsHTML() string {
+	body := utils.MarkdownToHTML([]byte(p.Body))
+	return body.String()
 }
 
-type PostWithViews struct {
-	Post
-	Views int
+func (p Post) BodyAsXML() string {
+	body := utils.MarkdownToXML([]byte(p.Body))
+	return body.String()
+}
+
+func (p Post) UpdatedAtAsISO() string {
+	return p.UpdatedAt.Format(time.RFC3339)
 }
 
 func NewNullString(s string) sql.NullString {
@@ -121,7 +125,7 @@ func PostsSearchHandler(c *fiber.Ctx) error {
 }
 
 func PostsViewsHandler(c *fiber.Ctx) error {
-	posts := []PostWithViews{}
+	posts := []Post{}
 	q := `
     SELECT
       p.title,

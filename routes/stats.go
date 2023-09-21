@@ -81,7 +81,7 @@ WHERE percent_as_number <= 1
 }
 
 func MostViewedHandler(c *fiber.Ctx) error {
-	var posts []PostWithViews
+	var posts []Post
 
 	err := data.DB.Select(&posts, `
 SELECT
@@ -187,7 +187,7 @@ SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
 }
 
 func MostViewedTodayHandler(c *fiber.Ctx) error {
-	var posts []PostWithViews
+	var posts []Post
 
 	err := data.DB.Select(&posts, `
 SELECT

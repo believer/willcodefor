@@ -7,7 +7,7 @@
       <span class="mx-1 font-normal text-gray-400">/</span>
       <span style="view-transition-name: title-{{ .Post.TILID }}">{{ .Post.Title }}</span>
     </h1>
-    <div id="body">{{ unescape .Post.Body }}</div>
+    <div id="body">{{ unescape .Post.BodyAsHTML }}</div>
   </article>
   {{ if .Post.Series }}
   <div
