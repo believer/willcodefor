@@ -67,7 +67,7 @@ func main() {
 
 	// Series
 	// ––––––––––––––––––––––––––––––––––––––––
-	app.Get("/seies/:series", routes.PostSeriesHandler)
+	app.Get("/series/:series", routes.PostSeriesHandler)
 
 	// XML
 	// ––––––––––––––––––––––––––––––––––––––––
