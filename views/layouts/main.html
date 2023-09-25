@@ -17,9 +17,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/public/styles.2a5b6a.css" rel="stylesheet" />
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon" />
-    <script src="/public/htmx.8e774f.min.js"></script>
-    <script src="/public/htmx-head-support.93484a.js"></script>
-    {{ if eq .Path "/stats" }}<script src="/public/echarts.min.js"></script>{{end}}
+    <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/head-support.js"></script>
+    {{ if eq .Path "/stats" }}<script src="https://www.unpkg.com/echarts@5.4.3/dist/echarts.min.js"></script>{{end}}
     <script async src="/public/command-menu.4e6ce0.js"></script>
     {{ if .Metadata }}
     <meta property="og:title" content="{{ .Metadata.Title }}" />

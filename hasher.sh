@@ -32,18 +32,6 @@ sed -i "" "s/styles\(\.[a-z0-9]\{6\}\)\{0,1\}\.css/styles\.$hash\.css/g" ./views
 
 echo "Tailwind generated and updated"
 
-# Fixing HTMX scripts
-
-hash=$(calculate_hash ./public/htmx.*.min.js)
-mv ./public/htmx.*.min.js ./public/htmx.$hash.min.js
-sed -i "" "s/htmx\.[a-z0-9]\{6\}\.min/htmx\.$hash\.min/g" ./views/layouts/main.html
-
-hash=$(calculate_hash ./public/htmx-head-support.*.js)
-mv ./public/htmx-head-support.*.js ./public/htmx-head-support.$hash.js
-sed -i "" "s/htmx-head-support\.[a-z0-9]\{6\}/htmx-head-support\.$hash/g" ./views/layouts/main.html
-
-echo "HTMX scripts fixed"
-
 # Fixing Command menu script
 
 hash=$(calculate_hash ./public/command-menu.*.js)
