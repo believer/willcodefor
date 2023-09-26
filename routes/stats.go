@@ -543,6 +543,7 @@ SELECT
 FROM
 	months
 	LEFT JOIN post AS p ON DATE_TRUNC('month', p.created_at) = months.month
+WHERE p.published = true
 GROUP BY 1
 ORDER BY 1
   `)
