@@ -16,6 +16,7 @@ func IndexHandler(c *fiber.Ctx) error {
       slug,
       created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at
     FROM post
+    WHERE published = true
     ORDER BY id DESC
     LIMIT 5
   `)
