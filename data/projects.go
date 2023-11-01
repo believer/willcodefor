@@ -19,7 +19,13 @@ type Work struct {
 	Title           string
 }
 
-var Projects = [7]Project{
+var Projects = [8]Project{
+	{
+		Name:        "My Movies",
+		Description: "This is where I keep track of all the movies I've watched. I've been doing it for over 20 years, first using lists in IMDb and from 2011 using my own database.",
+		Tech:        []string{"go", "htmx", "tailwind", "hyperscript"},
+		Link:        "https://movies.willcodefor.beer",
+	},
 	{
 		Name:        "Supreme",
 		Description: "Supreme is a command line tool that helps you get up and running fast with new apps. It can currently generate rescript-react apps with Tailwind CSS, GraphQL APIs with examples for queries, mutations and subscriptions using TypeScript and React apps with both TypeScript and JavaScript. It can also help you install and generate commonly used configs for things like prettier, husky and jest. ",
