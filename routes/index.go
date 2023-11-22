@@ -43,7 +43,7 @@ func CommandMenuHandler(c *fiber.Ctx) error {
     FROM post
     WHERE 
       CASE
-        WHEN $1 <> '"%%"' THEN title LIKE $1 AND published = true
+        WHEN $1 <> '"%%"' THEN title ILIKE $1 AND published = true
         ELSE published = true
       END
     ORDER BY id DESC
