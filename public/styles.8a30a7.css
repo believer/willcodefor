@@ -884,7 +884,6 @@ abbr[title]:focus::after,
   padding-right: 1.1428571em;
   padding-bottom: 0.8571429em;
   padding-left: 1.1428571em;
-  padding: 0;
   white-space: pre-wrap;
   word-break: break-word;
 }

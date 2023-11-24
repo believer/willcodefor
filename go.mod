@@ -3,7 +3,8 @@ module github.com/believer/willcodefor-go
 go 1.20
 
 require (
-	github.com/alecthomas/chroma/v2 v2.8.0
+	github.com/alecthomas/chroma/v2 v2.9.1
+	github.com/believer/goldmark-highlighting/v2 v2.0.0-20231124141847-6e3378573797
 	github.com/go-echarts/go-echarts/v2 v2.2.7
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/template/html/v2 v2.0.5
@@ -12,7 +13,6 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/mileusna/useragent v1.3.3
 	github.com/yuin/goldmark v1.5.6
-	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	go.abhg.dev/goldmark/anchor v0.1.1
 )
 

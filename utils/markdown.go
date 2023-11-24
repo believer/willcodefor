@@ -4,8 +4,8 @@ import (
 	"bytes"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
+	highlighting "github.com/believer/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark"
-	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
@@ -64,10 +64,7 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 			),
 			extension.Table,
 			highlighting.NewHighlighting(
-				highlighting.WithStyle("base16-snazzy"),
-				highlighting.WithFormatOptions(
-					chromahtml.WithLineNumbers(true),
-				),
+				highlighting.WithStyle("catppuccin-mocha"),
 			),
 		),
 		goldmark.WithRendererOptions(
