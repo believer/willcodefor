@@ -4,6 +4,9 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"path"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/believer/willcodefor-go/data"
@@ -157,6 +160,15 @@ func PostHandler(c *fiber.Ctx) error {
 	slug := c.Params("slug")
 	post := Post{}
 
+	// Self healing slug
+	parts := strings.Split(path.Base(slug), "-")
+	lastPart := parts[len(parts)-1]
+	tilId, err := strconv.Atoi(lastPart)
+
+	if err != nil {
+		tilId = 0
+	}
+
 	q := `
 	   SELECT
       title,
@@ -169,10 +181,10 @@ func PostHandler(c *fiber.Ctx) error {
       COALESCE(series, '') as series,
       excerpt
 	   FROM post
-	   WHERE slug = $1 OR long_slug = $1
+	   WHERE slug = $1 OR long_slug = $1 OR til_id = $2
 	 `
 
-	if err := data.DB.Get(&post, q, slug); err != nil {
+	if err := data.DB.Get(&post, q, slug, tilId); err != nil {
 		if err == sql.ErrNoRows {
 			return c.Render("404", fiber.Map{
 				"Slug": slug,
