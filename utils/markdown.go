@@ -53,7 +53,7 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 		goldmark.WithExtensions(
 			&anchor.Extender{
 				Attributer: anchor.Attributes{
-					"class": "!text-gray-400 dark:!text-gray-500 no-underline",
+					"class": "!text-neutral-400 dark:!text-neutral-500 no-underline",
 				},
 				Texter: anchor.Text("#"),
 			},
@@ -96,7 +96,7 @@ func MarkdownToXML(input []byte) bytes.Buffer {
 		goldmark.WithExtensions(
 			&anchor.Extender{
 				Attributer: anchor.Attributes{
-					"class": "!text-gray-400 dark:!text-gray-500 no-underline",
+					"class": "!text-neutral-400 dark:!text-neutral-500 no-underline",
 				},
 				Texter: anchor.Text("#"),
 			},

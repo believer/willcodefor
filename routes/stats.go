@@ -281,7 +281,7 @@ ORDER BY 1,2 ASC`,
 			},
 			AxisLine: &opts.AxisLine{
 				LineStyle: &opts.LineStyle{
-					Color: "#374151",
+					Color: "#a3a3a3",
 				},
 			},
 		}),
@@ -291,16 +291,17 @@ ORDER BY 1,2 ASC`,
 			Max:        10,
 			InRange: &opts.VisualMapInRange{
 				Color: []string{
-					"#e5f3ff",
-					"#cce7ff",
-					"#99cfff",
-					"#66b8ff",
-					"#33a0ff",
-					"#0088ff",
-					"#006dcc",
-					"#005299",
-					"#003666",
-					"#001b33",
+					"#f0f9ff",
+					"#e0f2fe",
+					"#bae6fd",
+					"#7dd3fc",
+					"#38bdf8",
+					"#0ea5e9",
+					"#0284c7",
+					"#0369a1",
+					"#075985",
+					"#0c4a6e",
+					"#082f49",
 				},
 			},
 		}),
@@ -347,10 +348,10 @@ func barAxisValues(views []CountData) ([]string, []opts.BarData) {
 				Value: nil,
 				Label: &opts.Label{
 					Show:  true,
-					Color: "#374151",
+					Color: "#a3a3a3",
 				},
 				ItemStyle: &opts.ItemStyle{
-					Color: "#65bcff",
+					Color: "#0ea5e9",
 				},
 			})
 		} else {
@@ -358,10 +359,10 @@ func barAxisValues(views []CountData) ([]string, []opts.BarData) {
 				Value: v.Count,
 				Label: &opts.Label{
 					Show:  true,
-					Color: "#374151",
+					Color: "#a3a3a3",
 				},
 				ItemStyle: &opts.ItemStyle{
-					Color: "#65bcff",
+					Color: "#0ea5e9",
 				},
 			})
 		}
@@ -507,7 +508,7 @@ from data`,
 				Show: true,
 				LineStyle: &opts.LineStyle{
 					Type:  "dashed",
-					Color: "#374151",
+					Color: "#262626",
 				},
 			},
 		}),
@@ -581,7 +582,7 @@ ORDER BY 1
 				Show: true,
 				LineStyle: &opts.LineStyle{
 					Type:  "dashed",
-					Color: "#374151",
+					Color: "#262626",
 				},
 			},
 		}),

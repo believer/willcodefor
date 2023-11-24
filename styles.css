@@ -7,18 +7,14 @@
 }
 
 ::selection {
-  @apply bg-pink-300 dark:bg-pink-600;
+  @apply bg-emerald-300 dark:bg-emerald-700;
 }
 
 dialog::backdrop {
-  @apply fixed inset-0 bg-tokyoNight-bg/80;
+  @apply fixed inset-0 bg-neutral-400/80 dark:bg-neutral-800/80;
 }
 
 @layer base {
-  body {
-    @apply bg-white dark:bg-tokyoNight-bg dark:text-gray-200;
-  }
-
   details summary::-webkit-details-marker {
     display: none;
   }
@@ -40,15 +36,15 @@ dialog::backdrop {
   }
 
   a {
-    @apply text-brandBlue-600 underline dark:text-tokyoNight-blue;
+    @apply text-sky-700 underline dark:text-sky-500;
   }
 
   hr {
-    @apply my-4 border-gray-200 dark:border-gray-700;
+    @apply my-4 border-neutral-300 dark:border-neutral-700;
   }
 
   abbr[title] {
-    @apply cursor-help border-b-2 border-dashed border-gray-400 no-underline;
+    @apply cursor-help border-b-2 border-dashed border-neutral-400 dark:border-neutral-500 no-underline;
   }
 
   /* Display the abbr title on mobile devices when clicked */
@@ -66,26 +62,6 @@ dialog::backdrop {
 }
 
 @layer components {
-  .markdown h2 {
-    @apply mt-10 mb-4 border-b border-gray-300 pb-4 font-medium text-gray-800 dark:border-gray-600 dark:text-gray-300;
-  }
-
-  .markdown h2:first-of-type {
-    @apply mt-0;
-  }
-
-  .markdown ul {
-    @apply ml-5;
-  }
-
-  .markdown li {
-    @apply list-disc;
-  }
-
-  .markdown li:not(:last-of-type) {
-    @apply mb-4;
-  }
-
   .grid-post {
     grid-template-columns: 1fr max-content;
   }
@@ -102,17 +78,8 @@ dialog::backdrop {
     grid-template-columns: 1fr auto;
   }
 
-  .list-item p a,
-  .markdown a {
-    @apply pb-0 text-blue-600 underline dark:text-blue-400;
-  }
-
-  .markdown a:hover {
-    @apply border-pink-300 bg-pink-300;
-  }
-
   .til-counter::before {
-    @apply absolute -left-14 top-1/2 hidden w-12 -translate-y-1/2 text-right text-xs tabular-nums text-gray-500 dark:text-gray-400;
+    @apply absolute -left-14 top-1/2 hidden w-12 -translate-y-1/2 text-right text-xs tabular-nums text-neutral-500 dark:text-neutral-400;
 
     content: "#" attr(data-til) ": ";
   }
@@ -137,7 +104,7 @@ dialog::backdrop {
   }
 
   .counter-increment::before {
-    @apply w-12 text-right font-mono text-xs tabular-nums text-gray-600;
+    @apply w-12 text-right font-mono text-xs tabular-nums text-neutral-600;
 
     counter-increment: section;
     content: "#" counter(section) ": ";

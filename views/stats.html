@@ -7,22 +7,22 @@
   </button>
 
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "week" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "week" }} text-white dark:text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
     data-time="week"
     onclick="updateTime('week')">Week</button>
 
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "thirty-days" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "thirty-days" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
     data-time="thirty-days"
     onclick="updateTime('thirty-days')">30 days</button>
 
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "this-year" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "this-year" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
     data-time="this-year"
     onclick="updateTime('this-year')">This year</button>
 
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "cumulative" }} text-blue-900 bg-blue-800 dark:bg-blue-300{{ else }} bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "cumulative" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
     data-time="cumulative"
     onclick="updateTime('cumulative')">Cumulative</button>
 </div>
@@ -36,7 +36,7 @@
         {{ .Count }}
       </span>
       <div
-        class="mt-2 text-sm font-normal uppercase text-gray-600 dark:text-gray-700"
+        class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
       >
         Total views
       </div>
@@ -44,7 +44,7 @@
     <div>
       {{ .ViewsPerDay }}
       <div
-        class="mt-2 text-sm font-normal uppercase text-gray-600 dark:text-gray-700"
+        class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
       >
         Views per day (average)
       </div>
@@ -52,36 +52,36 @@
   </div>
   <div class="flex flex-col gap-y-4">
     <div>
-      <h3 class="mb-2 font-semibold uppercase text-gray-500">Browsers</h3>
+      <h3 class="mb-2 font-semibold uppercase text-neutral-500">Browsers</h3>
       <div hx-get="/stats/browsers" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
     </div>
 
     <div>
-      <h3 class="mb-2 font-semibold uppercase text-gray-500">OS</h3>
+      <h3 class="mb-2 font-semibold uppercase text-neutral-500">OS</h3>
       <div hx-get="/stats/os" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
     </div>
 
-    <div class="text-xs text-gray-700 text-right">
+    <div class="text-xs text-neutral-700 text-right">
       This only displays the top five in each category.<br />
       Also, {{ .Bots}} bots are not included.
     </div>
   </div>
 </div>
 
-<h3 class="font-semibold uppercase text-gray-500 hidden sm:block">Post views</h3>
+<h3 class="font-semibold uppercase text-neutral-500 hidden sm:block">Post views</h3>
 <div class="mb-10 hidden sm:block" hx-get="/stats/chart" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
-<h3 class="font-semibold uppercase text-gray-500 hidden sm:block">Week Heatmap</h3>
+<h3 class="font-semibold uppercase text-neutral-500 hidden sm:block">Week Heatmap</h3>
 <div class="hidden sm:block" hx-get="/stats/heatmap" hx-trigger="load"></div>
-<h3 class="font-semibold uppercase text-gray-500 hidden sm:block">Posts created</h3>
+<h3 class="font-semibold uppercase text-neutral-500 hidden sm:block">Posts created</h3>
 <div class="mb-10 hidden sm:block" hx-get="/stats/posts" hx-trigger="load"></div>
 
 <div class="mb-10" hx-preserve id="total-views">
-  <h3 class="mb-4 font-semibold uppercase text-gray-500">Most viewed</h3>
+  <h3 class="mb-4 font-semibold uppercase text-neutral-500">Most viewed</h3>
   <div hx-trigger="load" hx-get="/stats/most-viewed"></div>
 </div>
 
 <div class="mb-10" hx-preserve id="most-viewed-today">
-  <h3 class="mb-4 font-semibold uppercase text-gray-500">Most viewed today</h3>
+  <h3 class="mb-4 font-semibold uppercase text-neutral-500">Most viewed today</h3>
   <div
     hx-trigger="load"
     hx-get="/stats/most-viewed-today"
@@ -109,11 +109,11 @@
       const t = el.dataset.time
 
       if (t === time) {
-        el.classList.add('text-blue-900', 'bg-blue-800', 'dark:bg-blue-300')
-        el.classList.remove('bg-gray-200', 'text-gray-800', 'dark:bg-gray-800', 'dark:text-gray-300')
+        el.classList.add('text-white', 'dark:text-neutral-950', 'bg-sky-700', 'dark:bg-sky-500')
+        el.classList.remove('bg-neutral-200', 'text-neutral-800', 'dark:bg-neutral-800', 'dark:text-neutral-300')
       } else {
-        el.classList.add('bg-gray-200', 'text-gray-800', 'dark:bg-gray-800', 'dark:text-gray-300')
-        el.classList.remove('text-blue-900', 'bg-blue-800', 'dark:bg-blue-300')
+        el.classList.add('bg-neutral-200', 'text-neutral-800', 'dark:bg-neutral-800', 'dark:text-neutral-300')
+        el.classList.remove('text-white', 'dark:text-neutral-950', 'bg-sky-700', 'dark:bg-sky-500')
       }
     })
   }

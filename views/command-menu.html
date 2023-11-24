@@ -1,15 +1,15 @@
 <div
   id="command-menu"
-  class="bg-tokyoNight-bg/30 fixed inset-0 flex justify-center items-center"
+  class="bg-neutral-bg/30 fixed inset-0 flex justify-center items-center"
 >
   <div
-    class="w-[80dvw] md:w-[60dvw] lg:w-[40dvw] rounded shadow-lg bg-tokyoNight-dark p-6 border-gray-800"
+    class="w-[80dvw] md:w-[60dvw] lg:w-[40dvw] rounded shadow-lg bg-neutral-100 dark:bg-neutral-900 p-6 border-neutral-800"
   >
     <input
       autofocus="true"
       type="text"
       name="search"
-      class="mb-4 text-white block w-full rounded-sm border bg-transparent p-2 ring-blue-700 focus:outline-none focus:ring-2 dark:border-gray-800 dark:ring-offset-gray-900"
+      class="mb-4 text-neutral-700 dark:text-neutral-300 border-neutral-400 block w-full rounded-sm border bg-transparent p-2 ring-sky-400 dark:ring-sky-600 focus:outline-none focus:ring-2 dark:border-neutral-800 dark:ring-offset-neutral-900"
       placeholder="Search"
       hx-trigger="keyup changed delay:300ms"
       hx-get="/command-menu"
@@ -19,7 +19,7 @@
     <ul id="command-menu-posts">
       {{ range $index, $p := .Posts }}
       <li
-        class="flex justify-between items-center focus-within:bg-gray-800 p-2 -mx-2 rounded-sm"
+        class="flex justify-between items-center focus-within:bg-neutral-200 dark:focus-within:bg-neutral-800 p-2 -mx-2 rounded-sm"
       >
         <a
           class="focus:outline-none"
@@ -28,7 +28,9 @@
         >
           {{ .Title }}
         </a>
-        <div class="text-xs text-gray-700">(ctrl + {{add $index 1 }})</div>
+        <div class="text-xs text-neutral-400 dark:text-neutral-700">
+          (ctrl + {{add $index 1 }})
+        </div>
       </li>
       {{ end }}
     </ul>

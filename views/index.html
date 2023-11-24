@@ -1,3 +1,9 @@
+{{ block "separator" . }}
+<span
+  class="w-full flex-shrink border-t border-dashed border-neutral-300 dark:border-neutral-700"
+></span>
+{{ end }}
+
 <section class="grid grid-cols-12 gap-6">
   <div class="col-span-12 md:col-start-3 md:col-end-13">
     <header class="text-2xl font-light">
@@ -19,15 +25,50 @@
       >.
     </header>
     <section class="mt-10 flex items-center space-x-6">
-      <GitHub />
-      <Twitter />
+      <a
+        class="flex items-center focus:outline-none rounded bg-neutral-100 p-2 text-neutral-700 ring-1 ring-transparent ring-offset-transparent transition-all hover:ring-2 hover:ring-neutral-200 hover:ring-offset-2 dark:bg-neutral-700 dark:hover:ring-neutral-700 motion-reduce:transition-none hover:text-white dark:text-white focus:ring-2 focus:ring-offset-2 focus:ring-neutral-200 dark:focus:ring-neutral-700 hover:bg-github focus:bg-github"
+        href="https://github.com/believer"
+        aria-label="GitHub profile"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg
+          class="h-6 w-6 fill-current"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <title>GitHub</title>
+          <path
+            d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+          />
+        </svg>
+      </a>
+
+      <a
+        class="flex items-center focus:outline-none rounded bg-neutral-100 p-2 text-neutral-700 ring-1 ring-transparent ring-offset-transparent transition-all hover:ring-2 hover:ring-neutral-200 hover:ring-offset-2 dark:bg-neutral-700 dark:hover:ring-neutral-700 motion-reduce:transition-none hover:text-white dark:text-white focus:ring-2 focus:ring-offset-2 focus:ring-neutral-200 dark:focus:ring-neutral-700 hover:bg-twitter focus:bg-twitter"
+        href="https://twitter.com/rnattochdag"
+        aria-label="Twitter profile"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg
+          class="h-6 w-6 fill-current"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <title>Twitter</title>
+          <path
+            d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"
+          />
+        </svg>
+      </a>
     </section>
   </div>
 </section>
 
 <section class="mt-10 grid gap-6 md:grid-cols-12">
   <header
-    class="col-span-12 text-gray-600 dark:text-gray-400 md:col-span-2 md:text-right"
+    class="col-span-12 text-neutral-600 dark:text-neutral-400 md:col-span-2 md:text-right"
   >
     Latest TIL
   </header>
@@ -64,29 +105,25 @@
 
 <section class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-12">
   <header
-    class="col-span-12 text-gray-600 dark:text-gray-400 md:col-span-2 md:text-right"
+    class="col-span-12 text-neutral-600 dark:text-neutral-400 md:col-span-2 md:text-right"
   >
     Work
   </header>
   <div class="col-span-12 space-y-2 md:col-span-10">
     {{ range .Work }}
     <details>
-      <summary
-        class="group mb-2 flex cursor-pointer items-baseline space-x-4 text-gray-800 dark:text-gray-400"
-      >
+      <summary class="group mb-2 flex cursor-pointer items-baseline space-x-4">
         <span
-          class="flex-none font-medium group-hover:text-brandBlue-600 group-hover:underline dark:group-hover:text-tokyoNight-blue"
+          class="flex-none font-medium group-hover:text-sky-700 group-hover:underline dark:group-hover:text-sky-500"
         >
           {{ .Company }}
         </span>
-        <span
-          class="w-full flex-shrink border-t border-dashed border-gray-300 dark:border-gray-500"
-        ></span>
-        <span class="flex-none text-gray-600 dark:text-gray-400">
+        {{ template "separator" }}
+        <span class="flex-none text-neutral-600 dark:text-neutral-400">
           {{ .Title }}
         </span>
         <span
-          class="flex-none font-mono text-xs tabular-nums text-gray-500 dark:text-gray-400"
+          class="flex-none font-mono text-xs tabular-nums text-neutral-500 dark:text-neutral-400"
         >
           <time datetime="{{ .StartDate }}">{{ .StartDate }}</time>-{{ if
           .EndDate }}<time datetime="{{ .EndDate }}">{{ .EndDate }}</time>{{
@@ -105,31 +142,27 @@
 
 <section class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-12">
   <header
-    class="col-span-12 text-gray-600 dark:text-gray-400 md:col-span-2 md:text-right"
+    class="col-span-12 text-neutral-600 dark:text-neutral-400 md:col-span-2 md:text-right"
   >
     Projects
   </header>
   <div class="col-span-12 space-y-2 md:col-span-10">
     {{ range .Projects }}
     <details>
-      <summary
-        class="group mb-2 flex cursor-pointer items-baseline space-x-4 text-gray-800 dark:text-gray-400"
-      >
+      <summary class="group mb-2 flex cursor-pointer items-baseline space-x-4">
         <span
-          class="flex-none font-medium group-hover:text-brandBlue-600 group-hover:underline dark:group-hover:text-tokyoNight-blue"
+          class="flex-none font-medium group-hover:text-sky-700 group-hover:underline dark:group-hover:text-sky-500"
         >
           {{ .Name }}
         </span>
-        <span
-          class="w-full flex-shrink border-t border-dashed border-gray-300 dark:border-gray-500"
-        ></span>
+        {{ template "separator" }}
       </summary>
       <div class="mb-8 text-sm">
         <div class="flex items-center">
           <div class="mr-5 flex-1">
             <div class="mb-2 flex space-x-2">
               {{ range .Tech }}
-              <div class="text-xs text-gray-600 dark:text-gray-400">
+              <div class="text-xs text-neutral-600 dark:text-neutral-400">
                 {{ . }}
               </div>
               {{ end}}

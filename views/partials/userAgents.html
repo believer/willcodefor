@@ -2,11 +2,13 @@
   {{ range .UserAgents }}
   <li class="grid grid-cols-[auto_1fr_52px] items-center gap-2">
     <span>{{ .Name }}</span>
-    <span class="ml-auto text-sm text-gray-500 dark:text-gray-400 tabular-nums">
+    <span
+      class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 tabular-nums"
+    >
       {{ .Count }}
     </span>
     <span
-      class="text-right font-mono text-xs tabular-nums text-gray-400 dark:text-gray-600"
+      class="text-right font-mono text-xs tabular-nums text-neutral-400 dark:text-neutral-600"
     >
       ({{ .Percent }})
     </span>
