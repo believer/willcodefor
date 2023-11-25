@@ -42,7 +42,9 @@
       </div>
     </div>
     <div>
-      {{ .ViewsPerDay }}
+      <span hx-get="/stats/views-per-day" hx-trigger="load, update-time from:body" hx-vals="js:{ time: time }" hx-swap="innerHTML transition:true">
+      ---
+        </span>
       <div
         class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
       >

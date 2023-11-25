@@ -29,18 +29,15 @@ func timeToQuery(t string) string {
 
 func StatsHandler(c *fiber.Ctx) error {
 	var bots int
-	var viewsPerDay float64
+	var totalViews float64
 	var lessThanOnePercent int
 
 	timeQuery := c.Query("time", "today")
+	timeQueryString := timeToQuery(c.Query("time", "today"))
 
-	// Views per day
-	err := data.DB.Get(&viewsPerDay, `
-    SELECT
-    ROUND((COUNT(id) / (max(created_at)::DATE - min(created_at)::DATE + 1)::NUMERIC), 2) as "viewsPerDay"
-    FROM post_view
-    WHERE is_bot = false
-  `)
+	err := data.DB.Get(&totalViews, `
+SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
+  `, timeQueryString)
 
 	if err != nil {
 		log.Fatal(err)
@@ -71,13 +68,46 @@ WHERE percent_as_number <= 1
 	}
 
 	return c.Render("stats", fiber.Map{
-		"ViewsPerDay":        viewsPerDay,
 		"LessThanOnePercent": lessThanOnePercent,
 		"Bots":               bots,
 		"Time":               timeQuery,
 		"Path":               "/stats",
 	})
+}
 
+func ViewsPerDay(c *fiber.Ctx) error {
+	var totalViews float64
+
+	timeQuery := c.Query("time", "today")
+	timeQuerySQL := timeToQuery(timeQuery)
+
+	err := data.DB.Get(&totalViews, `
+SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
+  `, timeQuerySQL)
+
+	if err != nil {
+		return err
+	}
+
+	viewsPerDay := totalViews
+
+	now := time.Now()
+	daysThisYear := now.YearDay()
+	firstViewDate := time.Date(2022, 6, 8, 17, 41, 0, 0, time.UTC)
+	daysSinceFirstView := now.Sub(firstViewDate).Hours() / 24
+
+	switch timeQuery {
+	case "week":
+		viewsPerDay = totalViews / 7
+	case "thirty-days":
+		viewsPerDay = totalViews / 30
+	case "this-year":
+		viewsPerDay = totalViews / float64(daysThisYear)
+	case "cumulative":
+		viewsPerDay = totalViews / float64(daysSinceFirstView)
+	}
+
+	return c.SendString(fmt.Sprintf("%.2f", viewsPerDay))
 }
 
 func MostViewedHandler(c *fiber.Ctx) error {

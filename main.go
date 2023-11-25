@@ -85,6 +85,7 @@ func main() {
 	// ––––––––––––––––––––––––––––––––––––––––
 	app.Get("/stats", routes.StatsHandler)
 	app.Get("/stats/total-views", routes.TotalViewsHandler)
+	app.Get("/stats/views-per-day", routes.ViewsPerDay)
 	app.Get("/stats/browsers", routes.BrowsersHandler)
 	app.Get("/stats/os", routes.OSHandler)
 	app.Get("/stats/most-viewed", routes.MostViewedHandler)
