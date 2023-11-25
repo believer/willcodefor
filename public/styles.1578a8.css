@@ -1882,6 +1882,22 @@ dialog::backdrop {
   outline-offset: 2px;
 }
 
+.focus\:outline-1:focus {
+  outline-width: 1px;
+}
+
+.focus\:outline-offset-2:focus {
+  outline-offset: 2px;
+}
+
+.focus\:outline-neutral-700:focus {
+  outline-color: #404040;
+}
+
+.focus\:outline-sky-500:focus {
+  outline-color: #0ea5e9;
+}
+
 .focus\:ring-2:focus {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
@@ -1904,6 +1920,14 @@ dialog::backdrop {
 
 .focus\:ring-offset-2:focus {
   --tw-ring-offset-width: 2px;
+}
+
+.focus-visible\:outline-dashed:focus-visible {
+  outline-style: dashed;
+}
+
+.focus-visible\:outline-offset-2:focus-visible {
+  outline-offset: 2px;
 }
 
 .group:focus-within .group-focus-within\:ring-2 {
@@ -2029,6 +2053,14 @@ dialog::backdrop {
   .dark\:focus\:text-neutral-800:focus {
     --tw-text-opacity: 1;
     color: rgb(38 38 38 / var(--tw-text-opacity));
+  }
+
+  .dark\:focus\:outline-neutral-600:focus {
+    outline-color: #525252;
+  }
+
+  .dark\:focus\:outline-sky-700:focus {
+    outline-color: #0369a1;
   }
 
   .dark\:focus\:ring-2:focus {

@@ -1,28 +1,28 @@
 <div class="flex gap-4 items-center justify-center flex-wrap">
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline"
+    class="text-sm px-4 py-2 rounded-md no-underline focus:outline-none focus:outline-1 focus:outline-offset-2 focus:outline-sky-500 dark:focus:outline-sky-700"
     data-time="today"
     onclick="updateTime('today')">
     Today
   </button>
 
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "week" }} text-white dark:text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline focus:outline-none focus:outline-1 focus:outline-offset-2 focus:outline-sky-500 dark:focus:outline-sky-700{{ if eq .Time "week" }} text-white dark:text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
     data-time="week"
     onclick="updateTime('week')">Week</button>
 
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "thirty-days" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline focus:outline-none focus:outline-1 focus:outline-offset-2 focus:outline-sky-500 dark:focus:outline-sky-700{{ if eq .Time "thirty-days" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
     data-time="thirty-days"
     onclick="updateTime('thirty-days')">30 days</button>
 
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "this-year" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline focus:outline-none focus:outline-1 focus:outline-offset-2 focus:outline-sky-500 dark:focus:outline-sky-700{{ if eq .Time "this-year" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
     data-time="this-year"
     onclick="updateTime('this-year')">This year</button>
 
   <button
-    class="text-sm px-4 py-2 rounded-md no-underline{{ if eq .Time "cumulative" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
+    class="text-sm px-4 py-2 rounded-md no-underline focus:outline-none focus:outline-1 focus:outline-offset-2 focus:outline-sky-500 dark:focus:outline-sky-700{{ if eq .Time "cumulative" }} text-neutral-950 bg-sky-700 dark:bg-sky-500{{ else }} bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300{{ end }}"
     data-time="cumulative"
     onclick="updateTime('cumulative')">Cumulative</button>
 </div>
