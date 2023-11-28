@@ -10,6 +10,7 @@ require (
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/gofiber/template/mustache/v2 v2.0.6
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/mileusna/useragent v1.3.3
 	github.com/yuin/goldmark v1.5.6

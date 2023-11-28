@@ -8,12 +8,14 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
+	"github.com/joho/godotenv"
 
 	"github.com/believer/willcodefor-go/data"
 	"github.com/believer/willcodefor-go/routes"
 )
 
 func main() {
+	godotenv.Load()
 	data.InitDB()
 
 	// Set up Fiber and view engine
