@@ -76,14 +76,23 @@ WHERE percent_as_number <= 1
 }
 
 func ViewsPerDay(c *fiber.Ctx) error {
+	var err error
 	var totalViews float64
 
 	timeQuery := c.Query("time", "today")
 	timeQuerySQL := timeToQuery(timeQuery)
 
-	err := data.DB.Get(&totalViews, `
+	if timeQuery == "week" {
+		err = data.DB.Get(&totalViews, `
+SELECT COUNT(*) 
+FROM post_view 
+WHERE is_bot = FALSE AND date_trunc('week', created_at) = date_trunc('week', now());
+`)
+	} else {
+		err = data.DB.Get(&totalViews, `
 SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
   `, timeQuerySQL)
+	}
 
 	if err != nil {
 		return err
@@ -201,13 +210,23 @@ func OSHandler(c *fiber.Ctx) error {
 }
 
 func TotalViewsHandler(c *fiber.Ctx) error {
+	var err error
 	var count int
 
-	timeQuery := timeToQuery(c.Query("time", "today"))
+	timeQuery := c.Query("time", "today")
+	timeQuerySQL := timeToQuery(timeQuery)
 
-	err := data.DB.Get(&count, `
+	if timeQuery == "week" {
+		err = data.DB.Get(&count, `
+SELECT COUNT(*) 
+FROM post_view 
+WHERE is_bot = FALSE AND date_trunc('week', created_at) = date_trunc('week', now());
+`)
+	} else {
+		err = data.DB.Get(&count, `
 SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
-  `, timeQuery)
+  `, timeQuerySQL)
+	}
 
 	if err != nil {
 		log.Fatal(err)
