@@ -15,11 +15,13 @@
     />
     {{ end }}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/public/styles.1578a8.css" rel="stylesheet" />
+    <link href="/public/styles.2fbbe5.css" rel="stylesheet" />
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon" />
     <script src="/public/htmx.1.9.9.min.js"></script>
     <script src="/public/htmx.head-support.js"></script>
-    {{ if eq .Path "/stats" }}<script src="/public/echarts.5.4.3.min.js"></script>{{end}}
+    {{ if eq .Path "/stats" }}
+    <script src="/public/hyperscript.0.9.12.min.js"></script>
+    {{end}}
     <script async src="/public/command-menu.4e6ce0.js"></script>
     {{ if .Metadata }}
     <meta property="og:title" content="{{ .Metadata.Title }}" />

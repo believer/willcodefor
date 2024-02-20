@@ -5,7 +5,6 @@ go 1.20
 require (
 	github.com/alecthomas/chroma/v2 v2.12.0
 	github.com/believer/goldmark-highlighting/v2 v2.0.0-20231124141847-6e3378573797
-	github.com/go-echarts/go-echarts/v2 v2.3.3
 	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/gofiber/template/html/v2 v2.1.1
 	github.com/gofiber/template/mustache/v2 v2.0.9

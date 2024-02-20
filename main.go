@@ -93,7 +93,6 @@ func main() {
 	app.Get("/stats/most-viewed", routes.MostViewedHandler)
 	app.Get("/stats/most-viewed-today", routes.MostViewedTodayHandler)
 	app.Get("/stats/chart", routes.ChartHandler)
-	app.Get("/stats/heatmap", routes.HeatMapHandler)
 	app.Get("/stats/posts", routes.PostsStatsHandler)
 
 	// Redirects to old page

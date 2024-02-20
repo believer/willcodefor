@@ -72,8 +72,6 @@
 
 <h3 class="font-semibold uppercase text-neutral-500 hidden sm:block">Post views</h3>
 <div class="mb-10 hidden sm:block" hx-get="/stats/chart" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
-<h3 class="font-semibold uppercase text-neutral-500 hidden sm:block">Week Heatmap</h3>
-<div class="hidden sm:block" hx-get="/stats/heatmap" hx-trigger="load"></div>
 <h3 class="font-semibold uppercase text-neutral-500 hidden sm:block">Posts created</h3>
 <div class="mb-10 hidden sm:block" hx-get="/stats/posts" hx-trigger="load"></div>
 

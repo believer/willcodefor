@@ -1,14 +1,15 @@
 package routes
 
 import (
+	"cmp"
 	"fmt"
 	"log"
+	"slices"
 	"strconv"
 	"time"
 
 	"github.com/believer/willcodefor-go/data"
-	"github.com/go-echarts/go-echarts/v2/charts"
-	"github.com/go-echarts/go-echarts/v2/opts"
+	"github.com/believer/willcodefor-go/model"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -120,7 +121,7 @@ SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
 }
 
 func MostViewedHandler(c *fiber.Ctx) error {
-	var posts []Post
+	var posts []model.Post
 
 	err := data.DB.Select(&posts, `
 SELECT
@@ -236,7 +237,7 @@ SELECT COUNT(*) FROM post_view WHERE is_bot = FALSE AND created_at >= $1
 }
 
 func MostViewedTodayHandler(c *fiber.Ctx) error {
-	var posts []Post
+	var posts []model.Post
 
 	err := data.DB.Select(&posts, `
 SELECT
@@ -276,149 +277,6 @@ function (info) {
 	return '<div class="tooltip-title">' + value + '</div>';
 }
 `
-
-func HeatMapHandler(c *fiber.Ctx) error {
-	var weekData []CountData
-
-	err := data.DB.Select(&weekData, `WITH days AS (
-    SELECT generate_series(date_trunc('week', current_date), date_trunc('week', current_date) + '6 days'::INTERVAL, '1 hour') as hour
-)
-
-SELECT
-	extract(isodow FROM days.hour) - 1 as date,
-  to_char(days.hour, 'HH24')::int as label,
-  count(pv.id)::int as count
-FROM days
-LEFT JOIN post_view AS pv ON DATE_TRUNC('hour', created_at at time zone 'utc' at time zone 'Europe/Stockholm') = days.hour AND pv.is_bot = false
-LEFT JOIN post AS p ON p.id = pv.post_id
-GROUP BY 1, days.hour
-ORDER BY 1,2 ASC`,
-	)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	weekDays := [...]string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
-	hm := charts.NewHeatMap()
-
-	hm.SetGlobalOptions(
-		charts.WithInitializationOpts(opts.Initialization{
-			Width:  "100%",
-			Height: "250px",
-		}),
-		charts.WithLegendOpts(opts.Legend{
-			Show: false,
-		}),
-		charts.WithGridOpts(opts.Grid{
-			Left:   "8%",
-			Right:  "2%",
-			Bottom: "20%",
-			Top:    "5%",
-		}),
-		charts.WithXAxisOpts(opts.XAxis{
-			Type: "category",
-			SplitArea: &opts.SplitArea{
-				Show: true,
-			},
-		}),
-		charts.WithYAxisOpts(opts.YAxis{
-			Type: "category",
-			Data: weekDays,
-			SplitArea: &opts.SplitArea{
-				Show: true,
-			},
-			AxisLine: &opts.AxisLine{
-				LineStyle: &opts.LineStyle{
-					Color: "#a3a3a3",
-				},
-			},
-		}),
-		charts.WithVisualMapOpts(opts.VisualMap{
-			Calculable: true,
-			Min:        0,
-			Max:        10,
-			InRange: &opts.VisualMapInRange{
-				Color: []string{
-					"#f0f9ff",
-					"#e0f2fe",
-					"#bae6fd",
-					"#7dd3fc",
-					"#38bdf8",
-					"#0ea5e9",
-					"#0284c7",
-					"#0369a1",
-					"#075985",
-					"#0c4a6e",
-					"#082f49",
-				},
-			},
-		}),
-		charts.WithTooltipOpts(opts.Tooltip{
-			Show:      true,
-			Trigger:   "item",
-			Formatter: opts.FuncOpts(ToolTipFormatter),
-		}),
-	)
-
-	var heatmapData []opts.HeatMapData
-
-	for _, v := range weekData {
-		x, _ := strconv.Atoi(v.Label)
-		y, _ := strconv.Atoi(v.Date)
-
-		if v.Count == 0 {
-			heatmapData = append(heatmapData, opts.HeatMapData{
-				Value: []interface{}{x, y, nil},
-			})
-		} else {
-			heatmapData = append(heatmapData, opts.HeatMapData{
-				Value: []interface{}{x, y, v.Count},
-			})
-		}
-	}
-
-	hm.AddSeries("Views for hour", heatmapData)
-
-	hm.PageTitle = "Rickard Natt och Dag"
-
-	return hm.Render(c)
-}
-
-func barAxisValues(views []CountData) ([]string, []opts.BarData) {
-	var xAxis []string
-	var yAxis []opts.BarData
-
-	for _, v := range views {
-		xAxis = append(xAxis, v.Label)
-
-		if v.Count == 0 {
-			yAxis = append(yAxis, opts.BarData{
-				Value: nil,
-				Label: &opts.Label{
-					Show:  true,
-					Color: "#a3a3a3",
-				},
-				ItemStyle: &opts.ItemStyle{
-					Color: "#0ea5e9",
-				},
-			})
-		} else {
-			yAxis = append(yAxis, opts.BarData{
-				Value: v.Count,
-				Label: &opts.Label{
-					Show:  true,
-					Color: "#a3a3a3",
-				},
-				ItemStyle: &opts.ItemStyle{
-					Color: "#0ea5e9",
-				},
-			})
-		}
-	}
-
-	return xAxis, yAxis
-}
 
 func ChartHandler(c *fiber.Ctx) error {
 	var views []CountData
@@ -528,55 +386,11 @@ from data`,
 		}
 	}
 
-	bar := charts.NewBar()
+	data, err := constructGraphFromData(views)
 
-	bar.SetGlobalOptions(
-		charts.WithInitializationOpts(opts.Initialization{
-			Width:  "100%",
-			Height: "250px",
-		}),
-		charts.WithLegendOpts(opts.Legend{
-			Show: false,
-		}),
-		charts.WithGridOpts(opts.Grid{
-			Left:   "8%",
-			Right:  "2%",
-			Bottom: "8%",
-			Top:    "8%",
-		}),
-		charts.WithTooltipOpts(opts.Tooltip{
-			Show:      true,
-			Trigger:   "item",
-			Formatter: "{b}: {c}",
-		}),
-		charts.WithYAxisOpts(opts.YAxis{
-			AxisLabel: &opts.AxisLabel{
-				Show: false,
-			},
-			SplitLine: &opts.SplitLine{
-				Show: true,
-				LineStyle: &opts.LineStyle{
-					Type:  "dashed",
-					Color: "#262626",
-				},
-			},
-		}),
-	)
-
-	xAxis, yAxis := barAxisValues(views)
-
-	// Put data into instance
-	bar.SetXAxis(xAxis).AddSeries("Data", yAxis).
-		SetSeriesOptions(
-			charts.WithLabelOpts(opts.Label{
-				Show:     true,
-				Position: "top",
-			}),
-		)
-
-	bar.PageTitle = "Rickard Natt och Dag"
-
-	return bar.Render(c)
+	return c.Render("partials/graph", fiber.Map{
+		"Bars": data,
+	}, "")
 }
 
 func PostsStatsHandler(c *fiber.Ctx) error {
@@ -602,53 +416,82 @@ ORDER BY 1
 		log.Fatal(err)
 	}
 
-	bar := charts.NewBar()
+	data, err := constructGraphFromData(posts)
 
-	bar.SetGlobalOptions(
-		charts.WithInitializationOpts(opts.Initialization{
-			Width:  "100%",
-			Height: "250px",
-		}),
-		charts.WithLegendOpts(opts.Legend{
-			Show: false,
-		}),
-		charts.WithGridOpts(opts.Grid{
-			Left:   "8%",
-			Right:  "2%",
-			Bottom: "8%",
-			Top:    "8%",
-		}),
-		charts.WithTooltipOpts(opts.Tooltip{
-			Show:      true,
-			Trigger:   "item",
-			Formatter: "{b}: {c}",
-		}),
-		charts.WithYAxisOpts(opts.YAxis{
-			AxisLabel: &opts.AxisLabel{
-				Show: false,
-			},
-			SplitLine: &opts.SplitLine{
-				Show: true,
-				LineStyle: &opts.LineStyle{
-					Type:  "dashed",
-					Color: "#262626",
-				},
-			},
-		}),
-	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	xAxis, yAxis := barAxisValues(posts)
+	return c.Render("partials/graph", fiber.Map{
+		"Bars": data,
+	}, "")
+}
 
-	// Put data into instance
-	bar.SetXAxis(xAxis).AddSeries("Data", yAxis).
-		SetSeriesOptions(
-			charts.WithLabelOpts(opts.Label{
-				Show:     true,
-				Position: "top",
-			}),
+type Bar struct {
+	Label     string
+	Value     int
+	BarHeight int
+	BarWidth  int
+	BarX      int
+	BarY      int
+	LabelX    float64
+	LabelY    float64
+	ValueX    float64
+	ValueY    int
+}
+
+func constructGraphFromData(data []CountData) ([]Bar, error) {
+	var graphData []Bar
+
+	graphHeight := 200
+	graphWidth := 900
+	maxCount := slices.MaxFunc(data, func(a, b CountData) int {
+		return cmp.Compare(a.Count, b.Count)
+	})
+
+	// The data is used for a bar chart, so we need to convert the data
+	for i, row := range data {
+		var (
+			// Calcualte the bar Height
+			// Subtract 20 from the maxBarHeight to make room for the text
+			barHeight = int(float64(row.Count) / float64(maxCount.Count) * float64(graphHeight-40))
+			barWidth  = int(float64(graphWidth)/float64(len(data))) - 5
+
+			// Space the bars evenly across the graph
+			barX = (graphWidth / len(data)) * i
+			barY = graphHeight - barHeight - 20
 		)
 
-	bar.PageTitle = "Rickard Natt och Dag"
+		// Position centered on the bar. Subtract 3.4 which is half the width of the text.
+		charWidth := 8.67 // Uses tabular nums so all characters are the same width
+		numberOfCharsInCount := len(strconv.Itoa(row.Count))
+		numberOfCharsInRating := len(row.Label)
 
-	return bar.Render(c)
+		halfWidthOfCount := charWidth * float64(numberOfCharsInCount) / 2
+		halfWidthOfRating := charWidth * float64(numberOfCharsInRating) / 2
+
+		valueX := float64(barX+(barWidth/2)) - halfWidthOfCount
+		labelX := float64(barX+(barWidth/2)) - halfWidthOfRating
+
+		// Subtract 8 to put some space between the text and the bar
+		valueY := barY - 8
+		// 16,5 is the height of the text
+		labelY := float64(barY) + float64(barHeight) + 20
+
+		// Add the data to the graphData slice
+		graphData = append(graphData, Bar{
+			Label:     row.Label,
+			Value:     row.Count,
+			BarHeight: barHeight,
+			BarWidth:  barWidth,
+			BarX:      barX,
+			BarY:      barY,
+			ValueX:    valueX,
+			ValueY:    valueY,
+			LabelX:    labelX,
+			LabelY:    labelY,
+		})
+	}
+
+	return graphData, nil
 }
