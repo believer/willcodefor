@@ -1,0 +1,23 @@
+package views
+
+import (
+	"strings"
+	"github.com/believer/willcodefor-go/data"
+)
+
+templ Iteam() {
+	@Layout(data.Metadata{}) {
+		<div class="col-span-12 md:col-start-3 md:col-end-13 flex gap-8 flex-col">
+			for _, project := range data.IteamProjects {
+				<div>
+					<h2>{ project.Name }</h2>
+					<p class="text-sm text-neutral-500">{ project.Role }</p>
+					<p>{ project.Description }</p>
+					<div class="mt-4 text-xs dark:text-neutral-600">
+						{ strings.Join(project.Tech, ", ") }
+					</div>
+				</div>
+			}
+		</div>
+	}
+}

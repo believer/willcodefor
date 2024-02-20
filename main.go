@@ -12,6 +12,8 @@ import (
 
 	"github.com/believer/willcodefor-go/data"
 	"github.com/believer/willcodefor-go/routes"
+	"github.com/believer/willcodefor-go/utils"
+	"github.com/believer/willcodefor-go/views"
 )
 
 func main() {
@@ -80,7 +82,7 @@ func main() {
 	// Other
 	// ––––––––––––––––––––––––––––––––––––––––
 	app.Get("/iteam", func(c *fiber.Ctx) error {
-		return c.Render("iteam", fiber.Map{})
+		return utils.TemplRender(c, views.Iteam())
 	})
 
 	// Stats

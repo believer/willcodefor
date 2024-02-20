@@ -1,0 +1,67 @@
+package views
+
+import (
+	"github.com/believer/willcodefor-go/data"
+	"github.com/believer/willcodefor-go/components"
+)
+
+templ Index(posts []data.Post) {
+	@Layout(data.Metadata{}) {
+		<section class="grid grid-cols-12 gap-6">
+			<div class="col-span-12 md:col-start-3 md:col-end-13">
+				<header class="text-2xl font-light">
+					<h1 class="mb-5 text-4xl font-bold md:text-5xl">Rickard Natt och Dag</h1>
+					Hej! I'm a developer from Sweden. I enjoy making user-friendly websites
+					and creating tools that make life easier for other developers. I currently
+					love working with 
+					@components.ExternalLink("https://htmx.org/") {
+						htmx
+					}
+					, 
+					@components.ExternalLink("https://go.dev/") {
+						Go<span class="sr-only">(The programming langauge)</span>
+					}
+					, and 
+					@components.ExternalLink("https://www.rust-lang.org/") {
+						Rust
+					}
+					.
+				</header>
+				<section class="mt-10 flex items-center space-x-6">
+					@GitHub()
+					@Twitter()
+				</section>
+			</div>
+		</section>
+		<section class="mt-10 grid gap-6 md:grid-cols-12">
+			<header
+				class="col-span-12 text-neutral-600 dark:text-neutral-400 md:col-span-2 md:text-right"
+			>
+				Latest TIL
+			</header>
+			<div class="col-span-12 md:col-span-10">
+				<p class="mt-0">
+					Today I Learned (TIL) are interesting things I've found on the web, ideas,
+					thoughts, and reminders regarding software development. I see it as a
+					second brain for all things related to development and a way for me to
+					practice
+					<a href="/posts/learning-in-public">Learning in public</a>.
+				</p>
+				<p>
+					This is heavily inspired by Lee Byron's 
+					@components.ExternalLink("https://leebyron.com/til") {
+						TIL
+					}
+					{ " " }
+					and builds on top of my initial attempt with my
+					<a href="https://devlog.willcodefor.beer">Devlog</a>.
+				</p>
+				@components.PostList(posts, "")
+				<div class="mt-4 flex gap-4 justify-end">
+					<a href="/stats" hx-boost="false">Stats</a>
+					<a href="feed.xml" hx-boost="false">Feed</a>
+				</div>
+			</div>
+		</section>
+	}
+}

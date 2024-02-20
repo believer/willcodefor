@@ -1,0 +1,7 @@
+package components
+
+templ ExternalLink(href string) {
+	<a href={ templ.SafeURL(href) } target="_blank" rel="noopener noreferrer">
+		{ children... }
+	</a>
+}

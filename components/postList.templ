@@ -1,0 +1,54 @@
+package components
+
+import (
+	"github.com/believer/willcodefor-go/data"
+	"fmt"
+	"strconv"
+)
+
+templ PostList(posts []data.Post, sortOrder string) {
+	<ol class="mt-8 space-y-2 sm:space-y-4">
+		for _, post := range posts {
+			<li
+				class="til-counter grid-post relative grid w-full items-baseline gap-4 sm:inline-flex sm:gap-5"
+				data-til={ strconv.Itoa(post.TILID) }
+			>
+				<a href={ templ.URL(fmt.Sprintf("/posts/%s", post.Slug)) } hx-swap="innerHTML transition:true" style="view-transition-name: title-{{ .TILID }}">{ post.Title }</a>
+				<hr
+					class="m-0 hidden flex-1 border-dashed border-neutral-300 dark:border-neutral-700 sm:block"
+				/>
+				if sortOrder == "views" {
+					<div
+						class="font-mono text-xs tabular-nums text-neutral-500 dark:text-neutral-400"
+					>
+						{ fmt.Sprintf("%d views", post.Views) }
+					</div>
+				} else if sortOrder == "updatedAt" {
+					<time
+						class="font-mono text-xs tabular-nums text-neutral-500 dark:text-neutral-400"
+						datetime={ post.UpdatedAt.Format("2006-01-02T15:04:05Z") }
+					>
+						<span class="hidden sm:block">
+							{ post.UpdatedAt.Format("2006-01-02 15:04")  }
+						</span>
+						<span class="block sm:hidden">
+							{ post.UpdatedAt.Format("2006-01-02") }
+						</span>
+					</time>
+				} else {
+					<time
+						class="font-mono text-xs tabular-nums text-neutral-500 dark:text-neutral-400"
+						datetime={ post.CreatedAt.Format("2006-01-02T15:04:05Z") }
+					>
+						<span class="hidden sm:block">
+							{ post.CreatedAt.Format("2006-01-02 15:04" ) }
+						</span>
+						<span class="block sm:hidden">
+							{ post.CreatedAt.Format ("2006-01-02" ) }
+						</span>
+					</time>
+				}
+			</li>
+		}
+	</ol>
+}

@@ -9,6 +9,13 @@ type Project struct {
 	Tech        []string
 }
 
+type IteamProject struct {
+	Description string
+	Name        string
+	Tech        []string
+	Role        string
+}
+
 type Work struct {
 	Company         string
 	Description     string
@@ -108,6 +115,80 @@ var Positions = [5]Work{
 		Title:       "Interaction designer",
 		Description: "<p>MatHem delivers groceries directly to your door, either as a prepackaged concept with recipes or as individual products of your choosing. MatHem has been selected as one of the best Swedish online stores two years running by Internetworld.</p><p>My job was mostly front-end development. I made mockups in Photoshop and then implemented the HTML, CSS and some jQuery on the website. I also made flash banners for advertising campaigns.</p>",
 	},
+}
+
+var IteamProjects = [13]IteamProject{
+	{
+		Name:        "Energiföretagen",
+		Description: "Complete rebuild of Energiföretagens publications website, EBR-e, on top of their existing Episerver.",
+		Tech:        []string{"React", "TypeScript", "Node", "GraphQL", "AWS", "Docker", "PostgreSQL", ".NET", "ElasticSearch"},
+		Role:        "Full stack developer ~ 2019",
+	},
+	{
+		Name:        "Motorbranschens Riksförbund",
+		Description: "Development of a new web-based system for car service workshops and billing insurance companies. The challenges of this project include supporting all legal requirements of GDPR, bookkeeping law and building a system with the end user in focus.",
+		Tech:        []string{"ReScript (rescript-react)", "Node", "GraphQL", "PostgreSQL"},
+		Role:        "Full stack developer ~ 2019 – 2020",
+	},
+	{
+		Name:        "Arbetsförmedlingen",
+		Description: "A service that made it easier for people who are new in Sweden to establish themselves on the Swedish job market.",
+		Tech:        []string{"React", "Node", "GraphQL", "Docker", "PostgreSQL"},
+		Role:        "Full stack developer ~ 2017 – 2019",
+	},
+	{
+		Name:        "Vimla",
+		Description: "Vimla is Telenor's fighter brand. I was with them from the beginning and have helped them build multiple platforms including their website, app, API, forum, knowledge base and much more.",
+		Tech:        []string{"React", "React Native", "Node", "Docker", "MongoDB", "NodeBB", "Flow", "TypeScript"},
+		Role:        "Full stack developer ~ 2014 – 2018",
+	},
+	{
+		Name:        "Playpilot",
+		Description: "Help them get started with setting up a GraphQL API on top of their existing REST API.",
+
+		Tech: []string{"Node", "GraphQL", "TypeScript"},
+
+		Role: "Backend developer ~ 2018"},
+	{
+		Name:        "Läkare utan gränser (MSF)",
+		Description: "Digitalization of the recruitment process. Before there was a lot of paperwork and manual labor, but we helped MSF by building a web app that the recruiters could use on a tablet. These applications were then automatically processed through the system.",
+		Tech:        []string{"React", "PWA"},
+		Role:        "Frontend developer ~ 2016 – 2017"},
+	{
+		Name:        "Kvalitetsbygg",
+		Description: "Assisting an existing team of developers abroad with development and writing testable Angular.",
+		Tech:        []string{"AngularJS", "Mocha"},
+		Role:        "Frontend developer ~ 2016 – 2017"},
+	{
+		Name:        "Taxi Stockholm",
+		Description: "Multiple frontend and backend projects.",
+		Tech:        []string{"React", "React Native", "Node"},
+		Role:        "Frontend developer ~ 2016 – 2017"},
+	{
+		Name:        "Svensk Förening för Allmänmedicin",
+		Description: "Rebuild of their website",
+		Tech:        []string{},
+		Role:        "Frontend developer ~ 2016"},
+	{
+		Name:        "Swedbank",
+		Description: "Building their new internet bank and mentoring their Java developers in JavaScript and CSS.",
+		Tech:        []string{"AngularJS", "Mentoring"},
+		Role:        "Frontend developer / Mentor ~ 2015 – 2016"},
+	{
+		Name:        "Besedo",
+		Description: "Auditing system for ads on services like Blocket.",
+		Tech:        []string{"AngularJS", "Node"},
+		Role:        "Frontend developer ~ 2015 – 2016"},
+	{
+		Name:        "Radical FM",
+		Description: "Built a webapp for music streaming with all the basic features of a music streaming service we know today, but also with the ability to add your voice and stream to each other to make it more like your own radio station.",
+		Tech:        []string{"AngularJS", "ElasticSearch"},
+		Role:        "Frontend developer ~ 2013 – 2014"},
+	{
+		Name:        "Beckers",
+		Description: "Rebuilding the user-facing websites for customer and companies",
+		Tech:        []string{"HTML", "CSS", "jQuery"},
+		Role:        "Frontend developer ~ 2012 – 2013"},
 }
 
 func init() {

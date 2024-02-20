@@ -4,11 +4,13 @@ import (
 	"log"
 
 	"github.com/believer/willcodefor-go/data"
+	"github.com/believer/willcodefor-go/utils"
+	"github.com/believer/willcodefor-go/views"
 	"github.com/gofiber/fiber/v2"
 )
 
 func IndexHandler(c *fiber.Ctx) error {
-	posts := []Post{}
+	posts := []data.Post{}
 	err := data.DB.Select(&posts, `
     SELECT
       title,
@@ -26,17 +28,17 @@ func IndexHandler(c *fiber.Ctx) error {
 		c.JSON("Oh no")
 	}
 
-	return c.Render("index", fiber.Map{
-		"Path":     "/",
-		"Posts":    posts,
-		"Projects": data.Projects,
-		"Work":     data.Positions,
-	})
+	return utils.TemplRender(c, views.Index(posts))
+	// 	"Path":     "/",
+	// 	"Posts":    posts,
+	// 	"Projects": data.Projects,
+	// 	"Work":     data.Positions,
+	// })
 }
 
 func CommandMenuHandler(c *fiber.Ctx) error {
 	search := c.Query("search")
-	posts := []Post{}
+	posts := []data.Post{}
 
 	q := `
     SELECT title, slug

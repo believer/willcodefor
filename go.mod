@@ -3,6 +3,7 @@ module github.com/believer/willcodefor-go
 go 1.20
 
 require (
+	github.com/a-h/templ v0.2.543
 	github.com/alecthomas/chroma/v2 v2.12.0
 	github.com/believer/goldmark-highlighting/v2 v2.0.0-20231124141847-6e3378573797
 	github.com/go-echarts/go-echarts/v2 v2.3.3
