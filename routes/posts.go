@@ -7,45 +7,19 @@ import (
 	"path"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/believer/willcodefor-go/data"
+	"github.com/believer/willcodefor-go/model"
 	"github.com/believer/willcodefor-go/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/mileusna/useragent"
 )
 
-type Post struct {
-	Body      string    `db:"body"`
-	CreatedAt time.Time `db:"created_at"`
-	Excerpt   string    `db:"excerpt"`
-	ID        int       `db:"id"`
-	Series    string    `db:"series"`
-	Slug      string    `db:"slug"`
-	TILID     int       `db:"til_id"`
-	Title     string    `db:"title"`
-	UpdatedAt time.Time `db:"updated_at"`
-	Views     int       `db:"views"`
-}
-
-func (p Post) BodyAsHTML() string {
-	body := utils.MarkdownToHTML([]byte(p.Body))
-	return body.String()
-}
-
-func (p Post) BodyAsXML() string {
-	body := utils.MarkdownToXML([]byte(p.Body))
-	return body.String()
-}
-
-func (p Post) UpdatedAtAsISO() string {
-	return p.UpdatedAt.Format(time.RFC3339)
-}
-
 func NewNullString(s string) sql.NullString {
 	if len(s) == 0 {
 		return sql.NullString{}
 	}
+
 	return sql.NullString{
 		String: s,
 		Valid:  true,
@@ -53,7 +27,7 @@ func NewNullString(s string) sql.NullString {
 }
 
 func PostsHandler(c *fiber.Ctx) error {
-	posts := []Post{}
+	posts := []model.Post{}
 	sortOrder := c.Query("sort", "createdAt")
 	q := `
     SELECT
@@ -96,7 +70,7 @@ func PostsHandler(c *fiber.Ctx) error {
 }
 
 func PostsSearchHandler(c *fiber.Ctx) error {
-	posts := []Post{}
+	posts := []model.Post{}
 	search := c.Query("search")
 	q := `
     SELECT
@@ -128,7 +102,7 @@ func PostsSearchHandler(c *fiber.Ctx) error {
 }
 
 func PostsViewsHandler(c *fiber.Ctx) error {
-	posts := []Post{}
+	posts := []model.Post{}
 	q := `
     SELECT
       p.title,
@@ -158,7 +132,7 @@ func PostsViewsHandler(c *fiber.Ctx) error {
 
 func PostHandler(c *fiber.Ctx) error {
 	slug := c.Params("slug")
-	post := Post{}
+	post := model.Post{}
 
 	// Self healing slug
 	parts := strings.Split(path.Base(slug), "-")
@@ -211,7 +185,7 @@ func PostHandler(c *fiber.Ctx) error {
 
 func PostNextHandler(c *fiber.Ctx) error {
 	id := c.Params("id")
-	nextPost := Post{}
+	nextPost := model.Post{}
 	q := `
     SELECT title, slug, til_id
     FROM post
@@ -234,7 +208,7 @@ func PostNextHandler(c *fiber.Ctx) error {
 
 func PostPreviousHandler(c *fiber.Ctx) error {
 	id := c.Params("id")
-	prevPost := Post{}
+	prevPost := model.Post{}
 	q := `
     SELECT title, slug, til_id
     FROM post
@@ -326,7 +300,7 @@ func PostStatsHandler(c *fiber.Ctx) error {
 }
 
 func PostSeriesHandler(c *fiber.Ctx) error {
-	posts := []Post{}
+	posts := []model.Post{}
 	series := c.Params("series")
 	slug := c.Query("slug")
 	q := `

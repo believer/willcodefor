@@ -4,11 +4,12 @@ import (
 	"log"
 
 	"github.com/believer/willcodefor-go/data"
+	"github.com/believer/willcodefor-go/model"
 	"github.com/gofiber/fiber/v2"
 )
 
 func IndexHandler(c *fiber.Ctx) error {
-	posts := []Post{}
+	posts := []model.Post{}
 	err := data.DB.Select(&posts, `
     SELECT
       title,
@@ -36,7 +37,7 @@ func IndexHandler(c *fiber.Ctx) error {
 
 func CommandMenuHandler(c *fiber.Ctx) error {
 	search := c.Query("search")
-	posts := []Post{}
+	posts := []model.Post{}
 
 	q := `
     SELECT title, slug

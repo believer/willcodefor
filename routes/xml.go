@@ -5,17 +5,18 @@ import (
 	"time"
 
 	"github.com/believer/willcodefor-go/data"
+	"github.com/believer/willcodefor-go/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/mustache/v2"
 )
 
 type PostWithParsedDate struct {
-	Post
+	model.Post
 	UpdatedAtParsed string
 }
 
 func FeedHandler(c *fiber.Ctx) error {
-	posts := []Post{}
+	posts := []model.Post{}
 	engineXML := mustache.New("./xmls", ".xml")
 
 	if err := engineXML.Load(); err != nil {
@@ -54,7 +55,7 @@ func FeedHandler(c *fiber.Ctx) error {
 }
 
 func SitemapHandler(c *fiber.Ctx) error {
-	posts := []Post{}
+	posts := []model.Post{}
 	engineXML := mustache.New("./xmls", ".xml")
 
 	if err := engineXML.Load(); err != nil {
