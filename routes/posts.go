@@ -260,7 +260,7 @@ func PostStatsHandler(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 	env := os.Getenv("APP_ENV")
-	userAgent := c.GetReqHeaders()["User-Agent"]
+	userAgent := c.GetReqHeaders()["User-Agent"][0]
 
 	if userAgent != "" && env == "production" {
 		engine := ""

@@ -118,7 +118,7 @@ func main() {
 	port := os.Getenv("PORT")
 
 	if port == "" {
-		port = "4002"
+		port = "3000"
 	}
 
 	// Serve static files
