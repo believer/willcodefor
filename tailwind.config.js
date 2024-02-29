@@ -5,7 +5,6 @@ export default {
 		extend: {
 			colors: {
 				github: "#181717",
-				twitter: "#1da1f2",
 			},
 			typography: (theme) => ({
 				DEFAULT: {
