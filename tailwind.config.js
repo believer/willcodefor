@@ -9,10 +9,8 @@ export default {
 			typography: (theme) => ({
 				DEFAULT: {
 					css: {
-						"--tw-prose-links": theme("colors.sky[700]"),
 						"--tw-prose-quote-borders": theme("colors.sky[400]"),
 						"--tw-prose-hr": theme("colors.neutral[300]"),
-						"--tw-prose-invert-links": theme("colors.sky[500]"),
 						"--tw-prose-invert-quote-borders": theme("colors.sky[600]"),
 						"--tw-prose-invert-hr": theme("colors.neutral[700]"),
 						".tag a": {
@@ -24,10 +22,6 @@ export default {
 						},
 						blockquote: {
 							fontStyle: "normal",
-						},
-						hr: {
-							marginBottom: "20px",
-							marginTop: "20px",
 						},
 						"hr ~ ul": {
 							listStyle: "none",

@@ -749,8 +749,8 @@ abbr[title]:focus::after,
 .prose :where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
   border-color: var(--tw-prose-hr);
   border-top-width: 1px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 3em;
+  margin-bottom: 3em;
 }
 
 .prose :where(blockquote):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
@@ -996,7 +996,7 @@ abbr[title]:focus::after,
   --tw-prose-body: #374151;
   --tw-prose-headings: #111827;
   --tw-prose-lead: #4b5563;
-  --tw-prose-links: #0369a1;
+  --tw-prose-links: #111827;
   --tw-prose-bold: #111827;
   --tw-prose-counters: #6b7280;
   --tw-prose-bullets: #d1d5db;
@@ -1014,7 +1014,7 @@ abbr[title]:focus::after,
   --tw-prose-invert-body: #d1d5db;
   --tw-prose-invert-headings: #fff;
   --tw-prose-invert-lead: #9ca3af;
-  --tw-prose-invert-links: #0ea5e9;
+  --tw-prose-invert-links: #fff;
   --tw-prose-invert-bold: #fff;
   --tw-prose-invert-counters: #9ca3af;
   --tw-prose-invert-bullets: #4b5563;
@@ -1156,6 +1156,45 @@ abbr[title]:focus::after,
 
 .prose :where(hr ~ ul li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
   padding-left: 0;
+}
+
+.prose-neutral {
+  --tw-prose-body: #404040;
+  --tw-prose-headings: #171717;
+  --tw-prose-lead: #525252;
+  --tw-prose-links: #171717;
+  --tw-prose-bold: #171717;
+  --tw-prose-counters: #737373;
+  --tw-prose-bullets: #d4d4d4;
+  --tw-prose-hr: #e5e5e5;
+  --tw-prose-quotes: #171717;
+  --tw-prose-quote-borders: #e5e5e5;
+  --tw-prose-captions: #737373;
+  --tw-prose-kbd: #171717;
+  --tw-prose-kbd-shadows: 23 23 23;
+  --tw-prose-code: #171717;
+  --tw-prose-pre-code: #e5e5e5;
+  --tw-prose-pre-bg: #262626;
+  --tw-prose-th-borders: #d4d4d4;
+  --tw-prose-td-borders: #e5e5e5;
+  --tw-prose-invert-body: #d4d4d4;
+  --tw-prose-invert-headings: #fff;
+  --tw-prose-invert-lead: #a3a3a3;
+  --tw-prose-invert-links: #fff;
+  --tw-prose-invert-bold: #fff;
+  --tw-prose-invert-counters: #a3a3a3;
+  --tw-prose-invert-bullets: #525252;
+  --tw-prose-invert-hr: #404040;
+  --tw-prose-invert-quotes: #f5f5f5;
+  --tw-prose-invert-quote-borders: #404040;
+  --tw-prose-invert-captions: #a3a3a3;
+  --tw-prose-invert-kbd: #fff;
+  --tw-prose-invert-kbd-shadows: 255 255 255;
+  --tw-prose-invert-code: #fff;
+  --tw-prose-invert-pre-code: #d4d4d4;
+  --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
+  --tw-prose-invert-th-borders: #525252;
+  --tw-prose-invert-td-borders: #404040;
 }
 
 .grid-post {
@@ -2073,6 +2112,53 @@ dialog::backdrop {
   text-decoration-line: underline;
 }
 
+.prose-a\:border-b :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  border-bottom-width: 1px;
+}
+
+.prose-a\:border-sky-700 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  --tw-border-opacity: 1;
+  border-color: rgb(3 105 161 / var(--tw-border-opacity));
+}
+
+.prose-a\:text-neutral-700 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  --tw-text-opacity: 1;
+  color: rgb(64 64 64 / var(--tw-text-opacity));
+}
+
+.prose-a\:no-underline :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  text-decoration-line: none;
+}
+
+.prose-a\:transition-colors :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.hover\:prose-a\:text-sky-700 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))):hover {
+  --tw-text-opacity: 1;
+  color: rgb(3 105 161 / var(--tw-text-opacity));
+}
+
+.focus\:prose-a\:text-sky-700 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))):focus {
+  --tw-text-opacity: 1;
+  color: rgb(3 105 161 / var(--tw-text-opacity));
+}
+
+.focus\:prose-a\:outline-dashed :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))):focus {
+  outline-style: dashed;
+}
+
+.focus\:prose-a\:outline-offset-2 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))):focus {
+  outline-offset: 2px;
+}
+
+.prose-hr\:my-5 :is(:where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .motion-reduce\:transition-none {
     transition-property: none;
@@ -2326,6 +2412,30 @@ dialog::backdrop {
   .group:hover .dark\:group-hover\:text-sky-500 {
     --tw-text-opacity: 1;
     color: rgb(14 165 233 / var(--tw-text-opacity));
+  }
+
+  .dark\:prose-a\:border-sky-500 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+    --tw-border-opacity: 1;
+    border-color: rgb(14 165 233 / var(--tw-border-opacity));
+  }
+
+  .dark\:prose-a\:text-neutral-300 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+    --tw-text-opacity: 1;
+    color: rgb(212 212 212 / var(--tw-text-opacity));
+  }
+
+  .dark\:hover\:prose-a\:text-sky-500 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))):hover {
+    --tw-text-opacity: 1;
+    color: rgb(14 165 233 / var(--tw-text-opacity));
+  }
+
+  .dark\:focus\:prose-a\:text-sky-500 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))):focus {
+    --tw-text-opacity: 1;
+    color: rgb(14 165 233 / var(--tw-text-opacity));
+  }
+
+  .dark\:focus\:prose-a\:outline-neutral-600 :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))):focus {
+    outline-color: #525252;
   }
 }
 
