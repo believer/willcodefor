@@ -15,7 +15,7 @@
     />
     {{ end }}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/public/styles.7b29ad.css" rel="stylesheet" />
+    <link href="/public/styles.css" rel="stylesheet" />
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon" />
     <script src="/public/htmx.1.9.9.min.js"></script>
     <script src="/public/htmx.head-support.js"></script>
@@ -49,8 +49,8 @@
       <div
         class="col-start-3 col-end-4 flex gap-8 items-center border-b border-neutral-300 pb-8 md:justify-end md:border-0 md:pb-0 dark:border-neutral-700"
       >
-      <a class="font-bold focus-visible:outline-dashed focus-visible:outline-offset-2 focus:outline-neutral-700 dark:focus:outline-neutral-600 {{ if eq .Path "/"}} no-underline text-neutral-700 dark:text-neutral-300{{end}}" href="/">Home</a>
-      <a class="font-bold focus-visible:outline-dashed focus-visible:outline-offset-2 focus:outline-neutral-700 dark:focus:outline-neutral-600 {{ if eq .Path "/posts"}} no-underline text-neutral-700 dark:text-neutral-300{{end}}" href="/posts">
+      <a class="font-bold focus-visible:outline-dashed focus-visible:outline-offset-2 focus:outline-neutral-700 dark:focus:outline-neutral-600 {{ if eq .Path "/"}} text-neutral-700 dark:text-neutral-300 border-neutral-700 dark:border-neutral-300{{end}}" href="/">Home</a>
+      <a class="font-bold focus-visible:outline-dashed focus-visible:outline-offset-2 focus:outline-neutral-700 dark:focus:outline-neutral-600 {{ if eq .Path "/posts"}} text-neutral-700 dark:text-neutral-300 border-neutral-700 dark:border-neutral-300{{end}}" href="/posts">
           Writing
         </a>
       </div>

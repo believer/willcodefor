@@ -19,14 +19,6 @@ dialog::backdrop {
     display: none;
   }
 
-  p {
-    @apply my-4;
-  }
-
-  p:not(:last-of-type) {
-    @apply mb-2;
-  }
-
   h1 {
     @apply mb-5 flex text-2xl font-semibold;
   }
@@ -46,7 +38,7 @@ dialog::backdrop {
   }
 
   a {
-    @apply text-sky-700 underline dark:text-sky-500;
+    @apply no-underline border-b text-neutral-700 dark:text-neutral-300 border-sky-700 dark:border-sky-500 hover:text-sky-700 dark:hover:text-sky-500 transition-colors focus:outline-offset-2 dark:focus:outline-neutral-600 focus:outline-dashed focus:text-sky-700 dark:focus:text-sky-500;
   }
 
   hr {
@@ -78,10 +70,6 @@ dialog::backdrop {
 
   .grid-template-main {
     grid-template-columns: 2rem 1fr minmax(auto, 900px) 1fr 2rem;
-  }
-
-  .grid-template-admin {
-    grid-template-columns: 2rem 1fr minmax(auto, 1300px) 1fr 2rem;
   }
 
   .grid-search {
@@ -119,8 +107,4 @@ dialog::backdrop {
     counter-increment: section;
     content: "#" counter(section) ": ";
   }
-}
-
-.footnotes {
-  @apply text-sm;
 }

@@ -8,25 +8,27 @@
   <div class="col-span-12 md:col-start-3 md:col-end-13">
     <header class="text-2xl font-light">
       <h1 class="mb-5 text-4xl font-bold md:text-5xl">Rickard Natt och Dag</h1>
-      Hej! I'm a developer from Sweden. I enjoy making user-friendly websites
-      and creating tools that make life easier for other developers. I currently
-      love working with
-      <a href="https://htmx.org/" target="_blank" rel="noopener noreferrer"
-        >htmx</a
-      >,
-      <a href="https://go.dev/" target="_blank" rel="noopener noreferrer"
-        >Go<span class="sr-only"> (The programming langauge)</span></a
-      >, and
-      <a
-        href="https://www.rust-lang.org/"
-        target="_blank"
-        rel="noopener noreferrer"
-        >Rust</a
-      >.
+      <p>
+        Hej! I'm a developer from Sweden. I enjoy making user-friendly websites
+        and creating tools that make life easier for other developers. I
+        currently love working with
+        <a href="https://htmx.org/" target="_blank" rel="noopener noreferrer"
+          >htmx</a
+        >,
+        <a href="https://go.dev/" target="_blank" rel="noopener noreferrer"
+          >Go<span class="sr-only"> (The programming langauge)</span></a
+        >, and
+        <a
+          href="https://www.rust-lang.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Rust</a
+        >.
+      </p>
     </header>
     <section class="mt-10 flex items-center space-x-6">
       <a
-        class="flex items-center focus:outline-none rounded bg-neutral-100 p-2 text-neutral-700 ring-1 ring-transparent ring-offset-transparent transition-all hover:ring-2 hover:ring-neutral-200 hover:ring-offset-2 dark:bg-neutral-700 dark:hover:ring-neutral-700 motion-reduce:transition-none hover:text-white dark:text-white focus:ring-2 focus:ring-offset-2 focus:ring-neutral-200 dark:focus:ring-neutral-700 hover:bg-github focus:bg-github"
+        class="flex items-center focus:outline-none rounded bg-neutral-100 p-2 text-neutral-700 ring-1 ring-transparent ring-offset-transparent transition-all hover:ring-2 hover:ring-neutral-200 hover:ring-offset-2 dark:bg-neutral-700 dark:hover:ring-neutral-700 motion-reduce:transition-none hover:text-white dark:text-white focus:ring-2 focus:ring-offset-2 focus:ring-neutral-200 dark:focus:ring-neutral-700 hover:bg-github focus:bg-github border-none"
         href="https://github.com/believer"
         aria-label="GitHub profile"
         target="_blank"
@@ -45,7 +47,7 @@
       </a>
 
       <a
-        class="flex items-center focus:outline-none rounded bg-neutral-100 p-2 text-neutral-700 ring-1 ring-transparent ring-offset-transparent transition-all hover:ring-2 hover:ring-neutral-200 hover:ring-offset-2 dark:bg-neutral-700 dark:hover:ring-neutral-700 motion-reduce:transition-none hover:text-white dark:text-white focus:ring-2 focus:ring-offset-2 focus:ring-neutral-200 dark:focus:ring-neutral-700 hover:bg-black focus:bg-black"
+        class="flex items-center focus:outline-none rounded bg-neutral-100 p-2 text-neutral-700 ring-1 ring-transparent ring-offset-transparent transition-all hover:ring-2 hover:ring-neutral-200 hover:ring-offset-2 dark:bg-neutral-700 dark:hover:ring-neutral-700 motion-reduce:transition-none hover:text-white dark:text-white focus:ring-2 focus:ring-offset-2 focus:ring-neutral-200 dark:focus:ring-neutral-700 hover:bg-black focus:bg-black border-none"
         href="https://x.com/rnattochdag"
         aria-label="X profile"
         target="_blank"
@@ -76,26 +78,28 @@
     Latest TIL
   </header>
 
-  <div class="col-span-12 md:col-span-10">
-    <p class="mt-0">
-      Today I Learned (TIL) are interesting things I've found on the web, ideas,
-      thoughts, and reminders regarding software development. I see it as a
-      second brain for all things related to development and a way for me to
-      practice
-      <a href="/posts/learning-in-public">Learning in public</a>.
-    </p>
+  <div class="col-span-12 md:col-span-10 space-y-8">
+    <section class="space-y-4">
+      <p class="mt-0">
+        Today I Learned (TIL) are interesting things I've found on the web,
+        ideas, thoughts, and reminders regarding software development. I see it
+        as a second brain for all things related to development and a way for me
+        to practice
+        <a href="/posts/learning-in-public">Learning in public</a>.
+      </p>
 
-    <p>
-      This is heavily inspired by Lee Byron's
-      <a
-        href="https://leebyron.com/til"
-        target="_blank"
-        rel="noopener noreferrer"
-        >TIL</a
-      >
-      and builds on top of my initial attempt with my
-      <a href="https://devlog.willcodefor.beer">Devlog</a>.
-    </p>
+      <p>
+        This is heavily inspired by Lee Byron's
+        <a
+          href="https://leebyron.com/til"
+          target="_blank"
+          rel="noopener noreferrer"
+          >TIL</a
+        >
+        and builds on top of my initial attempt with my
+        <a href="https://devlog.willcodefor.beer">Devlog</a>.
+      </p>
+    </section>
 
     {{ template "partials/postList" . }}
 
