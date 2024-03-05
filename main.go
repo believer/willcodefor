@@ -98,10 +98,6 @@ func main() {
 	// Redirects to old page
 	// ––––––––––––––––––––––––––––––––––––––––
 
-	app.Get("/admin", func(c *fiber.Ctx) error {
-		return c.Redirect("https://willcodefor-htmx.fly.dev/admin", fiber.StatusTemporaryRedirect)
-	})
-
 	// Handle short URLs and old posts where images were linked
 	// from the root folder.
 	app.Get("/:slug", func(c *fiber.Ctx) error {
