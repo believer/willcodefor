@@ -94,6 +94,8 @@ func main() {
 	app.Get("/stats/most-viewed-today", routes.MostViewedTodayHandler)
 	app.Get("/stats/chart", routes.ChartHandler)
 	app.Get("/stats/posts", routes.PostsStatsHandler)
+	app.Get("/stats/:id", routes.StatsPostHandler)
+	app.Get("/stats/:id/views", routes.StatsPostViewsHandler)
 
 	// Redirects to old page
 	// ––––––––––––––––––––––––––––––––––––––––

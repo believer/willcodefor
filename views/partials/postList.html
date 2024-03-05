@@ -4,7 +4,11 @@
     class="til-counter grid-post relative grid w-full items-baseline gap-4 sm:inline-flex sm:gap-5"
     data-til="{{ .TILID }}"
   >
+    {{ if eq $.Path "stats" }}
+    <a href="/stats/{{ .ID }}" hx-swap="innerHTML">{{ .Title }}</a>
+    {{ else }}
     <a href="/posts/{{ .Slug }}" hx-swap="innerHTML transition:true" style="view-transition-name: title-{{ .TILID }}">{{ .Title }}</a>
+    {{ end }}
     <hr
       class="m-0 hidden flex-1 border-dashed border-neutral-300 dark:border-neutral-700 sm:block"
     />

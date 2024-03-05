@@ -76,6 +76,53 @@ WHERE percent_as_number <= 1
 	})
 }
 
+func StatsPostHandler(c *fiber.Ctx) error {
+	return c.Render("statsPost", fiber.Map{
+		"ID":   c.Params("id"),
+		"Path": "/stats",
+	})
+}
+
+func StatsPostViewsHandler(c *fiber.Ctx) error {
+	id := c.Params("id")
+	var views []CountData
+
+	err := data.DB.Select(&views, `WITH days AS (
+	SELECT
+		GENERATE_SERIES(
+      (SELECT created_at FROM post WHERE id = $1),
+			CURRENT_DATE,
+			'1 day'::INTERVAL
+		)::DATE AS DAY
+)
+SELECT
+  days.day as date,
+	TO_CHAR(days.day, 'Mon DD YY') AS label,
+	COUNT(pv.id)::INT AS count
+FROM
+	days
+	LEFT JOIN post_view AS pv ON DATE_TRUNC('day', created_at) = days.day
+	AND pv.is_bot = FALSE
+	AND post_id = $1
+GROUP BY 1
+ORDER BY 1 ASC`, id)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	data, err := constructGraphFromData(views)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return c.Render("partials/graph", fiber.Map{
+		"Bars":     data,
+		"Animated": false,
+	}, "")
+}
+
 func ViewsPerDay(c *fiber.Ctx) error {
 	var err error
 	var totalViews float64
@@ -262,6 +309,7 @@ ORDER BY views DESC
 	return c.Render("partials/postList", fiber.Map{
 		"Posts":     posts,
 		"SortOrder": "views",
+		"Path":      "stats",
 	}, "")
 }
 
@@ -270,13 +318,6 @@ type CountData struct {
 	Label string `db:"label"`
 	Count int    `db:"count"`
 }
-
-var ToolTipFormatter = `
-function (info) {
-  var [,,value] =info.value;
-	return '<div class="tooltip-title">' + value + '</div>';
-}
-`
 
 func ChartHandler(c *fiber.Ctx) error {
 	var views []CountData
@@ -388,8 +429,13 @@ from data`,
 
 	data, err := constructGraphFromData(views)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return c.Render("partials/graph", fiber.Map{
-		"Bars": data,
+		"Bars":     data,
+		"Animated": true,
 	}, "")
 }
 
@@ -423,7 +469,8 @@ ORDER BY 1
 	}
 
 	return c.Render("partials/graph", fiber.Map{
-		"Bars": data,
+		"Bars":     data,
+		"Animated": true,
 	}, "")
 }
 
@@ -452,15 +499,21 @@ func constructGraphFromData(data []CountData) ([]Bar, error) {
 	// The data is used for a bar chart, so we need to convert the data
 	for i, row := range data {
 		var (
+			elementsInGraph = graphWidth / len(data)
 			// Calcualte the bar Height
-			// Subtract 20 from the maxBarHeight to make room for the text
+			// Subtract 40 from the graph height to make room for the labels
 			barHeight = int(float64(row.Count) / float64(maxCount.Count) * float64(graphHeight-40))
-			barWidth  = int(float64(graphWidth)/float64(len(data))) - 5
+			barWidth  = int(elementsInGraph) - 5
 
 			// Space the bars evenly across the graph
-			barX = (graphWidth / len(data)) * i
+			barX = elementsInGraph * i
 			barY = graphHeight - barHeight - 20
 		)
+
+		if barWidth <= 0 {
+			barWidth = elementsInGraph
+			barX = barX + 20
+		}
 
 		// Position centered on the bar. Subtract 3.4 which is half the width of the text.
 		charWidth := 8.67 // Uses tabular nums so all characters are the same width

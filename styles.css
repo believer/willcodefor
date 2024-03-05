@@ -46,17 +46,18 @@ dialog::backdrop {
   }
 
   abbr[title] {
-    @apply cursor-help border-b-2 border-dashed border-neutral-400 dark:border-neutral-500 no-underline;
+    @apply cursor-help border-b-2 border-dotted border-neutral-400 dark:border-neutral-500 no-underline relative;
   }
 
   /* Display the abbr title on mobile devices when clicked */
-  abbr[title]:focus::after,
+  abbr[title]:focus-visible::after,
   abbr[title]:hover::after {
     content: " (" attr(title) ")";
   }
 
   /* Remove abbr display on hover devices */
   @media (any-hover: hover) {
+    abbr[title]:focus-visible::after,
     abbr[title]:hover::after {
       content: "";
     }

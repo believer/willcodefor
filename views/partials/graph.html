@@ -12,6 +12,18 @@
         remove .opacity-100 from <text /> in me
      end"
   >
+    {{ if not $.Animated }}
+    <rect
+      class="stroke-neutral-400 dark:stroke-neutral-600"
+      width="{{ .BarWidth }}"
+      height="{{ .BarHeight }}"
+      stroke-dasharray="4 2"
+      rx="2"
+      ry="2"
+      x="{{ .BarX }}"
+      y="{{ .BarY }}"
+    ></rect>
+    {{ else }}
     <rect
       class="stroke-neutral-400 dark:stroke-neutral-600 transition-transform delay-200 duration-1000 scale-y-0 origin-[center_180px]"
       _="init add .scale-y-100 to me"
@@ -23,6 +35,7 @@
       x="{{ .BarX }}"
       y="{{ .BarY }}"
     ></rect>
+    {{ end }}
     <text
       class="fill-neutral-400 dark:fill-neutral-500 opacity-0 transition-opacity text-sm tabular-nums"
       x="{{ .ValueX }}"

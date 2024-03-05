@@ -510,9 +510,10 @@ hr {
 }
 
 abbr[title] {
+  position: relative;
   cursor: help;
   border-bottom-width: 2px;
-  border-style: dashed;
+  border-style: dotted;
   --tw-border-opacity: 1;
   border-color: rgb(163 163 163 / var(--tw-border-opacity));
   text-decoration-line: none;
@@ -527,7 +528,7 @@ abbr[title] {
 
 /* Display the abbr title on mobile devices when clicked */
 
-abbr[title]:focus::after,
+abbr[title]:focus-visible::after,
   abbr[title]:hover::after {
   content: " (" attr(title) ")";
 }
@@ -535,7 +536,8 @@ abbr[title]:focus::after,
 /* Remove abbr display on hover devices */
 
 @media (any-hover: hover) {
-  abbr[title]:hover::after {
+  abbr[title]:focus-visible::after,
+    abbr[title]:hover::after {
     content: "";
   }
 }
