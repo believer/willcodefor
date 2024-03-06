@@ -77,9 +77,38 @@ WHERE percent_as_number <= 1
 }
 
 func StatsPostHandler(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	var totalViews int
+	var biggestDay struct {
+		Date  time.Time `db:"date"`
+		Count int       `db:"count"`
+	}
+
+	err := data.DB.Get(&totalViews, `SELECT COUNT(*) FROM post_view WHERE post_id = $1 AND is_bot = FALSE`, id)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = data.DB.Get(&biggestDay, `
+SELECT
+  DATE(created_at) AS DATE,
+  COUNT(*) AS COUNT
+FROM post_view
+WHERE post_id = $1 AND is_bot = FALSE
+GROUP BY DATE(created_at)
+ORDER BY COUNT DESC LIMIT 1`, id)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return c.Render("statsPost", fiber.Map{
-		"ID":   c.Params("id"),
-		"Path": "/stats",
+		"ID":         id,
+		"TotalViews": totalViews,
+		"BiggestDay": biggestDay,
+		"Path":       "/stats",
 	})
 }
 
@@ -111,15 +140,14 @@ ORDER BY 1 ASC`, id)
 		log.Fatal(err)
 	}
 
-	data, err := constructGraphFromData(views)
+	d, err := constructLineGraphFromData(views)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return c.Render("partials/graph", fiber.Map{
-		"Bars":     data,
-		"Animated": false,
+	return c.Render("partials/graphLine", fiber.Map{
+		"D": d,
 	}, "")
 }
 
@@ -492,9 +520,7 @@ func constructGraphFromData(data []CountData) ([]Bar, error) {
 
 	graphHeight := 200
 	graphWidth := 900
-	maxCount := slices.MaxFunc(data, func(a, b CountData) int {
-		return cmp.Compare(a.Count, b.Count)
-	})
+	maxCount := calculateMaxCount(data)
 
 	// The data is used for a bar chart, so we need to convert the data
 	for i, row := range data {
@@ -502,7 +528,7 @@ func constructGraphFromData(data []CountData) ([]Bar, error) {
 			elementsInGraph = graphWidth / len(data)
 			// Calcualte the bar Height
 			// Subtract 40 from the graph height to make room for the labels
-			barHeight = int(float64(row.Count) / float64(maxCount.Count) * float64(graphHeight-40))
+			barHeight = int(float64(row.Count) / float64(maxCount) * float64(graphHeight-40))
 			barWidth  = int(elementsInGraph) - 5
 
 			// Space the bars evenly across the graph
@@ -547,4 +573,31 @@ func constructGraphFromData(data []CountData) ([]Bar, error) {
 	}
 
 	return graphData, nil
+}
+
+func constructLineGraphFromData(data []CountData) (string, error) {
+	graphHeight := 200
+	graphWidth := 900
+	maxCount := calculateMaxCount(data)
+
+	// Start the path at the bottom left corner
+	path := "M 0 " + strconv.Itoa(graphHeight)
+
+	for i, row := range data {
+		// Calculate the x and y values for the line
+		x := float64(graphWidth) / float64(len(data)) * float64(i)
+		y := float64(graphHeight) - (float64(row.Count)/float64(maxCount))*float64(graphHeight)
+
+		path += " L " + strconv.FormatFloat(x, 'f', 3, 64) + " " + strconv.FormatFloat(y, 'f', 3, 64)
+	}
+
+	return path, nil
+}
+
+func calculateMaxCount(data []CountData) int {
+	c := slices.MaxFunc(data, func(a, b CountData) int {
+		return cmp.Compare(a.Count, b.Count)
+	})
+
+	return c.Count
 }
