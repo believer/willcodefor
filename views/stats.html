@@ -70,7 +70,7 @@
   </div>
 </div>
 
-<h3 class="font-semibold uppercase text-neutral-500">Post views today</h3>
+<h3 class="font-semibold uppercase text-neutral-500">Post views</h3>
 <div class="mb-10" hx-get="/stats/chart" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
 <h3 class="font-semibold uppercase text-neutral-500">Posts created</h3>
 <div class="mb-10" hx-get="/stats/posts" hx-trigger="load"></div>
