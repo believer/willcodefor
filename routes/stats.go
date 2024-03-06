@@ -140,14 +140,15 @@ ORDER BY 1 ASC`, id)
 		log.Fatal(err)
 	}
 
-	d, err := constructLineGraphFromData(views)
+	p, err := constructLineGraphFromData(views)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	return c.Render("partials/graphLine", fiber.Map{
-		"D": d,
+		"D":     p.D,
+		"YGrid": p.YGrid,
 	}, "")
 }
 
@@ -222,6 +223,7 @@ LIMIT 10
 	return c.Render("partials/postList", fiber.Map{
 		"Posts":     posts,
 		"SortOrder": "views",
+		"Path":      "stats",
 	}, "")
 }
 
@@ -575,10 +577,22 @@ func constructGraphFromData(data []CountData) ([]Bar, error) {
 	return graphData, nil
 }
 
-func constructLineGraphFromData(data []CountData) (string, error) {
+type GridLine struct {
+	Y1    int
+	Y2    int
+	Label int
+}
+
+type LineGraph struct {
+	D     string
+	YGrid []GridLine
+}
+
+func constructLineGraphFromData(data []CountData) (LineGraph, error) {
 	graphHeight := 200
 	graphWidth := 900
 	maxCount := calculateMaxCount(data)
+	var yGrid []GridLine
 
 	// Start the path at the bottom left corner
 	path := "M 0 " + strconv.Itoa(graphHeight)
@@ -586,12 +600,28 @@ func constructLineGraphFromData(data []CountData) (string, error) {
 	for i, row := range data {
 		// Calculate the x and y values for the line
 		x := float64(graphWidth) / float64(len(data)) * float64(i)
-		y := float64(graphHeight) - (float64(row.Count)/float64(maxCount))*float64(graphHeight)
+		y := float64(graphHeight) - float64(row.Count)/float64(maxCount)*float64(graphHeight)
 
+		// Add point to the path
 		path += " L " + strconv.FormatFloat(x, 'f', 3, 64) + " " + strconv.FormatFloat(y, 'f', 3, 64)
 	}
 
-	return path, nil
+	spacing := (graphHeight - 20) / 3
+
+	for i := range 3 {
+		ii := i + 1
+
+		yGrid = append(yGrid, GridLine{
+			Y1:    graphHeight - spacing*ii,
+			Y2:    graphHeight - spacing*ii,
+			Label: maxCount / 3 * ii,
+		})
+	}
+
+	return LineGraph{
+		D:     path,
+		YGrid: yGrid,
+	}, nil
 }
 
 func calculateMaxCount(data []CountData) int {

@@ -1,3 +1,45 @@
 <svg viewBox="0 0 900 200">
-  <path d="{{ .D }}" stroke="#0ea5e9" fill="none"></path>
+  <path
+    d="{{ .D }}"
+    class="stroke-sky-600 dark:stroke-sky-500 fill-none"
+  ></path>
+  <line
+    x1="0"
+    y1="200"
+    x2="900"
+    y2="200"
+    stroke-width="1"
+    class="stroke-neutral-400 dark:stroke-neutral-700"
+  />
+  <text
+    x="0"
+    y="200"
+    text-anchor="start"
+    alignment-baseline="end"
+    class="text-2xl sm:text-xs font-medium fill-neutral-700 dark:fill-neutral-200"
+  >
+    0
+  </text>
+  {{ range .YGrid}}
+  <line
+    x1="0"
+    y1="{{ .Y1 }}"
+    x2="900"
+    y2="{{ .Y2 }}"
+    stroke-dasharray="4 2"
+    stroke-width="1"
+    class="stroke-neutral-400 dark:stroke-neutral-700"
+  />
+  <text
+    x="0"
+    y="{{ .Y2 }}"
+    font-size="12"
+    font-weight="bold"
+    text-anchor="start"
+    alignment-baseline="middle"
+    class="text-2xl sm:text-xs font-medium fill-neutral-700 dark:fill-neutral-200"
+  >
+    {{ .Label }}
+  </text>
+  {{ end }}
 </svg>

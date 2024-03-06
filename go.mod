@@ -1,6 +1,6 @@
 module github.com/believer/willcodefor-go
 
-go 1.20
+go 1.22
 
 require (
 	github.com/alecthomas/chroma/v2 v2.12.0

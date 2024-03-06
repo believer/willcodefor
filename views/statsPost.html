@@ -25,13 +25,4 @@
       </div>
     </div>
   </div>
-
-  <ol>
-    {{ range .AllViews }}
-    <li class="flex justify-between">
-      <span>{{ .CreatedAt.Format "2006-01-02" }}</span>
-      <span>{{ .BrowserName }}</span>
-    </li>
-    {{ end }}
-  </ol>
 </div>
