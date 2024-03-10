@@ -534,8 +534,9 @@ func constructGraphFromData(data []CountData) ([]Bar, error) {
 			barWidth  = int(elementsInGraph) - 5
 
 			// Space the bars evenly across the graph
-			barX = elementsInGraph * i
-			barY = graphHeight - barHeight - 20
+			// Plus one px for border of first bar
+			barX = elementsInGraph*i + 1
+			barY = graphHeight - barHeight - 26
 		)
 
 		if barWidth <= 0 {
@@ -546,13 +547,23 @@ func constructGraphFromData(data []CountData) ([]Bar, error) {
 		// Position centered on the bar. Subtract 3.4 which is half the width of the text.
 		charWidth := 8.67 // Uses tabular nums so all characters are the same width
 		numberOfCharsInCount := len(strconv.Itoa(row.Count))
-		numberOfCharsInRating := len(row.Label)
+		numberOfCharsInLabel := len(row.Label)
 
 		halfWidthOfCount := charWidth * float64(numberOfCharsInCount) / 2
-		halfWidthOfRating := charWidth * float64(numberOfCharsInRating) / 2
+		halfWidthOfLabel := charWidth * float64(numberOfCharsInLabel) / 2
 
 		valueX := float64(barX+(barWidth/2)) - halfWidthOfCount
-		labelX := float64(barX+(barWidth/2)) - halfWidthOfRating
+		labelX := float64(barX+(barWidth/2)) - halfWidthOfLabel
+
+		// If it's the first bar, we want to position the label at the start of the graph
+		if i == 0 {
+			labelX = float64(barX)
+		}
+
+		// If it's the last bar, we want to position the label at the end of the graph
+		if i == len(data)-1 {
+			labelX = float64(barX+barWidth) - charWidth*float64(numberOfCharsInLabel)
+		}
 
 		// Subtract 8 to put some space between the text and the bar
 		valueY := barY - 8
