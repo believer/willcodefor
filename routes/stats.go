@@ -25,20 +25,33 @@ func timeToQuery(t string) string {
 	}
 }
 
-func StatsHandler(c *fiber.Ctx) error {
-	var bots int
+// Get the total views for a given period
+func viewsForPeriod(c *fiber.Ctx) (float64, error) {
+	var err error
 	var totalViews float64
 
 	timeQuery := c.Query("time", "today")
-	timeQueryString := timeToQuery(c.Query("time", "today"))
+	timeQuerySQL := timeToQuery(timeQuery)
 
-	err := data.Dot.Get(data.DB, &totalViews, "stats-views-for-period", timeQueryString)
-
-	if err != nil {
-		return err
+	if timeQuery == "week" {
+		err = data.Dot.Get(data.DB, &totalViews, "stats-views-per-week")
+	} else {
+		err = data.Dot.Get(data.DB, &totalViews, "stats-views-for-period", timeQuerySQL)
 	}
 
-	err = data.Dot.Get(data.DB, &bots, "stats-bots")
+	if err != nil {
+		return 0, err
+	}
+
+	return totalViews, nil
+}
+
+// Handles the initial rendering of the stats page
+func StatsHandler(c *fiber.Ctx) error {
+	var bots int
+
+	timeQuery := c.Query("time", "today")
+	err := data.Dot.Get(data.DB, &bots, "stats-bots")
 
 	if err != nil {
 		return err
@@ -103,28 +116,19 @@ func StatsPostViewsHandler(c *fiber.Ctx) error {
 }
 
 func ViewsPerDay(c *fiber.Ctx) error {
-	var err error
-	var totalViews float64
+	var viewsPerDay float64
 
-	timeQuery := c.Query("time", "today")
-	timeQuerySQL := timeToQuery(timeQuery)
-
-	if timeQuery == "week" {
-		err = data.Dot.Get(data.DB, &totalViews, "stats-views-per-week")
-	} else {
-		err = data.Dot.Get(data.DB, &totalViews, "stats-views-for-period", timeQuerySQL)
-	}
+	totalViews, err := viewsForPeriod(c)
 
 	if err != nil {
 		return err
 	}
 
-	viewsPerDay := totalViews
-
 	now := time.Now()
 	daysThisYear := now.YearDay()
 	firstViewDate := time.Date(2022, 6, 8, 17, 41, 0, 0, time.UTC)
 	daysSinceFirstView := now.Sub(firstViewDate).Hours() / 24
+	timeQuery := c.Query("time", "today")
 
 	switch timeQuery {
 	case "week":
@@ -135,6 +139,8 @@ func ViewsPerDay(c *fiber.Ctx) error {
 		viewsPerDay = totalViews / float64(daysThisYear)
 	case "cumulative":
 		viewsPerDay = totalViews / float64(daysSinceFirstView)
+	default:
+		viewsPerDay = totalViews
 	}
 
 	return c.SendString(fmt.Sprintf("%.2f", viewsPerDay))
@@ -197,17 +203,7 @@ func OSHandler(c *fiber.Ctx) error {
 }
 
 func TotalViewsHandler(c *fiber.Ctx) error {
-	var err error
-	var count int
-
-	timeQuery := c.Query("time", "today")
-	timeQuerySQL := timeToQuery(timeQuery)
-
-	if timeQuery == "week" {
-		err = data.Dot.Get(data.DB, &count, "stats-views-per-week")
-	} else {
-		err = data.Dot.Get(data.DB, &count, "stats-views-for-period", timeQuerySQL)
-	}
+	count, err := viewsForPeriod(c)
 
 	if err != nil {
 		return err
