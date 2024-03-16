@@ -46,7 +46,79 @@ func viewsForPeriod(c *fiber.Ctx) (float64, error) {
 	return totalViews, nil
 }
 
+func averageViewsPerDay(c *fiber.Ctx) (string, error) {
+	var viewsPerDay float64
+
+	totalViews, err := viewsForPeriod(c)
+
+	if err != nil {
+		return "", err
+	}
+
+	now := time.Now()
+	daysThisYear := now.YearDay()
+	firstViewDate := time.Date(2022, 6, 8, 17, 41, 0, 0, time.UTC)
+	daysSinceFirstView := now.Sub(firstViewDate).Hours() / 24
+	timeQuery := c.Query("time", "today")
+
+	switch timeQuery {
+	case "week":
+		viewsPerDay = totalViews / 7
+	case "thirty-days":
+		viewsPerDay = totalViews / 30
+	case "this-year":
+		viewsPerDay = totalViews / float64(daysThisYear)
+	case "cumulative":
+		viewsPerDay = totalViews / float64(daysSinceFirstView)
+	default:
+		viewsPerDay = totalViews
+	}
+
+	return fmt.Sprintf("%.2f", viewsPerDay), nil
+}
+
+type Browser struct {
+	Name    string `db:"browser_name"`
+	Count   int    `db:"count"`
+	Percent string `db:"percent"`
+}
+
+func browsers(c *fiber.Ctx) ([]Browser, error) {
+	var userAgents []Browser
+
+	timeQuery := timeToQuery(c.Query("time", "today"))
+
+	err := data.Dot.Select(data.DB, &userAgents, "stats-browsers", timeQuery)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return userAgents, nil
+}
+
+type OS struct {
+	Name    string `db:"os_name"`
+	Count   int    `db:"count"`
+	Percent string `db:"percent"`
+}
+
+func osStats(c *fiber.Ctx) ([]OS, error) {
+	var os []OS
+
+	timeQuery := timeToQuery(c.Query("time", "today"))
+
+	err := data.Dot.Select(data.DB, &os, "stats-os", timeQuery)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return os, nil
+}
+
 // Handles the initial rendering of the stats page
+// Subsequent data is loaded via htmx
 func StatsHandler(c *fiber.Ctx) error {
 	var bots int
 
@@ -57,10 +129,38 @@ func StatsHandler(c *fiber.Ctx) error {
 		return err
 	}
 
+	totalViews, err := viewsForPeriod(c)
+
+	if err != nil {
+		return err
+	}
+
+	averageViewsPerDay, err := averageViewsPerDay(c)
+
+	if err != nil {
+		return err
+	}
+
+	browsers, err := browsers(c)
+
+	if err != nil {
+		return err
+	}
+
+	os, err := osStats(c)
+
+	if err != nil {
+		return err
+	}
+
 	return c.Render("stats", fiber.Map{
-		"Bots": bots,
-		"Time": timeQuery,
-		"Path": "/stats",
+		"AverageViewsPerDay": averageViewsPerDay,
+		"Bots":               bots,
+		"Browsers":           browsers,
+		"OS":                 os,
+		"Time":               timeQuery,
+		"TotalViews":         totalViews,
+		"Path":               "/stats",
 	})
 }
 
@@ -116,34 +216,13 @@ func StatsPostViewsHandler(c *fiber.Ctx) error {
 }
 
 func ViewsPerDay(c *fiber.Ctx) error {
-	var viewsPerDay float64
-
-	totalViews, err := viewsForPeriod(c)
+	averageViewsPerDay, err := averageViewsPerDay(c)
 
 	if err != nil {
 		return err
 	}
 
-	now := time.Now()
-	daysThisYear := now.YearDay()
-	firstViewDate := time.Date(2022, 6, 8, 17, 41, 0, 0, time.UTC)
-	daysSinceFirstView := now.Sub(firstViewDate).Hours() / 24
-	timeQuery := c.Query("time", "today")
-
-	switch timeQuery {
-	case "week":
-		viewsPerDay = totalViews / 7
-	case "thirty-days":
-		viewsPerDay = totalViews / 30
-	case "this-year":
-		viewsPerDay = totalViews / float64(daysThisYear)
-	case "cumulative":
-		viewsPerDay = totalViews / float64(daysSinceFirstView)
-	default:
-		viewsPerDay = totalViews
-	}
-
-	return c.SendString(fmt.Sprintf("%.2f", viewsPerDay))
+	return c.SendString(averageViewsPerDay)
 }
 
 func MostViewedHandler(c *fiber.Ctx) error {
@@ -163,43 +242,23 @@ func MostViewedHandler(c *fiber.Ctx) error {
 }
 
 func BrowsersHandler(c *fiber.Ctx) error {
-	var userAgents []struct {
-		Name    string `db:"browser_name"`
-		Count   int    `db:"count"`
-		Percent string `db:"percent"`
-	}
-
-	timeQuery := timeToQuery(c.Query("time", "today"))
-
-	err := data.Dot.Select(data.DB, &userAgents, "stats-browsers", timeQuery)
+	browsers, err := browsers(c)
 
 	if err != nil {
 		return err
 	}
 
-	return c.Render("partials/userAgents", fiber.Map{
-		"UserAgents": userAgents,
-	}, "")
+	return c.Render("partials/userAgents", browsers, "")
 }
 
 func OSHandler(c *fiber.Ctx) error {
-	var os []struct {
-		Name    string `db:"os_name"`
-		Count   int    `db:"count"`
-		Percent string `db:"percent"`
-	}
-
-	timeQuery := timeToQuery(c.Query("time", "today"))
-
-	err := data.Dot.Select(data.DB, &os, "stats-os", timeQuery)
+	os, err := osStats(c)
 
 	if err != nil {
 		return err
 	}
 
-	return c.Render("partials/userAgents", fiber.Map{
-		"UserAgents": os,
-	}, "")
+	return c.Render("partials/userAgents", os, "")
 }
 
 func TotalViewsHandler(c *fiber.Ctx) error {

@@ -32,8 +32,8 @@
 <div class="mb-10 grid grid-cols-1 gap-8 sm:grid-cols-2 items-start">
   <div class="text-center text-8xl font-bold space-y-8">
     <div>
-      <span hx-get="/stats/total-views" hx-trigger="load, update-time from:body" hx-vals="js:{ time: time }" hx-swap="innerHTML transition:true">
-        {{ .Count }}
+      <span hx-get="/stats/total-views" hx-trigger="update-time from:body" hx-vals="js:{ time: time }" hx-swap="innerHTML transition:true">
+        {{ .TotalViews }}
       </span>
       <div
         class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
@@ -42,8 +42,8 @@
       </div>
     </div>
     <div>
-      <span hx-get="/stats/views-per-day" hx-trigger="load, update-time from:body" hx-vals="js:{ time: time }" hx-swap="innerHTML transition:true">
-      ---
+      <span hx-get="/stats/views-per-day" hx-trigger="update-time from:body" hx-vals="js:{ time: time }" hx-swap="innerHTML transition:true">
+        {{ .AverageViewsPerDay }}
         </span>
       <div
         class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
@@ -55,12 +55,16 @@
   <div class="flex flex-col gap-y-4">
     <div>
       <h3 class="mb-2 font-semibold uppercase text-neutral-500">Browsers</h3>
-      <div hx-get="/stats/browsers" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
+      <div hx-get="/stats/browsers" hx-trigger="update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }">
+        {{ template "partials/userAgents" .Browsers }}
+      </div>
     </div>
 
     <div>
       <h3 class="mb-2 font-semibold uppercase text-neutral-500">OS</h3>
-      <div hx-get="/stats/os" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
+      <div hx-get="/stats/os" hx-trigger="update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }">
+        {{ template "partials/userAgents" .OS }}
+      </div>
     </div>
 
     <div class="text-xs text-neutral-700 text-right">
@@ -71,9 +75,9 @@
 </div>
 
 <h3 class="font-semibold uppercase text-neutral-500">Post views</h3>
-<div class="mb-10" hx-get="/stats/chart" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
+<div class="mb-10 sm:h-[200px]" hx-get="/stats/chart" hx-trigger="load, update-time from:body" hx-swap="innerHTML transition:true" hx-vals="js:{ time: time }"></div>
 <h3 class="font-semibold uppercase text-neutral-500">Posts created</h3>
-<div class="mb-10" hx-get="/stats/posts" hx-trigger="load"></div>
+<div class="mb-10 sm:h-[200px]" hx-get="/stats/posts" hx-trigger="load"></div>
 
 <div class="mb-10" hx-preserve id="total-views">
   <h3 class="mb-4 font-semibold uppercase text-neutral-500">Most viewed</h3>
