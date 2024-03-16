@@ -2,7 +2,6 @@ package routes
 
 import (
 	"database/sql"
-	"log"
 	"os"
 	"path"
 	"strconv"
@@ -27,39 +26,21 @@ func NewNullString(s string) sql.NullString {
 }
 
 func PostsHandler(c *fiber.Ctx) error {
-	posts := []model.Post{}
-	sortOrder := c.Query("sort", "createdAt")
-	q := `
-    SELECT
-      title,
-      til_id,
-      slug,
-      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at,
-      updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at
-    FROM post
-    WHERE published = true
-    ORDER BY created_at DESC
-  `
+	var (
+		posts     []model.Post
+		sortOrder = c.Query("sort", "createdAt")
+	)
+
+	q := "posts-by-created"
 
 	if sortOrder == "updatedAt" {
-		q = `
-    SELECT
-      title,
-      til_id,
-      slug,
-      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at,
-      updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at
-    FROM post
-    WHERE published = true
-    ORDER BY updated_at DESC
-  `
+		q = "posts-by-updated"
 	}
 
-	err := data.DB.Select(&posts, q)
+	err := data.Dot.Select(data.DB, &posts, q)
 
 	if err != nil {
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	return c.Render("posts", fiber.Map{
@@ -70,103 +51,64 @@ func PostsHandler(c *fiber.Ctx) error {
 }
 
 func PostsSearchHandler(c *fiber.Ctx) error {
-	posts := []model.Post{}
-	search := c.Query("search")
-	q := `
-    SELECT
-      title,
-      til_id,
-      slug,
-      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at,
-      updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at
-    FROM post
-    WHERE
-      title ILIKE '%' || $1 || '%'
-      OR body ILIKE '%' || $1 || '%'
-      AND published = TRUE
-    ORDER BY created_at DESC
-  `
+	var (
+		posts  []model.Post
+		search = c.Query("search")
+	)
 
-	err := data.DB.Select(&posts, q, search)
+	err := data.Dot.Select(data.DB, &posts, "post-search", search)
 
 	if err != nil {
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	return c.Render("posts", fiber.Map{
-		"Posts":     posts,
 		"SortOrder": "createdAt",
+		"Posts":     posts,
 		"Search":    search,
 	})
 }
 
 func PostsViewsHandler(c *fiber.Ctx) error {
-	posts := []model.Post{}
-	q := `
-    SELECT
-      p.title,
-      p.til_id,
-      p.slug,
-      COUNT(pv.id) AS views
-    FROM post AS p
-    INNER JOIN post_view AS pv ON p.id = pv.post_id
-    WHERE p.published = true AND pv.is_bot = false
-    GROUP BY p.id
-    ORDER BY views DESC
-  `
+	var posts []model.Post
 
-	err := data.DB.Select(&posts, q)
+	err := data.Dot.Select(data.DB, &posts, "posts-views")
 
 	if err != nil {
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	return c.Render("posts", fiber.Map{
 		"Path":      "/posts",
-		"Posts":     posts,
 		"SortOrder": "views",
+		"Posts":     posts,
 	})
 }
 
 func PostHandler(c *fiber.Ctx) error {
-	slug := c.Params("slug")
-	post := model.Post{}
+	var post model.Post
 
 	// Self healing slug
-	parts := strings.Split(path.Base(slug), "-")
-	lastPart := parts[len(parts)-1]
+	var (
+		slug     = c.Params("slug")
+		parts    = strings.Split(path.Base(slug), "-")
+		lastPart = parts[len(parts)-1]
+	)
+
 	tilId, err := strconv.Atoi(lastPart)
 
 	if err != nil {
 		tilId = 0
 	}
 
-	q := `
-	   SELECT
-      title,
-      til_id,
-      slug,
-      id,
-      body,
-      created_at at time zone 'utc' at time zone 'Europe/Stockholm' as created_at,
-      updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at,
-      COALESCE(series, '') as series,
-      excerpt
-	   FROM post
-	   WHERE slug = $1 OR long_slug = $1 OR til_id = $2
-	 `
-
-	if err := data.DB.Get(&post, q, slug, tilId); err != nil {
+	if err := data.Dot.Get(data.DB, &post, "post-by-slug", slug, tilId); err != nil {
 		if err == sql.ErrNoRows {
 			return c.Render("404", fiber.Map{
 				"Slug": slug,
 			})
 		}
 
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	body := utils.MarkdownToHTML([]byte(post.Body))
@@ -184,46 +126,32 @@ func PostHandler(c *fiber.Ctx) error {
 }
 
 func PostNextHandler(c *fiber.Ctx) error {
-	id := c.Params("id")
-	nextPost := model.Post{}
-	q := `
-    SELECT title, slug, til_id
-    FROM post
-    WHERE id > $1 AND published = true
-    ORDER BY id ASC
-    LIMIT 1
-   `
+	var nextPost model.Post
 
-	if err := data.DB.Get(&nextPost, q, id); err != nil {
+	id := c.Params("id")
+
+	if err := data.Dot.Get(data.DB, &nextPost, "next-post", id); err != nil {
 		if err == sql.ErrNoRows {
 			return c.SendString("<li></li>")
 		}
 
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	return c.Render("partials/postNext", nextPost, "")
 }
 
 func PostPreviousHandler(c *fiber.Ctx) error {
-	id := c.Params("id")
-	prevPost := model.Post{}
-	q := `
-    SELECT title, slug, til_id
-    FROM post
-    WHERE id < $1 AND published = true
-    ORDER BY id DESC
-    LIMIT 1
-   `
+	var prevPost model.Post
 
-	if err := data.DB.Get(&prevPost, q, id); err != nil {
+	id := c.Params("id")
+
+	if err := data.Dot.Get(data.DB, &prevPost, "previous-post", id); err != nil {
 		if err == sql.ErrNoRows {
 			return c.SendString("<li></li>")
 		}
 
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	return c.Render("partials/postPrev", prevPost, "")
@@ -260,16 +188,7 @@ func PostStatsHandler(c *fiber.Ctx) error {
 			deviceVendor = "Apple"
 		}
 
-		_, err := data.DB.Exec(`
-		    INSERT INTO post_view (
-		      user_agent, post_id, is_bot,
-		      browser_name, browser_version,
-		      device_type, device_model, device_vendor,
-          os_name, os_version,
-          engine_version, engine_name
-		    )
-		    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-		  `,
+		_, err := data.Dot.Exec(data.DB, "insert-view",
 			ua.String,
 			id,
 			ua.Bot,
@@ -285,36 +204,28 @@ func PostStatsHandler(c *fiber.Ctx) error {
 		)
 
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 	}
 
-	q := `SELECT COUNT(*) FROM post_view WHERE post_id = $1`
-
-	if err := data.DB.Get(&postViews, q, id); err != nil {
-		log.Fatal(err)
-		c.JSON("Oh no")
+	if err := data.Dot.Get(data.DB, &postViews, "post-views", id); err != nil {
+		return err
 	}
 
 	return c.SendString(postViews)
 }
 
 func PostSeriesHandler(c *fiber.Ctx) error {
-	posts := []model.Post{}
-	series := c.Params("series")
-	slug := c.Query("slug")
-	q := `
-    SELECT slug, title
-    FROM post
-    WHERE series = $1 AND published = true
-    ORDER BY id ASC
-  `
+	var (
+		posts  []model.Post
+		series = c.Params("series")
+		slug   = c.Query("slug")
+	)
 
-	err := data.DB.Select(&posts, q, series)
+	err := data.Dot.Select(data.DB, &posts, "post-series", series)
 
 	if err != nil {
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	seriesNames := map[string]string{

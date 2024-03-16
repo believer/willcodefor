@@ -40,7 +40,17 @@ func InitDB() error {
 		return err
 	}
 
-	dot := dotsql.Merge(statsQueries, indexQueries)
+	postQueries, err := dotsql.LoadFromFile("./data/postQueries.sql")
+
+	if err != nil {
+		return err
+	}
+
+	dot := dotsql.Merge(
+		statsQueries,
+		indexQueries,
+		postQueries,
+	)
 	dotx := dotsqlx.Wrap(dot)
 
 	// Set the global DBClient variable to the db connection
