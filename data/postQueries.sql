@@ -129,3 +129,27 @@ WHERE
 ORDER BY
     id ASC;
 
+-- name: xml-feed
+SELECT
+    title,
+    slug,
+    body,
+    updated_at at time zone 'utc' at time zone 'Europe/Stockholm' AS updated_at
+FROM
+    post
+WHERE
+    published = TRUE
+ORDER BY
+    created_at DESC;
+
+-- name: xml-sitemap
+SELECT
+    slug,
+    updated_at
+FROM
+    post
+WHERE
+    published = TRUE
+ORDER BY
+    created_at DESC;
+

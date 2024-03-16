@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"log"
 	"time"
 
 	"github.com/believer/willcodefor-go/data"
@@ -16,25 +15,19 @@ type PostWithParsedDate struct {
 }
 
 func FeedHandler(c *fiber.Ctx) error {
-	posts := []model.Post{}
-	engineXML := mustache.New("./xmls", ".xml")
+	var (
+		posts     []model.Post
+		engineXML = mustache.New("./xmls", ".xml")
+	)
 
 	if err := engineXML.Load(); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	q := `
-    SELECT title, slug, body, updated_at at time zone 'utc' at time zone 'Europe/Stockholm' as updated_at
-    FROM post
-    WHERE published = true
-    ORDER BY created_at DESC
-  `
-
-	err := data.DB.Select(&posts, q)
+	err := data.Dot.Select(data.DB, &posts, "xml-feed")
 
 	if err != nil {
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	c.Type("xml")
@@ -55,18 +48,19 @@ func FeedHandler(c *fiber.Ctx) error {
 }
 
 func SitemapHandler(c *fiber.Ctx) error {
-	posts := []model.Post{}
-	engineXML := mustache.New("./xmls", ".xml")
+	var (
+		posts     []model.Post
+		engineXML = mustache.New("./xmls", ".xml")
+	)
 
 	if err := engineXML.Load(); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	err := data.DB.Select(&posts, "SELECT slug, updated_at FROM post WHERE published = true ORDER BY created_at DESC")
+	err := data.Dot.Select(data.DB, &posts, "xml-sitemap")
 
 	if err != nil {
-		log.Fatal(err)
-		c.JSON("Oh no")
+		return err
 	}
 
 	var updatedPosts []PostWithParsedDate
