@@ -120,7 +120,7 @@ func StatsPostViewsHandler(c *fiber.Ctx) error {
 	SELECT
 		GENERATE_SERIES(
       (SELECT created_at FROM post WHERE id = $1),
-			CURRENT_DATE,
+			CURRENT_DATE + INTERVAL '1 day',
 			'1 day'::INTERVAL
 		)::DATE AS DAY
 )
