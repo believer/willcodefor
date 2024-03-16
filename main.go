@@ -16,7 +16,11 @@ import (
 
 func main() {
 	godotenv.Load()
-	data.InitDB()
+	err := data.InitDB()
+
+	if err != nil {
+		log.Fatalf("Error connecting to database: %v", err)
+	}
 
 	// Set up Fiber and view engine
 	engine := html.New("./views", ".html")

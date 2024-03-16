@@ -1,29 +1,46 @@
 package data
 
 import (
+	"log"
 	"os"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/qustavo/dotsql"
+	"github.com/swithek/dotsqlx"
 
 	_ "github.com/lib/pq"
 )
 
-var DB *sqlx.DB
+var (
+	DB  *sqlx.DB
+	Dot *dotsqlx.DotSqlx
+)
 
-func InitDB() {
+func InitDB() error {
 	connectionString := os.Getenv("DATABASE_URL")
-	db, err := sqlx.Connect("postgres", connectionString)
+
+	db := sqlx.MustConnect("postgres", connectionString)
+	err := db.Ping()
 
 	if err != nil {
-		panic(err)
+		return err
+	} else {
+		log.Println("Connected to database")
 	}
 
-	// Check if we can connect to the DB
-	err = db.Ping()
+	statsQueries, err := dotsql.LoadFromFile("./data/statsQueries.sql")
 
 	if err != nil {
-		panic(err)
+		return err
 	}
 
+	dot := dotsql.Merge(statsQueries)
+	dotx := dotsqlx.Wrap(dot)
+
+	// Set the global DBClient variable to the db connection
 	DB = db
+	Dot = dotx
+
+	return nil
+
 }
