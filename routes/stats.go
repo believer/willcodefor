@@ -209,10 +209,7 @@ func StatsPostViewsHandler(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Render("partials/graphLine", fiber.Map{
-		"D":     p.D,
-		"YGrid": p.YGrid,
-	}, "")
+	return c.Render("partials/graphLine", p, "")
 }
 
 func ViewsPerDay(c *fiber.Ctx) error {

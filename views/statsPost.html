@@ -1,9 +1,7 @@
 <div class="flex flex-col gap-y-8 sm:gap-y-12">
-  <div
-    hx-get="/stats/{{ .ID }}/views"
-    hx-trigger="load"
-    hx-swap="outerHTML"
-  ></div>
+  <div class="sm:h-[200px]" hx-get="/stats/{{ .ID }}/views" hx-trigger="load">
+    {{ template "partials/graphLine" .LineGraph }}
+  </div>
 
   <div
     class="grid grid-cols-1 sm:grid-cols-2 gap-8 text-center text-6xl sm:text-8xl font-bold"
