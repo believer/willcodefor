@@ -17,12 +17,12 @@
       hx-select="#command-menu-posts li"
     />
     <ul id="command-menu-posts">
-      {{ range $index, $p := .Posts }}
+      {{ range $index, $p := . }}
       <li
-        class="flex justify-between items-center focus-within:bg-neutral-200 dark:focus-within:bg-neutral-800 p-2 -mx-2 rounded-sm"
+        class="flex justify-between items-center focus-within:bg-neutral-200 dark:focus-within:bg-neutral-800 p-2 -mx-2 rounded-sm gap-x-4"
       >
         <a
-          class="focus:outline-none"
+          class="focus:outline-none flex-1 text-pretty"
           href="/posts/{{ .Slug }}"
           hx-trigger="click, keyup[ctrlKey && key == '{{add $index 1}}'] from:body"
         >
