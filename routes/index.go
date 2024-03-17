@@ -34,7 +34,5 @@ func CommandMenuHandler(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Render("command-menu", fiber.Map{
-		"Posts": posts,
-	}, "")
+	return c.Render("command-menu", posts, "")
 }

@@ -29,9 +29,8 @@ func PostsHandler(c *fiber.Ctx) error {
 	var (
 		posts     []model.Post
 		sortOrder = c.Query("sort", "createdAt")
+		q         = "posts-by-created"
 	)
-
-	q := "posts-by-created"
 
 	if sortOrder == "updatedAt" {
 		q = "posts-by-updated"
@@ -126,9 +125,10 @@ func PostHandler(c *fiber.Ctx) error {
 }
 
 func PostNextHandler(c *fiber.Ctx) error {
-	var nextPost model.Post
-
-	id := c.Params("id")
+	var (
+		nextPost model.Post
+		id       = c.Params("id")
+	)
 
 	if err := data.Dot.Get(data.DB, &nextPost, "next-post", id); err != nil {
 		if err == sql.ErrNoRows {
@@ -142,9 +142,10 @@ func PostNextHandler(c *fiber.Ctx) error {
 }
 
 func PostPreviousHandler(c *fiber.Ctx) error {
-	var prevPost model.Post
-
-	id := c.Params("id")
+	var (
+		prevPost model.Post
+		id       = c.Params("id")
+	)
 
 	if err := data.Dot.Get(data.DB, &prevPost, "previous-post", id); err != nil {
 		if err == sql.ErrNoRows {
@@ -158,17 +159,20 @@ func PostPreviousHandler(c *fiber.Ctx) error {
 }
 
 func PostStatsHandler(c *fiber.Ctx) error {
-	var postViews string
-
-	id := c.Params("id")
-	env := os.Getenv("APP_ENV")
-	userAgent := c.GetReqHeaders()["User-Agent"][0]
+	var (
+		postViews string
+		id        = c.Params("id")
+		userAgent = c.GetReqHeaders()["User-Agent"][0]
+		env       = os.Getenv("APP_ENV")
+	)
 
 	if userAgent != "" && env == "production" {
-		engine := ""
-		deviceModel := ""
-		deviceVendor := ""
-		ua := useragent.Parse(userAgent)
+		var (
+			engine       = ""
+			deviceModel  = ""
+			deviceVendor = ""
+			ua           = useragent.Parse(userAgent)
+		)
 
 		switch ua.Name {
 		case "Firefox":
