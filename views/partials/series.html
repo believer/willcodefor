@@ -2,7 +2,7 @@
   class="mt-5 rounded-lg bg-neutral-200 p-5 text-sm shadow-lg dark:bg-neutral-800"
 >
   <h2 class="mb-2">{{ .SeriesName }} series</h2>
-  <ul class="counter space-y-2">
+  <ul class="counter space-y-3">
     {{ range .Posts }}
     <li class="counter-increment">
       {{ if eq $.Slug .Slug }}

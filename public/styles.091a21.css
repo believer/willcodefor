@@ -2410,6 +2410,11 @@ dialog::backdrop {
     color: rgb(163 163 163 / var(--tw-text-opacity));
   }
 
+  .dark\:text-neutral-500 {
+    --tw-text-opacity: 1;
+    color: rgb(115 115 115 / var(--tw-text-opacity));
+  }
+
   .dark\:text-neutral-600 {
     --tw-text-opacity: 1;
     color: rgb(82 82 82 / var(--tw-text-opacity));
