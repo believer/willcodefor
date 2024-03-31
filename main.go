@@ -90,17 +90,19 @@ func main() {
 
 	// Stats
 	// ––––––––––––––––––––––––––––––––––––––––
-	app.Get("/stats", routes.StatsHandler)
-	app.Get("/stats/total-views", routes.TotalViewsHandler)
-	app.Get("/stats/views-per-day", routes.ViewsPerDay)
-	app.Get("/stats/browsers", routes.BrowsersHandler)
-	app.Get("/stats/os", routes.OSHandler)
-	app.Get("/stats/most-viewed", routes.MostViewedHandler)
-	app.Get("/stats/most-viewed-today", routes.MostViewedTodayHandler)
-	app.Get("/stats/chart", routes.ChartHandler)
-	app.Get("/stats/posts", routes.PostsStatsHandler)
-	app.Get("/stats/:id", routes.StatsPostHandler)
-	app.Get("/stats/:id/views", routes.StatsPostViewsHandler)
+	stats := app.Group("/stats")
+
+	stats.Get("/", routes.StatsHandler)
+	stats.Get("/total-views", routes.TotalViewsHandler)
+	stats.Get("/views-per-day", routes.ViewsPerDay)
+	stats.Get("/browsers", routes.BrowsersHandler)
+	stats.Get("/os", routes.OSHandler)
+	stats.Get("/most-viewed", routes.MostViewedHandler)
+	stats.Get("/most-viewed-today", routes.MostViewedTodayHandler)
+	stats.Get("/chart", routes.ChartHandler)
+	stats.Get("/posts", routes.PostsStatsHandler)
+	stats.Get("/:id", routes.StatsPostHandler)
+	stats.Get("/:id/views", routes.StatsPostViewsHandler)
 
 	// Redirects to old page
 	// ––––––––––––––––––––––––––––––––––––––––
@@ -108,13 +110,14 @@ func main() {
 	// Handle short URLs and old posts where images were linked
 	// from the root folder.
 	app.Get("/:slug", func(c *fiber.Ctx) error {
-		filename := fmt.Sprintf("./public/%s", c.Params("slug"))
+		slug := c.Params("slug")
+		filename := fmt.Sprintf("./public/%s", slug)
 
 		if _, err := os.Stat(filename); err == nil {
 			return c.SendFile(filename)
 		}
 
-		return c.Redirect("/posts/"+c.Params("slug"), fiber.StatusSeeOther)
+		return c.Redirect("/posts/"+slug, fiber.StatusSeeOther)
 	})
 
 	port := os.Getenv("PORT")

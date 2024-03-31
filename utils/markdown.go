@@ -4,8 +4,8 @@ import (
 	"bytes"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
-	highlighting "github.com/believer/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
