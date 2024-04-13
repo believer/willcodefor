@@ -25,6 +25,16 @@ type Bar struct {
 	ValueY    int
 }
 
+func clamp(val, min, max int) int {
+	if val < min {
+		return min
+	}
+	if val > max {
+		return max
+	}
+	return val
+}
+
 func BarChart(data []CountData) ([]Bar, error) {
 	var graphData []Bar
 
@@ -37,8 +47,8 @@ func BarChart(data []CountData) ([]Bar, error) {
 		var (
 			elementsInGraph = graphWidth / len(data)
 			// Calcualte the bar Height
-			// Subtract 40 from the graph height to make room for the labels
-			barHeight = int(float64(row.Count)/float64(maxCount)*float64(graphHeight-40)) - 6
+			// Subtract 46 from the graph height to make room for the labels
+			barHeight = clamp(int(float64(row.Count)/float64(maxCount)*float64(graphHeight-46)), 2, graphHeight-46)
 			barWidth  = int(elementsInGraph) - 5
 
 			// Space the bars evenly across the graph
