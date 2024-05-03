@@ -15,12 +15,12 @@
     />
     {{ end }}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/public/styles.8c74bf.css" rel="stylesheet" />
+    <link href="/public/styles.667b21.css" rel="stylesheet" />
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon" />
-    <script src="/public/htmx.2.0.0-beta1.min.js"></script>
-    <script src="/public/htmx.head-support.js"></script>
+    <script defer src="/public/htmx.2.0.0-beta1.min.js"></script>
+    <script defer src="/public/htmx.head-support.js"></script>
     {{ if eq .Path "/stats" }}
-    <script src="/public/hyperscript.0.9.12.min.js"></script>
+    <script defer src="/public/hyperscript.0.9.12.min.js"></script>
     {{end}}
     <script async src="/public/command-menu.4e6ce0.js"></script>
     {{ if .Metadata }}
@@ -52,6 +52,9 @@
       <a class="font-bold focus-visible:outline-dashed focus-visible:outline-offset-2 focus:outline-neutral-700 dark:focus:outline-neutral-600 {{ if eq .Path "/"}} text-neutral-700 dark:text-neutral-300 border-neutral-700 dark:border-neutral-300{{end}}" href="/">Home</a>
       <a class="font-bold focus-visible:outline-dashed focus-visible:outline-offset-2 focus:outline-neutral-700 dark:focus:outline-neutral-600 {{ if eq .Path "/posts"}} text-neutral-700 dark:text-neutral-300 border-neutral-700 dark:border-neutral-300{{end}}" href="/posts">
           Writing
+        </a>
+      <a class="font-bold focus-visible:outline-dashed focus-visible:outline-offset-2 focus:outline-neutral-700 dark:focus:outline-neutral-600 {{ if eq .Path "/books"}} text-neutral-700 dark:text-neutral-300 border-neutral-700 dark:border-neutral-300{{end}}" href="/books">
+          Reading
         </a>
       </div>
       <div class="col-start-3 col-end-4 my-10 md:my-12">{{embed}}</div>

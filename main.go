@@ -45,6 +45,7 @@ func main() {
 	// ––––––––––––––––––––––––––––––––––––––––
 
 	app.Get("/", routes.IndexHandler)
+	app.Get("/books", routes.BooksHandler)
 	app.Get("/command-menu", routes.CommandMenuHandler)
 
 	// Posts routes

@@ -46,10 +46,17 @@ func InitDB() error {
 		return err
 	}
 
+	bookQueries, err := dotsql.LoadFromFile("./data/bookQueries.sql")
+
+	if err != nil {
+		return err
+	}
+
 	dot := dotsql.Merge(
 		statsQueries,
 		indexQueries,
 		postQueries,
+		bookQueries,
 	)
 	dotx := dotsqlx.Wrap(dot)
 

@@ -1,0 +1,179 @@
+<div class="mx-auto max-w-2xl space-y-8">
+  <p>
+    I like reading books, but usually it only happens before going to bed. I'm
+    also a competitive person. So, to motivate me to read more, I'm going to
+    post the books here. Sort of like <a href="/lip">learning in public</a>, but
+    for reading. With
+    <a href="https://wordcounters.com">estimated word counts</a> I can also
+    satisfy my love for stats.
+  </p>
+
+  <div class="text-center text-4xl font-bold md:flex justify-evenly">
+    <div>
+      <span>{{ .TotalWords }}</span>
+      <div
+        class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
+      >
+        Total words
+      </div>
+    </div>
+    <div>
+      <span>{{ .WordsPerDay }}</span>
+      <div
+        class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
+      >
+        Words per day
+      </div>
+    </div>
+    <div>
+      <span>{{ .TotalBooks }}</span>
+      <div
+        class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
+      >
+        Books read
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-6 items-start mb-12 p-4 bg-sky-100 dark:bg-sky-950 rounded-sm"
+  >
+    <div class="flex items-center justify-center mt-1">
+      <img
+        src="{{ .CurrentBook.CoverURL }}"
+        alt="{{ .Title }}"
+        class="sm:w-full rounded-sm"
+      />
+    </div>
+    <div>
+      <div
+        class="flex justify-between items-center mb-4 pb-4 border-b border-sky-300 dark:border-sky-900 gap-x-8"
+      >
+        <div class="space-y-1">
+          <div class="font-bold flex gap-x-2 items-baseline">
+            <span>{{ .CurrentBook.Title }}</span> {{ if
+            .CurrentBook.Series.Valid }}
+            <span
+              class="text-xs font-normal text-neutral-600 dark:text-neutral-400"
+            >
+              {{ .CurrentBook.Series.String }} #{{
+              .CurrentBook.OrderInSeries.Float64 }}
+            </span>
+            {{ end }}
+          </div>
+          {{ if .CurrentBook.Subtitle.Valid }}
+          <div class="text-xs text-neutral-600 dark:text-neutral-400">
+            {{ .CurrentBook.Subtitle.String }}
+          </div>
+          {{ end }}
+          <div class="text-sm">{{ .CurrentBook.Author }}</div>
+        </div>
+        {{ if .CurrentBook.Rating.Valid }}
+        <div class="whitespace-nowrap">{{ .CurrentBook.Rating }} / 10</div>
+        {{ end }}
+      </div>
+
+      <dl
+        class="grid sm:grid-cols-[max-content_1fr] gap-x-4 gap-y-1 md:text-sm"
+      >
+        <dd class="font-semibold">Started at</dd>
+        <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+          {{ .CurrentBook.StartedAt.Format "2006-01-02" }}
+        </dt>
+        {{ if .CurrentBook.FinishedAt.Valid }}
+        <dd class="font-semibold">Expected to finish</dd>
+        <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+          {{ .CurrentBook.FinishedAt.Time.Format "2006-01-02" }} {{ if
+          .CurrentBook.Days.Valid }}({{ .CurrentBook.Days.String }}) {{ end }}
+        </dt>
+        {{ end }}
+        <dd class="font-semibold">Word count</dd>
+
+        <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+          {{ .CurrentBook.WordCount }}
+        </dt>
+        <dd class="font-semibold">Pace</dd>
+        <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+          {{ .CurrentBook.Pace }} words per day
+        </dt>
+      </dl>
+    </div>
+  </div>
+
+  <ol class="space-y-4">
+    {{ range .Books }}
+    <li
+      class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-6 items-start p-4 bg-neutral-200 dark:bg-neutral-800 rounded-sm group"
+    >
+      <div class="flex items-center justify-center mt-1">
+        <img
+          src="{{ .CoverURL }}"
+          alt="{{ .Title }}"
+          class="rounded-sm sm:w-full saturate-0 group-hover:saturate-100 transition"
+        />
+      </div>
+      <div>
+        <div
+          class="flex justify-between items-center mb-4 pb-4 border-b border-neutral-300 dark:border-neutral-700 gap-x-8"
+        >
+          <div class="space-y-0.5">
+            <div class="font-bold flex gap-x-2 items-baseline">
+              <span>{{ .Title }}</span> {{ if .Series.Valid }}
+              <span
+                class="text-xs font-normal text-neutral-600 dark:text-neutral-400"
+              >
+                {{ .Series.String }} #{{ .OrderInSeries.Float64 }}
+              </span>
+              {{ end }}
+            </div>
+            {{ if .Subtitle.Valid }}
+            <div class="text-xs text-neutral-600 dark:text-neutral-400">
+              {{ .Subtitle.String }}
+            </div>
+            {{ end }}
+            <div class="text-sm">{{ .Author }}</div>
+          </div>
+        </div>
+
+        <div class="gap-x-4 gap-y-2 md:text-sm grid grid-cols-1 md:grid-cols-2">
+          <div>
+            <div class="font-semibold">Started at</div>
+            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
+              {{ .StartedAt.Format "2006-01-02" }}
+            </div>
+          </div>
+          <div>
+            {{ if .FinishedAt.Valid }}
+            <div class="font-semibold">Finished at</div>
+            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
+              {{ .FinishedAt.Time.Format "2006-01-02" }} {{ if .Days.Valid }}({{
+              .Days.String }}){{ end }}
+            </div>
+            {{ end }}
+          </div>
+          <div>
+            <div class="font-semibold">Word count</div>
+            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
+              {{ .WordCount }}
+            </div>
+          </div>
+          <div>
+            <div class="font-semibold">Pace</div>
+            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
+              {{ .Pace }} words per day
+            </div>
+          </div>
+          {{ if .Rating.Valid }}
+          <div>
+            <div class="font-semibold">Rating</div>
+            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
+              {{ .Rating.Int32 }} / 10
+            </div>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </li>
+    {{ end }}
+  </ol>
+</div>
