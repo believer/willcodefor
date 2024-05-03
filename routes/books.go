@@ -34,8 +34,7 @@ func BooksHandler(c *fiber.Ctx) error {
 		totalWords += (book.WordCount / book.PageCount) * book.CurrentPage
 	}
 
-	totalBooks := len(books) + 1
-
+	booksRead := len(books)
 	now := time.Now()
 	dayOfYear := now.YearDay()
 	wordsPerDay := totalWords / dayOfYear
@@ -49,7 +48,7 @@ func BooksHandler(c *fiber.Ctx) error {
 		"Books":        books,
 		"CurrentBooks": currentBooks,
 		"TotalWords":   totalWords,
-		"TotalBooks":   totalBooks,
+		"BooksRead":    booksRead,
 		"WordsPerDay":  wordsPerDay,
 	})
 }
