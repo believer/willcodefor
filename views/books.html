@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-2xl space-y-8">
+<div class="mx-auto max-w-xl space-y-8">
   <p>
     I like reading books, but usually it only happens before going to bed. I'm
     also a competitive person. So, to motivate me to read more, I'm going to
@@ -13,7 +13,9 @@
     >.
   </p>
 
-  <div class="text-center text-4xl font-bold md:flex justify-evenly">
+  <div
+    class="text-center text-5xl md:text-4xl font-bold flex flex-col md:flex-row justify-evenly gap-4"
+  >
     <div>
       <span>{{ .TotalWords }}</span>
       <div
@@ -41,74 +43,75 @@
   </div>
 
   <div
-    class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-6 items-start mb-12 p-4 bg-sky-100 dark:bg-sky-950 rounded-sm"
+    class="rounded-md p-px bg-gradient-to-br from-sky-200 to-sky-400 dark:from-sky-400 dark:to-sky-900"
   >
-    <div class="flex items-center justify-center mt-1">
-      <img
-        src="{{ .CurrentBook.CoverURL }}"
-        alt="{{ .Title }}"
-        class="sm:w-full rounded-sm"
-      />
-    </div>
-    <div class="space-y-4">
-      <div class="space-y-1">
-        <div class="font-bold flex gap-x-2 items-baseline">
-          <span>{{ .CurrentBook.Title }}</span> {{ if .CurrentBook.Series.Valid
-          }}
-          <span
-            class="text-xs font-normal text-neutral-600 dark:text-neutral-400"
-          >
-            {{ .CurrentBook.Series.String }} #{{
-            .CurrentBook.OrderInSeries.Float64 }}
-          </span>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-6 items-start p-4 bg-sky-100 dark:bg-sky-950 rounded-[calc(0.375rem-1px)]"
+    >
+      <div class="flex items-center justify-center mt-1">
+        <img
+          src="{{ .CurrentBook.CoverURL }}"
+          alt="{{ .Title }}"
+          class="sm:w-full rounded-sm"
+        />
+      </div>
+      <div class="space-y-4">
+        <div class="space-y-1">
+          <div class="font-bold flex gap-x-2 items-baseline">
+            <span>{{ .CurrentBook.Title }}</span> {{ if
+            .CurrentBook.Series.Valid }}
+            <span class="text-xs font-normal text-sky-600 dark:text-sky-200">
+              {{ .CurrentBook.Series.String }} #{{
+              .CurrentBook.OrderInSeries.Float64 }}
+            </span>
+            {{ end }}
+          </div>
+          {{ if .CurrentBook.Subtitle.Valid }}
+          <div class="text-xs text-sky-600 dark:text-sky-200 text-balance">
+            {{ .CurrentBook.Subtitle.String }}
+          </div>
           {{ end }}
+          <div class="text-sm">{{ .CurrentBook.Author }}</div>
         </div>
-        {{ if .CurrentBook.Subtitle.Valid }}
-        <div class="text-xs text-neutral-600 dark:text-neutral-400">
-          {{ .CurrentBook.Subtitle.String }}
+
+        <div class="h-[1px] bg-sky-300 dark:bg-sky-900 relative">
+          <div
+            class="absolute h-[1px] bg-sky-700 dark:bg-sky-500"
+            style="width:{{ .CurrentBookProgress }}%;"
+          ></div>
         </div>
-        {{ end }}
-        <div class="text-sm">{{ .CurrentBook.Author }}</div>
+
+        <dl
+          class="grid sm:grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-sm md:text-xs"
+        >
+          <dd class="font-semibold">Started at</dd>
+          <dt class="tabular-nums text-sky-600 dark:text-sky-200">
+            {{ .CurrentBook.StartedAt.Format "2006-01-02" }}
+          </dt>
+          {{ if .CurrentBook.FinishedAt.Valid }}
+          <dd class="font-semibold">Expected to finish</dd>
+          <dt class="tabular-nums text-sky-600 dark:text-sky-200">
+            {{ .CurrentBook.FinishedAt.Time.Format "2006-01-02" }} {{ if
+            .CurrentBook.Days.Valid }}({{ .CurrentBook.Days.String }}) {{ end }}
+          </dt>
+          {{ end }}
+          <dd class="font-semibold">Word count</dd>
+          <dt class="tabular-nums text-sky-600 dark:text-sky-200">
+            {{ .CurrentBook.WordCount }}
+          </dt>
+          <dd class="font-semibold">Pace</dd>
+          <dt class="tabular-nums text-sky-600 dark:text-sky-200">
+            {{ .CurrentBook.Pace }} words per day
+          </dt>
+        </dl>
       </div>
-
-      <div class="h-[1px] bg-sky-300 dark:bg-sky-900 relative">
-        <div
-          class="absolute h-[1px] bg-sky-700 dark:bg-sky-500"
-          style="width:{{ .CurrentBookProgress }}%;"
-        ></div>
-      </div>
-
-      <dl
-        class="grid sm:grid-cols-[max-content_1fr] gap-x-4 gap-y-1 md:text-sm"
-      >
-        <dd class="font-semibold">Started at</dd>
-        <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-          {{ .CurrentBook.StartedAt.Format "2006-01-02" }}
-        </dt>
-        {{ if .CurrentBook.FinishedAt.Valid }}
-        <dd class="font-semibold">Expected to finish</dd>
-        <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-          {{ .CurrentBook.FinishedAt.Time.Format "2006-01-02" }} {{ if
-          .CurrentBook.Days.Valid }}({{ .CurrentBook.Days.String }}) {{ end }}
-        </dt>
-        {{ end }}
-        <dd class="font-semibold">Word count</dd>
-
-        <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-          {{ .CurrentBook.WordCount }}
-        </dt>
-        <dd class="font-semibold">Pace</dd>
-        <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-          {{ .CurrentBook.Pace }} words per day
-        </dt>
-      </dl>
     </div>
   </div>
 
   <ol class="space-y-4">
     {{ range .Books }}
     <li
-      class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-6 items-start p-4 bg-neutral-200 dark:bg-neutral-800 rounded-sm group"
+      class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-6 items-start p-4 bg-neutral-200 dark:bg-neutral-800 rounded group"
     >
       <div class="flex items-center justify-center mt-1">
         <img
@@ -132,7 +135,9 @@
               {{ end }}
             </div>
             {{ if .Subtitle.Valid }}
-            <div class="text-xs text-neutral-600 dark:text-neutral-400">
+            <div
+              class="text-xs text-neutral-600 dark:text-neutral-400 text-balance"
+            >
               {{ .Subtitle.String }}
             </div>
             {{ end }}
@@ -140,43 +145,35 @@
           </div>
         </div>
 
-        <div class="gap-x-4 gap-y-2 md:text-sm grid grid-cols-1 md:grid-cols-2">
-          <div>
-            <div class="font-semibold">Started at</div>
-            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
-              {{ .StartedAt.Format "2006-01-02" }}
-            </div>
-          </div>
-          <div>
-            {{ if .FinishedAt.Valid }}
-            <div class="font-semibold">Finished at</div>
-            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
-              {{ .FinishedAt.Time.Format "2006-01-02" }} {{ if .Days.Valid }}({{
-              .Days.String }}){{ end }}
-            </div>
-            {{ end }}
-          </div>
-          <div>
-            <div class="font-semibold">Word count</div>
-            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
-              {{ .WordCount }}
-            </div>
-          </div>
-          <div>
-            <div class="font-semibold">Pace</div>
-            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
-              {{ .Pace }} words per day
-            </div>
-          </div>
-          {{ if .Rating.Valid }}
-          <div>
-            <div class="font-semibold">Rating</div>
-            <div class="tabular-nums text-neutral-600 dark:text-neutral-400">
-              {{ .Rating.Int32 }} / 10
-            </div>
-          </div>
+        <dl
+          class="grid sm:grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-sm md:text-xs"
+        >
+          <dd class="font-semibold">Started at</dd>
+          <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+            {{ .StartedAt.Format "2006-01-02" }}
+          </dt>
+          {{ if .FinishedAt.Valid }}
+          <dd class="font-semibold">Finished at</dd>
+          <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+            {{ .FinishedAt.Time.Format "2006-01-02" }} {{ if .Days.Valid }}({{
+            .Days.String }}){{ end }}
+          </dt>
           {{ end }}
-        </div>
+          <dd class="font-semibold">Word count</dd>
+          <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+            {{ .WordCount }}
+          </dt>
+          <dd class="font-semibold">Pace</dd>
+          <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+            {{ .Pace }} words per day
+          </dt>
+          {{ if .Rating.Valid }}
+          <dd class="font-semibold">Rating</dd>
+          <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+            {{ .Rating.Int32 }} / 10
+          </dt>
+          {{ end }}
+        </dl>
       </div>
     </li>
     {{ end }}
