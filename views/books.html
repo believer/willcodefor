@@ -42,42 +42,41 @@
     </div>
   </div>
 
+  {{ range .CurrentBooks }}
   <div
     class="rounded-md p-px bg-gradient-to-br from-sky-200 to-sky-400 dark:from-sky-400 dark:to-sky-900"
   >
     <div
-      class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-6 items-start p-4 bg-sky-100 dark:bg-sky-950 rounded-[calc(0.375rem-1px)]"
+      class="grid grid-cols-1 sm:grid-cols-[130px_1fr] sm:gap-6 items-start p-4 bg-sky-100 dark:bg-sky-950 rounded-[calc(0.375rem-1px)]"
     >
       <div class="flex items-center justify-center mt-1">
         <img
-          src="{{ .CurrentBook.CoverURL }}"
+          src="{{ .CoverURL }}"
           alt="{{ .Title }}"
-          class="sm:w-full rounded-sm"
+          class="hidden sm:block sm:w-full rounded-sm"
         />
       </div>
       <div class="space-y-4">
         <div class="space-y-1">
           <div class="font-bold flex gap-x-2 items-baseline">
-            <span>{{ .CurrentBook.Title }}</span> {{ if
-            .CurrentBook.Series.Valid }}
+            <span>{{ .Title }}</span> {{ if .Series.Valid }}
             <span class="text-xs font-normal text-sky-600 dark:text-sky-200">
-              {{ .CurrentBook.Series.String }} #{{
-              .CurrentBook.OrderInSeries.Float64 }}
+              {{ .Series.String }} #{{ .OrderInSeries.Float64 }}
             </span>
             {{ end }}
           </div>
-          {{ if .CurrentBook.Subtitle.Valid }}
+          {{ if .Subtitle.Valid }}
           <div class="text-xs text-sky-600 dark:text-sky-200 text-balance">
-            {{ .CurrentBook.Subtitle.String }}
+            {{ .Subtitle.String }}
           </div>
           {{ end }}
-          <div class="text-sm">{{ .CurrentBook.Author }}</div>
+          <div class="text-sm">{{ .Author }}</div>
         </div>
 
         <div class="h-[1px] bg-sky-300 dark:bg-sky-900 relative">
           <div
             class="absolute h-[1px] bg-sky-700 dark:bg-sky-500"
-            style="width:{{ .CurrentBookProgress }}%;"
+            style="width:{{ .Progress }}%;"
           ></div>
         </div>
 
@@ -86,38 +85,39 @@
         >
           <dd class="font-semibold">Started at</dd>
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
-            {{ .CurrentBook.StartedAt.Format "2006-01-02" }}
+            {{ .StartedAt.Format "2006-01-02" }}
           </dt>
-          {{ if .CurrentBook.FinishedAt.Valid }}
+          {{ if .FinishedAt.Valid }}
           <dd class="font-semibold">Expected to finish</dd>
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
-            {{ .CurrentBook.FinishedAt.Time.Format "2006-01-02" }} {{ if
-            .CurrentBook.Days.Valid }}({{ .CurrentBook.Days.String }}) {{ end }}
+            {{ .FinishedAt.Time.Format "2006-01-02" }} {{ if .Days.Valid }}({{
+            .Days.String }}) {{ end }}
           </dt>
           {{ end }}
           <dd class="font-semibold">Word count</dd>
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
-            {{ .CurrentBook.WordCount }}
+            {{ .WordCount }}
           </dt>
           <dd class="font-semibold">Pace</dd>
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
-            {{ .CurrentBook.Pace }} words per day
+            {{ .Pace }} words per day
           </dt>
         </dl>
       </div>
     </div>
   </div>
+  {{ end }}
 
   <ol class="space-y-4">
     {{ range .Books }}
     <li
-      class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-6 items-start p-4 bg-neutral-200 dark:bg-neutral-800 rounded group"
+      class="grid grid-cols-1 sm:grid-cols-[130px_1fr] sm:gap-6 items-start p-4 bg-neutral-200 dark:bg-neutral-800 rounded group"
     >
       <div class="flex items-center justify-center mt-1">
         <img
           src="{{ .CoverURL }}"
           alt="{{ .Title }}"
-          class="rounded-sm sm:w-full saturate-0 group-hover:saturate-100 transition"
+          class="hidden rounded-sm sm:block sm:w-full saturate-0 group-hover:saturate-100 transition"
         />
       </div>
       <div>

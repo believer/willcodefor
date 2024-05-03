@@ -22,4 +22,7 @@ type Book struct {
 	Year          time.Time       `db:"year"`
 	Days          sql.NullString  `db:"days"`
 	Pace          int             `db:"pace"`
+
+	// Calculated
+	Progress float64
 }

@@ -10,7 +10,7 @@ import (
 
 func BooksHandler(c *fiber.Ctx) error {
 	var books []model.Book
-	var currentBook model.Book
+	var currentBooks []model.Book
 
 	err := data.Dot.Select(data.DB, &books, "get-books")
 
@@ -18,7 +18,7 @@ func BooksHandler(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = data.Dot.Get(data.DB, &currentBook, "currently-reading")
+	err = data.Dot.Select(data.DB, &currentBooks, "currently-reading")
 
 	if err != nil {
 		return err
@@ -30,7 +30,9 @@ func BooksHandler(c *fiber.Ctx) error {
 		totalWords += book.WordCount
 	}
 
-	totalWords += (currentBook.WordCount / currentBook.PageCount) * currentBook.CurrentPage
+	for _, book := range currentBooks {
+		totalWords += (book.WordCount / book.PageCount) * book.CurrentPage
+	}
 
 	totalBooks := len(books) + 1
 
@@ -38,15 +40,16 @@ func BooksHandler(c *fiber.Ctx) error {
 	dayOfYear := now.YearDay()
 	wordsPerDay := totalWords / dayOfYear
 
-	currentBookProgress := (float64(currentBook.CurrentPage) / float64(currentBook.PageCount)) * 100
+	for _, book := range currentBooks {
+		book.Progress = (float64(book.CurrentPage) / float64(book.PageCount)) * 100
+	}
 
 	return c.Render("books", fiber.Map{
-		"Path":                "/books",
-		"Books":               books,
-		"CurrentBook":         currentBook,
-		"TotalWords":          totalWords,
-		"TotalBooks":          totalBooks,
-		"WordsPerDay":         wordsPerDay,
-		"CurrentBookProgress": currentBookProgress,
+		"Path":         "/books",
+		"Books":        books,
+		"CurrentBooks": currentBooks,
+		"TotalWords":   totalWords,
+		"TotalBooks":   totalBooks,
+		"WordsPerDay":  wordsPerDay,
 	})
 }

@@ -19,5 +19,7 @@ SELECT
 FROM
     public.book
 WHERE
-    finished_at IS NULL;
+    finished_at IS NULL
+ORDER BY
+    started_at DESC;
 
