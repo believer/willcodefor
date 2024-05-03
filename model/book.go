@@ -19,9 +19,10 @@ type Book struct {
 	WordCount     int             `db:"word_count"`
 	PageCount     int             `db:"page_count"`
 	CurrentPage   int             `db:"current_page"`
-	Year          time.Time       `db:"year"`
+	ReleaseDate   time.Time       `db:"release_date"`
 	Days          sql.NullString  `db:"days"`
 	Pace          int             `db:"pace"`
+	RecommendedBy sql.NullString  `db:"recommended_by"`
 
 	// Calculated
 	Progress float64
