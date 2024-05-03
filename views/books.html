@@ -45,32 +45,32 @@
         class="sm:w-full rounded-sm"
       />
     </div>
-    <div>
-      <div
-        class="flex justify-between items-center mb-4 pb-4 border-b border-sky-300 dark:border-sky-900 gap-x-8"
-      >
-        <div class="space-y-1">
-          <div class="font-bold flex gap-x-2 items-baseline">
-            <span>{{ .CurrentBook.Title }}</span> {{ if
-            .CurrentBook.Series.Valid }}
-            <span
-              class="text-xs font-normal text-neutral-600 dark:text-neutral-400"
-            >
-              {{ .CurrentBook.Series.String }} #{{
-              .CurrentBook.OrderInSeries.Float64 }}
-            </span>
-            {{ end }}
-          </div>
-          {{ if .CurrentBook.Subtitle.Valid }}
-          <div class="text-xs text-neutral-600 dark:text-neutral-400">
-            {{ .CurrentBook.Subtitle.String }}
-          </div>
+    <div class="space-y-4">
+      <div class="space-y-1">
+        <div class="font-bold flex gap-x-2 items-baseline">
+          <span>{{ .CurrentBook.Title }}</span> {{ if .CurrentBook.Series.Valid
+          }}
+          <span
+            class="text-xs font-normal text-neutral-600 dark:text-neutral-400"
+          >
+            {{ .CurrentBook.Series.String }} #{{
+            .CurrentBook.OrderInSeries.Float64 }}
+          </span>
           {{ end }}
-          <div class="text-sm">{{ .CurrentBook.Author }}</div>
         </div>
-        {{ if .CurrentBook.Rating.Valid }}
-        <div class="whitespace-nowrap">{{ .CurrentBook.Rating }} / 10</div>
+        {{ if .CurrentBook.Subtitle.Valid }}
+        <div class="text-xs text-neutral-600 dark:text-neutral-400">
+          {{ .CurrentBook.Subtitle.String }}
+        </div>
         {{ end }}
+        <div class="text-sm">{{ .CurrentBook.Author }}</div>
+      </div>
+
+      <div class="h-[1px] bg-sky-300 dark:bg-sky-900 relative">
+        <div
+          class="absolute h-[1px] bg-sky-700 dark:bg-sky-500"
+          style="width:{{ .CurrentBookProgress }}%;"
+        ></div>
       </div>
 
       <dl

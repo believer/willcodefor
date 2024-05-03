@@ -38,12 +38,15 @@ func BooksHandler(c *fiber.Ctx) error {
 	dayOfYear := now.YearDay()
 	wordsPerDay := totalWords / dayOfYear
 
+	currentBookProgress := (float64(currentBook.CurrentPage) / float64(currentBook.PageCount)) * 100
+
 	return c.Render("books", fiber.Map{
-		"Path":        "/books",
-		"Books":       books,
-		"CurrentBook": currentBook,
-		"TotalWords":  totalWords,
-		"TotalBooks":  totalBooks,
-		"WordsPerDay": wordsPerDay,
+		"Path":                "/books",
+		"Books":               books,
+		"CurrentBook":         currentBook,
+		"TotalWords":          totalWords,
+		"TotalBooks":          totalBooks,
+		"WordsPerDay":         wordsPerDay,
+		"CurrentBookProgress": currentBookProgress,
 	})
 }

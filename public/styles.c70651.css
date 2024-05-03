@@ -1434,6 +1434,10 @@ abbr[title]:focus-visible::after,
   height: 1.5rem;
 }
 
+.h-\[1px\] {
+  height: 1px;
+}
+
 .min-h-\[140px\] {
   min-height: 140px;
 }
@@ -1665,10 +1669,6 @@ abbr[title]:focus-visible::after,
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
 }
 
-.whitespace-nowrap {
-  white-space: nowrap;
-}
-
 .text-pretty {
   text-wrap: pretty;
 }
@@ -1737,11 +1737,6 @@ abbr[title]:focus-visible::after,
   border-color: rgb(38 38 38 / var(--tw-border-opacity));
 }
 
-.border-sky-300 {
-  --tw-border-opacity: 1;
-  border-color: rgb(125 211 252 / var(--tw-border-opacity));
-}
-
 .bg-neutral-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(245 245 245 / var(--tw-bg-opacity));
@@ -1755,6 +1750,11 @@ abbr[title]:focus-visible::after,
 .bg-sky-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(224 242 254 / var(--tw-bg-opacity));
+}
+
+.bg-sky-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(125 211 252 / var(--tw-bg-opacity));
 }
 
 .bg-sky-400 {
@@ -2454,11 +2454,6 @@ dialog::backdrop {
     border-color: rgb(38 38 38 / var(--tw-border-opacity));
   }
 
-  .dark\:border-sky-900 {
-    --tw-border-opacity: 1;
-    border-color: rgb(12 74 110 / var(--tw-border-opacity));
-  }
-
   .dark\:bg-neutral-700 {
     --tw-bg-opacity: 1;
     background-color: rgb(64 64 64 / var(--tw-bg-opacity));
@@ -2482,6 +2477,11 @@ dialog::backdrop {
   .dark\:bg-sky-600 {
     --tw-bg-opacity: 1;
     background-color: rgb(2 132 199 / var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-sky-900 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(12 74 110 / var(--tw-bg-opacity));
   }
 
   .dark\:bg-sky-950 {
