@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"math"
 	"time"
 )
 
@@ -20,10 +21,50 @@ type Book struct {
 	PageCount     int             `db:"page_count"`
 	CurrentPage   int             `db:"current_page"`
 	ReleaseDate   time.Time       `db:"release_date"`
-	Days          sql.NullString  `db:"days"`
-	Pace          int             `db:"pace"`
 	RecommendedBy sql.NullString  `db:"recommended_by"`
+}
 
-	// Calculated
-	Progress float64
+func (b Book) Finished() bool {
+	return b.FinishedAt.Valid
+}
+
+func (b Book) ProgressPercent() float64 {
+	return (float64(b.CurrentPage) / float64(b.PageCount)) * 100
+}
+
+func (b Book) WordsPerPage() int {
+	return b.WordCount / b.PageCount
+}
+
+func (b Book) WordsRead() int {
+	return b.WordsPerPage() * b.CurrentPage
+}
+
+func (b Book) DaysElapsed() int {
+	elapsed := time.Since(b.StartedAt).Hours() / 24
+
+	if b.Finished() {
+		elapsed = b.FinishedAt.Time.Sub(b.StartedAt).Hours() / 24
+	}
+
+	if elapsed == 0 {
+		elapsed = 1
+	}
+
+	return int(elapsed)
+}
+
+func (b Book) Pace() int {
+	return int(float64(b.WordsRead()) / float64(b.DaysElapsed()))
+}
+
+func (b Book) ExpectedFinish() time.Time {
+	wordsLeft := b.WordCount - b.WordsRead()
+	daysLeft := math.Round(float64(wordsLeft) / float64(b.Pace()))
+
+	return time.Now().AddDate(0, 0, int(daysLeft))
+}
+
+func (b Book) DaysLeft() int {
+	return int(math.Round(b.ExpectedFinish().Sub(time.Now()).Hours() / 24))
 }
