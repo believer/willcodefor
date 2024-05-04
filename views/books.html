@@ -91,6 +91,10 @@
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
             {{ .ExpectedFinish.Format "2006-01-02" }} ({{ .DaysLeft }} days)
           </dt>
+          <dd class="font-semibold">Page</dd>
+          <dt class="tabular-nums text-sky-600 dark:text-sky-200">
+            {{ .CurrentPage }} / {{ .PageCount }}
+          </dt>
           <dd class="font-semibold">Word count</dd>
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
             {{ .WordCount }}
