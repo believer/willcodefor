@@ -46,14 +46,15 @@ func BooksHandler(c *fiber.Ctx) error {
 	formattedTotalWords := p.Sprintf("%v", number.Decimal(totalWords))
 	formattedWordsPerDay := p.Sprintf("%v", number.Decimal(wordsPerDay))
 
+	yearlyProgress := float64(booksRead) / 20 * 100
+
 	return c.Render("books", fiber.Map{
 		"Path":                 "/books",
 		"Books":                books,
 		"CurrentBooks":         currentBooks,
 		"FormattedTotalWords":  formattedTotalWords,
 		"FormattedWordsPerDay": formattedWordsPerDay,
-		"TotalWords":           totalWords,
 		"BooksRead":            booksRead,
-		"WordsPerDay":          wordsPerDay,
+		"YearlyProgress":       yearlyProgress,
 	})
 }

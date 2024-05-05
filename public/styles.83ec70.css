@@ -1422,6 +1422,10 @@ abbr[title]:focus-visible::after,
   display: none;
 }
 
+.h-1 {
+  height: 0.25rem;
+}
+
 .h-5 {
   height: 1.25rem;
 }
@@ -1779,14 +1783,28 @@ abbr[title]:focus-visible::after,
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
 }
 
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
 .from-sky-200 {
   --tw-gradient-from: #bae6fd var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(186 230 253 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-sky-300 {
+  --tw-gradient-from: #7dd3fc var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(125 211 252 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .to-sky-400 {
   --tw-gradient-to: #38bdf8 var(--tw-gradient-to-position);
+}
+
+.to-sky-500 {
+  --tw-gradient-to: #0ea5e9 var(--tw-gradient-to-position);
 }
 
 .fill-current {
@@ -2530,6 +2548,16 @@ dialog::backdrop {
     --tw-gradient-from: #38bdf8 var(--tw-gradient-from-position);
     --tw-gradient-to: rgb(56 189 248 / 0) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .dark\:from-sky-500 {
+    --tw-gradient-from: #0ea5e9 var(--tw-gradient-from-position);
+    --tw-gradient-to: rgb(14 165 233 / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .dark\:to-sky-700 {
+    --tw-gradient-to: #0369a1 var(--tw-gradient-to-position);
   }
 
   .dark\:to-sky-900 {
