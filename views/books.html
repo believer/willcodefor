@@ -1,59 +1,64 @@
-<div class="mx-auto max-w-xl space-y-8">
-  <p>
-    I like reading books, but usually it only happens before going to bed. I'm
-    also a competitive person. So, to motivate me to read more, I'm going to
-    post the books here. Sort of like <a href="/lip">learning in public</a>, but
-    for reading. With
-    <a rel="noopener noreferrer" target="_blank" href="https://wordcounters.com"
-      >estimated word counts</a
-    >
-    I can also satisfy my love for stats.
-  </p>
+<div class="mx-auto max-w-xl space-y-12">
+  <div class="space-y-8">
+    <p>
+      I like reading books, but usually it only happens before going to bed. I'm
+      also a competitive person. So, to motivate me to read more, I'm going to
+      post the books here. Sort of like <a href="/lip">learning in public</a>,
+      but for reading. With
+      <a
+        rel="noopener noreferrer"
+        target="_blank"
+        href="https://wordcounters.com"
+        >estimated word counts</a
+      >
+      I can also satisfy my love for stats.
+    </p>
 
-  <div
-    class="text-center text-5xl md:text-4xl font-bold flex flex-col md:flex-row justify-evenly gap-4"
-  >
-    <div>
-      <span>{{ .FormattedTotalWords }}</span>
-      <div
-        class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
-      >
-        Total words
-      </div>
-    </div>
-    <div>
-      <span>{{ .FormattedWordsPerDay }}</span>
-      <div
-        class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
-      >
-        Words per day
-      </div>
-    </div>
-    <div>
-      <span>{{ .BooksRead }}</span>
-      <div
-        class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
-      >
-        Books read
-      </div>
-    </div>
-  </div>
-
-  <div
-    class="h-1 relative bg-neutral-200 dark:bg-neutral-800 rounded overflow-hidden"
-    title="{{ .BooksRead }} books read out of the goal of 20 this year"
-  >
     <div
-      class="bg-gradient-to-r from-sky-300 to-sky-500 dark:from-sky-500 dark:to-sky-700 absolute h-1 rounded"
-      style="width: {{ .YearlyProgress }}%"
-    ></div>
+      class="text-center text-5xl md:text-4xl font-bold flex flex-col md:flex-row justify-evenly gap-4"
+    >
+      <div>
+        <span>{{ .FormattedTotalWords }}</span>
+        <div
+          class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
+        >
+          Total words
+        </div>
+      </div>
+      <div>
+        <span>{{ .FormattedWordsPerDay }}</span>
+        <div
+          class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
+        >
+          Words per day
+        </div>
+      </div>
+      <div>
+        <span>{{ .BooksRead }}</span>
+        <div
+          class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
+        >
+          Books read
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="h-1 relative bg-neutral-200 dark:bg-neutral-800 rounded overflow-hidden"
+      title="{{ .BooksRead }} books read out of the goal of 20 this year"
+    >
+      <div
+        class="bg-gradient-to-r from-sky-300 to-sky-500 dark:from-sky-500 dark:to-sky-700 absolute h-1 rounded"
+        style="width: {{ .YearlyProgress }}%"
+      ></div>
+    </div>
   </div>
 
   <ol class="space-y-4">
     {{ range .CurrentBooks }}
 
     <li
-      class="grid grid-cols-1 sm:grid-cols-[170px_1fr] items-start bg-neutral-200 dark:bg-neutral-800 rounded-r"
+      class="grid grid-cols-1 sm:grid-cols-[170px_1fr] items-start bg-neutral-200 dark:bg-neutral-800 rounded"
     >
       <div class="flex items-center justify-center h-full">
         <img
