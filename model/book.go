@@ -68,7 +68,7 @@ func (b Book) DaysElapsed() int {
 		elapsed = b.FinishedAt.Time.Sub(b.StartedAt).Hours() / 24
 	}
 
-	if elapsed == 0 {
+	if elapsed < 1 {
 		elapsed = 1
 	}
 
