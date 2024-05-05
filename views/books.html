@@ -53,6 +53,7 @@
   </div>
 
   {{ range .CurrentBooks }}
+
   <div
     class="rounded-md p-px bg-gradient-to-br from-sky-200 to-sky-400 dark:from-sky-400 dark:to-sky-900"
   >
@@ -66,6 +67,7 @@
           class="hidden sm:block sm:w-full rounded-sm"
         />
       </div>
+
       <div class="space-y-4">
         <div class="space-y-1">
           <div class="font-bold flex gap-x-2 items-baseline">
@@ -113,6 +115,10 @@
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
             {{ .FormattedPace }} words per day
           </dt>
+          <dd class="font-semibold">Format</dd>
+          <dt class="tabular-nums text-sky-600 dark:text-sky-200">
+            {{ .FormattedBookFormats }}
+          </dt>
         </dl>
       </div>
     </div>
@@ -128,7 +134,7 @@
         <img
           src="{{ .CoverURL }}"
           alt="{{ .Title }}"
-          class="hidden rounded-sm sm:block sm:w-full saturate-0 group-hover:saturate-100 transition"
+          class="hidden rounded-sm sm:block sm:w-full saturate-0 group-hover:saturate-100 transition-all duration-300"
         />
       </div>
       <div>
@@ -183,6 +189,10 @@
             {{ .Rating.Int32 }} / 10
           </dt>
           {{ end }}
+          <dd class="font-semibold">Format</dd>
+          <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+            {{ .FormattedBookFormats }}
+          </dt>
         </dl>
       </div>
     </li>

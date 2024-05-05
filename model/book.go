@@ -2,11 +2,22 @@ package model
 
 import (
 	"database/sql"
+	"math"
+	"strings"
+	"time"
+
+	"github.com/lib/pq"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"golang.org/x/text/number"
-	"math"
-	"time"
+)
+
+type BookFormat string
+
+const (
+	Physical BookFormat = "physical"
+	Kindle   BookFormat = "kindle"
+	Audio    BookFormat = "audio"
 )
 
 type Book struct {
@@ -25,6 +36,7 @@ type Book struct {
 	CurrentPage   int             `db:"current_page"`
 	ReleaseDate   time.Time       `db:"release_date"`
 	RecommendedBy sql.NullString  `db:"recommended_by"`
+	BookFormat    pq.StringArray  `db:"book_format"`
 }
 
 func (b Book) Finished() bool {
@@ -82,4 +94,8 @@ func (b Book) ExpectedFinish() time.Time {
 
 func (b Book) DaysLeft() int {
 	return int(math.Round(b.ExpectedFinish().Sub(time.Now()).Hours() / 24))
+}
+
+func (b Book) FormattedBookFormats() string {
+	return strings.Join(b.BookFormat, ", ")
 }
