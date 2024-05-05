@@ -17,7 +17,7 @@
     class="text-center text-5xl md:text-4xl font-bold flex flex-col md:flex-row justify-evenly gap-4"
   >
     <div>
-      <span>{{ .TotalWords }}</span>
+      <span>{{ .FormattedTotalWords }}</span>
       <div
         class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
       >
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div>
-      <span>{{ .WordsPerDay }}</span>
+      <span>{{ .FormattedWordsPerDay }}</span>
       <div
         class="mt-2 text-sm font-normal uppercase text-neutral-600 dark:text-neutral-700"
       >
@@ -97,11 +97,11 @@
           </dt>
           <dd class="font-semibold">Word count</dd>
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
-            {{ .WordCount }}
+            {{ .FormattedWordCount }}
           </dt>
           <dd class="font-semibold">Pace</dd>
           <dt class="tabular-nums text-sky-600 dark:text-sky-200">
-            {{ .Pace }} words per day
+            {{ .FormattedPace }} words per day
           </dt>
         </dl>
       </div>
@@ -161,11 +161,11 @@
           {{ end }}
           <dd class="font-semibold">Word count</dd>
           <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-            {{ .WordCount }}
+            {{ .FormattedWordCount }}
           </dt>
           <dd class="font-semibold">Pace</dd>
           <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-            {{ .Pace }} words per day
+            {{ .FormattedPace }} words per day
           </dt>
           {{ if .Rating.Valid }}
           <dd class="font-semibold">Rating</dd>

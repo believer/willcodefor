@@ -2,6 +2,9 @@ package model
 
 import (
 	"database/sql"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
+	"golang.org/x/text/number"
 	"math"
 	"time"
 )
@@ -40,6 +43,12 @@ func (b Book) WordsRead() int {
 	return b.WordsPerPage() * b.CurrentPage
 }
 
+func (b Book) FormattedWordCount() string {
+	p := message.NewPrinter(language.Swedish)
+
+	return p.Sprintf("%v", number.Decimal(b.WordCount))
+}
+
 func (b Book) DaysElapsed() int {
 	elapsed := time.Since(b.StartedAt).Hours() / 24
 
@@ -56,6 +65,12 @@ func (b Book) DaysElapsed() int {
 
 func (b Book) Pace() int {
 	return int(float64(b.WordsRead()) / float64(b.DaysElapsed()))
+}
+
+func (b Book) FormattedPace() string {
+	p := message.NewPrinter(language.Swedish)
+
+	return p.Sprintf("%v", number.Decimal(b.Pace()))
 }
 
 func (b Book) ExpectedFinish() time.Time {
