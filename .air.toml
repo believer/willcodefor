@@ -2,3 +2,9 @@
 kill_delay = "10s"
 delay = 500
 exclude_dir = ["public", "tmp", "vendor", "node_modules"]
+
+[proxy]
+enabled = true
+proxy_port = 3001
+app_port = 3000
+
