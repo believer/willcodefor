@@ -13,7 +13,7 @@ echo "Running the public hasher"
 rm ./public/styles.*.css
 
 # Generate the new CSS file
-npx tailwindcss -i ./styles.css -o ./public/styles.css
+npx tailwindcss --minify -i ./styles.css -o ./public/styles.css
 
 # Add the 6 first characters of the hash to the file name
 # of the generated CSS file. This is to bust the cache of the CSS file.
