@@ -6,10 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/believer/willcodefor-go/utils"
 	"github.com/lib/pq"
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
-	"golang.org/x/text/number"
 )
 
 type BookFormat string
@@ -56,9 +54,7 @@ func (b Book) WordsRead() int {
 }
 
 func (b Book) FormattedWordCount() string {
-	p := message.NewPrinter(language.Swedish)
-
-	return p.Sprintf("%v", number.Decimal(b.WordCount))
+	return utils.FormatNumber(b.WordCount)
 }
 
 func (b Book) DaysElapsed() int {
@@ -80,9 +76,7 @@ func (b Book) Pace() int {
 }
 
 func (b Book) FormattedPace() string {
-	p := message.NewPrinter(language.Swedish)
-
-	return p.Sprintf("%v", number.Decimal(b.Pace()))
+	return utils.FormatNumber(b.Pace())
 }
 
 func (b Book) ExpectedFinish() time.Time {

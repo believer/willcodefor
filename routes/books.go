@@ -5,17 +5,14 @@ import (
 
 	"github.com/believer/willcodefor-go/data"
 	"github.com/believer/willcodefor-go/model"
+	"github.com/believer/willcodefor-go/utils"
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
-	"golang.org/x/text/number"
 )
 
 func BooksHandler(c *fiber.Ctx) error {
 	var books []model.Book
 	var currentBooks []model.Book
 
-	p := message.NewPrinter(language.Swedish)
 	err := data.Dot.Select(data.DB, &books, "get-books")
 
 	if err != nil {
@@ -43,8 +40,8 @@ func BooksHandler(c *fiber.Ctx) error {
 	dayOfYear := now.YearDay()
 	wordsPerDay := totalWords / dayOfYear
 
-	formattedTotalWords := p.Sprintf("%v", number.Decimal(totalWords))
-	formattedWordsPerDay := p.Sprintf("%v", number.Decimal(wordsPerDay))
+	formattedTotalWords := utils.FormatNumber(totalWords)
+	formattedWordsPerDay := utils.FormatNumber(wordsPerDay)
 
 	yearlyProgress := float64(booksRead) / 20 * 100
 
