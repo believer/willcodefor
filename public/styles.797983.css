@@ -1669,6 +1669,10 @@ abbr[title]:focus-visible::after,
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .text-balance {
   text-wrap: balance;
 }
