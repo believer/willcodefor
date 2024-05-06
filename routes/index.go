@@ -8,8 +8,15 @@ import (
 
 func IndexHandler(c *fiber.Ctx) error {
 	var posts []model.Post
+	var books []model.Book
 
 	err := data.Dot.Select(data.DB, &posts, "five-latest-posts")
+
+	if err != nil {
+		return err
+	}
+
+	err = data.Dot.Select(data.DB, &books, "currently-reading")
 
 	if err != nil {
 		return err
@@ -20,6 +27,7 @@ func IndexHandler(c *fiber.Ctx) error {
 		"Posts":    posts,
 		"Projects": data.Projects,
 		"Work":     data.Positions,
+		"Books":    books,
 	})
 }
 

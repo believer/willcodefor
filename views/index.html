@@ -110,6 +110,29 @@
   </div>
 </section>
 
+<section class="mt-10 grid gap-6 md:grid-cols-12">
+  <header
+    class="col-span-12 text-neutral-600 dark:text-neutral-400 md:col-span-2 md:text-right"
+  >
+    Currently reading
+  </header>
+
+  <div class="col-span-12 md:col-span-10">
+    <div
+      class="snap-mandatory snap-x flex flex-col sm:flex-row gap-6 w-full overflow-x-auto pb-4"
+    >
+      {{ range .Books }} {{ template "partials/currentBookMini" . }} {{ end }}
+      <div class="snap-center shrink-0 hidden sm:block">
+        <div class="shrink-0 w-4 sm:w-40"></div>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <a href="/books" hx-boost="false">All books</a>
+    </div>
+  </div>
+</section>
+
 <section class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-12">
   <header
     class="col-span-12 text-neutral-600 dark:text-neutral-400 md:col-span-2 md:text-right"
