@@ -1,0 +1,67 @@
+<li
+  class="grid grid-cols-1 sm:grid-cols-[170px_1fr] items-start bg-neutral-200 dark:bg-neutral-800 rounded"
+>
+  <div class="flex items-center justify-center h-full">
+    <img
+      src="{{ .CoverURL }}"
+      alt="{{ .Title }}"
+      class="hidden sm:block sm:w-full object-fit rounded-l"
+    />
+  </div>
+
+  <div class="space-y-4 py-4 px-6">
+    <div class="space-y-1">
+      <div class="font-bold flex gap-x-2 items-baseline">
+        <span>{{ .Title }}</span> {{ if .Series.Valid }}
+        <span
+          class="text-xs font-normal text-neutral-600 dark:text-neutral-400"
+        >
+          {{ .Series.String }} #{{ .OrderInSeries.Float64 }}
+        </span>
+        {{ end }}
+      </div>
+      {{ if .Subtitle.Valid }}
+      <div class="text-xs text-neutral-600 dark:text-neutral-400 text-balance">
+        {{ .Subtitle.String }}
+      </div>
+      {{ end }}
+      <div class="text-sm">{{ .Author }}</div>
+    </div>
+
+    <div class="h-0.5 bg-sky-300 dark:bg-sky-900 relative">
+      <div
+        class="absolute h-0.5 bg-sky-700 dark:bg-sky-500"
+        style="width:{{ .ProgressPercent }}%;"
+      ></div>
+    </div>
+
+    <dl
+      class="grid sm:grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-sm md:text-xs"
+    >
+      <dd class="font-semibold">Started at</dd>
+      <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+        {{ .StartedAt.Format "2006-01-02" }}
+      </dt>
+      <dd class="font-semibold">Expected to finish</dd>
+      <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+        {{ .ExpectedFinish.Format "2006-01-02" }} ({{ .DaysLeft }} days)
+      </dt>
+      <dd class="font-semibold">Page</dd>
+      <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+        {{ .CurrentPage }} / {{ .PageCount }}
+      </dt>
+      <dd class="font-semibold">Word count</dd>
+      <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+        {{ .FormattedWordCount }}
+      </dt>
+      <dd class="font-semibold">Pace</dd>
+      <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+        {{ .FormattedPace }} words per day
+      </dt>
+      <dd class="font-semibold">Format</dd>
+      <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+        {{ .FormattedBookFormats }}
+      </dt>
+    </dl>
+  </div>
+</li>
