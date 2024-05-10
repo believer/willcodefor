@@ -65,6 +65,10 @@
       <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
         {{ .FormattedBookFormats }}
       </dt>
+      <dd class="font-semibold">Release date</dd>
+      <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+        {{ .ReleaseDate.Format "2006-01-02" }}
+      </dt>
     </dl>
   </div>
 </li>
