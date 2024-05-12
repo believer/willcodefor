@@ -1,19 +1,18 @@
 <div
-  class="items-start bg-neutral-200 dark:bg-neutral-800 rounded w-80 h-32 snap-center shrink-0"
+  class="items-start bg-neutral-200 dark:bg-neutral-800 rounded w-80 snap-center shrink-0"
 >
-  <div class="space-y-4 py-4 px-6 h-full flex flex-col justify-between">
+  <div class="py-4 px-6 h-full flex flex-col justify-between gap-y-4">
     <div class="space-y-1">
-      <div class="font-bold flex gap-x-2 items-baseline">
-        <span>{{ .Title }}</span> {{ if .Series.Valid }}
-        <span
-          class="text-xs font-normal text-neutral-600 dark:text-neutral-400"
-        >
-          {{ .Series.String }} #{{ .OrderInSeries.Float64 }}
-        </span>
-        {{ end }}
-      </div>
-      {{ if .Subtitle.Valid }}
-      <div class="text-xs text-neutral-600 dark:text-neutral-400 text-balance">
+      <div class="font-bold flex gap-x-2 items-baseline">{{ .Title }}</div>
+      {{ if .Series.Valid }}
+      <span class="text-xs font-normal text-neutral-600 dark:text-neutral-400">
+        {{ .Series.String }} #{{ .OrderInSeries.Float64 }}
+      </span>
+      {{ end }} {{ if .Subtitle.Valid }}
+      <div
+        class="text-xs text-neutral-600 dark:text-neutral-400 truncate"
+        title="{{ .Subtitle.String }}"
+      >
         {{ .Subtitle.String }}
       </div>
       {{ end }}
