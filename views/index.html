@@ -119,7 +119,7 @@
 
   <div class="col-span-12 md:col-span-10">
     <div
-      class="snap-mandatory snap-x flex flex-col sm:flex-row gap-6 w-full overflow-x-auto pb-4"
+      class="snap-mandatory snap-x flex flex-col sm:flex-row gap-6 w-full overflow-x-auto pb-4 [scrollbar-color:theme(colors.sky.600)_transparent]"
     >
       {{ range .Books }} {{ template "partials/currentBookMini" . }} {{ end }}
       <div class="snap-center shrink-0 hidden sm:block">
