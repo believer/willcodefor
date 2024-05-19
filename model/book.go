@@ -93,3 +93,7 @@ func (b Book) DaysLeft() int {
 func (b Book) FormattedBookFormats() string {
 	return strings.Join(b.BookFormat, ", ")
 }
+
+func (b Book) ReadPercentage() float64 {
+	return math.Round((float64(b.CurrentPage) / float64(b.PageCount)) * 100)
+}
