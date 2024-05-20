@@ -45,12 +45,12 @@ func (b Book) ProgressPercent() float64 {
 	return (float64(b.CurrentPage) / float64(b.PageCount)) * 100
 }
 
-func (b Book) WordsPerPage() int {
-	return b.WordCount / b.PageCount
+func (b Book) WordsPerPage() float64 {
+	return math.Round(float64(b.WordCount) / float64(b.PageCount))
 }
 
-func (b Book) WordsRead() int {
-	return b.WordsPerPage() * b.CurrentPage
+func (b Book) WordsRead() float64 {
+	return math.Round(b.WordsPerPage() * float64(b.CurrentPage))
 }
 
 func (b Book) FormattedWordCount() string {
@@ -80,7 +80,7 @@ func (b Book) FormattedPace() string {
 }
 
 func (b Book) ExpectedFinish() time.Time {
-	wordsLeft := b.WordCount - b.WordsRead()
+	wordsLeft := float64(b.WordCount) - b.WordsRead()
 	daysLeft := math.Round(float64(wordsLeft) / float64(b.Pace()))
 
 	return time.Now().AddDate(0, 0, int(daysLeft))
