@@ -11,7 +11,7 @@ WHERE
 GROUP BY
     b.id
 ORDER BY
-    started_at DESC;
+    finished_at DESC;
 
 -- name: currently-reading
 SELECT
