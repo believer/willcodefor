@@ -14,20 +14,18 @@
       class="flex justify-between items-center mb-4 pb-4 border-b border-neutral-300 dark:border-neutral-700 gap-x-8"
     >
       <div class="space-y-0.5">
-        <div class="font-bold flex gap-x-2 items-baseline">
-          <span>{{ .Title }}</span> {{ if .Series.Valid }}
-          <span
-            class="text-xs font-normal text-neutral-600 dark:text-neutral-400"
-          >
-            {{ .Series.String }} #{{ .OrderInSeries.Float64 }}
-          </span>
-          {{ end }}
+        <div class="font-bold flex gap-x-2 items-baseline text-balance">
+          {{ .Title }}
         </div>
         {{ if .Subtitle.Valid }}
         <div
           class="text-xs text-neutral-600 dark:text-neutral-400 text-balance"
         >
           {{ .Subtitle.String }}
+        </div>
+        {{ end }} {{ if .Series.Valid }}
+        <div class="text-xs text-neutral-600 dark:text-neutral-400">
+          {{ .Series.String }} #{{ .OrderInSeries.Float64 }}
         </div>
         {{ end }}
         <div class="text-sm">{{ .Author }}</div>
