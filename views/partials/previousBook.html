@@ -35,11 +35,12 @@
     <dl
       class="grid sm:grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-sm md:text-xs"
     >
+      {{ if .Started }}
       <dd class="font-semibold">Started at</dd>
       <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-        {{ .StartedAt.Format "2006-01-02" }}
+        {{ .StartedAt.Time.Format "2006-01-02" }}
       </dt>
-      {{ if .Finished }}
+      {{ end }} {{ if .Finished }}
       <dd class="font-semibold">Finished at</dd>
       <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
         {{ .FinishedAt.Time.Format "2006-01-02" }} ({{ .DaysElapsed }} days)

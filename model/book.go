@@ -27,7 +27,7 @@ type Book struct {
 	Series        sql.NullString  `db:"series"`
 	OrderInSeries sql.NullFloat64 `db:"order_in_series"`
 	Rating        sql.NullInt32   `db:"rating"`
-	StartedAt     time.Time       `db:"started_at"`
+	StartedAt     sql.NullTime    `db:"started_at"`
 	FinishedAt    sql.NullTime    `db:"finished_at"`
 	WordCount     int             `db:"word_count"`
 	PageCount     int             `db:"page_count"`
@@ -37,8 +37,16 @@ type Book struct {
 	BookFormat    pq.StringArray  `db:"book_format"`
 }
 
+func (b Book) Started() bool {
+	return b.StartedAt.Valid
+}
+
 func (b Book) Finished() bool {
 	return b.FinishedAt.Valid
+}
+
+func (b Book) WasRecommended() bool {
+	return b.RecommendedBy.Valid
 }
 
 func (b Book) ProgressPercent() float64 {
@@ -58,10 +66,14 @@ func (b Book) FormattedWordCount() string {
 }
 
 func (b Book) DaysElapsed() int {
-	elapsed := time.Since(b.StartedAt).Hours() / 24
+	if !b.Started() {
+		return 0
+	}
+
+	elapsed := time.Since(b.StartedAt.Time).Hours() / 24
 
 	if b.Finished() {
-		elapsed = b.FinishedAt.Time.Sub(b.StartedAt).Hours() / 24
+		elapsed = b.FinishedAt.Time.Sub(b.StartedAt.Time).Hours() / 24
 	}
 
 	if elapsed < 1 {

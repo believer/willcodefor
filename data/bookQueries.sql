@@ -8,6 +8,7 @@ FROM
     INNER JOIN FORMAT AS f ON f.id = bf.format_id
 WHERE
     finished_at IS NOT NULL
+    AND started_at IS NOT NULL
 GROUP BY
     b.id
 ORDER BY
@@ -23,6 +24,11 @@ FROM
     INNER JOIN FORMAT AS f ON f.id = bf.format_id
 WHERE
     finished_at IS NULL
+    AND started_at IS NOT NULL
+GROUP BY
+    b.id
+ORDER BY
+    started_at DESC;
 GROUP BY
     b.id
 ORDER BY
