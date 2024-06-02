@@ -12,6 +12,7 @@ import (
 func BooksHandler(c *fiber.Ctx) error {
 	var books []model.Book
 	var currentBooks []model.Book
+	var nextBooks []model.Book
 
 	err := data.Dot.Select(data.DB, &books, "get-books")
 
@@ -20,6 +21,12 @@ func BooksHandler(c *fiber.Ctx) error {
 	}
 
 	err = data.Dot.Select(data.DB, &currentBooks, "currently-reading")
+
+	if err != nil {
+		return err
+	}
+
+	err = data.Dot.Select(data.DB, &nextBooks, "next-books")
 
 	if err != nil {
 		return err
@@ -48,7 +55,10 @@ func BooksHandler(c *fiber.Ctx) error {
 	return c.Render("books", fiber.Map{
 		"Path":                 "/books",
 		"Books":                books,
+		"HasPreviousBooks":     len(books) > 0,
 		"CurrentBooks":         currentBooks,
+		"NextBooks":            nextBooks,
+		"HasNextBooks":         len(nextBooks) > 0,
 		"FormattedTotalWords":  formattedTotalWords,
 		"FormattedWordsPerDay": formattedWordsPerDay,
 		"BooksRead":            booksRead,

@@ -29,6 +29,18 @@ GROUP BY
     b.id
 ORDER BY
     started_at DESC;
+
+-- name: next-books
+SELECT
+    b.*,
+    array_agg(f.format_name) AS book_format
+FROM
+    public.book AS b
+    INNER JOIN book_format AS bf ON bf.book_id = b.id
+    INNER JOIN FORMAT AS f ON f.id = bf.format_id
+WHERE
+    started_at IS NULL
+    AND finished_at IS NULL
 GROUP BY
     b.id
 ORDER BY

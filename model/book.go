@@ -10,14 +10,6 @@ import (
 	"github.com/lib/pq"
 )
 
-type BookFormat string
-
-const (
-	Physical BookFormat = "physical"
-	Kindle   BookFormat = "kindle"
-	Audio    BookFormat = "audio"
-)
-
 type Book struct {
 	ID            int             `db:"id"`
 	Author        string          `db:"author"`
