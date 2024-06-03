@@ -68,6 +68,7 @@ func main() {
 
 	posts.Get("/:slug", routes.PostHandler)
 	app.Get("/til/:slug", routes.PostHandler)
+	app.Get("/test/:slug", routes.MarkdownPost)
 
 	posts.Get("/:id/next", routes.PostNextHandler)
 	posts.Get("/:id/previous", routes.PostPreviousHandler)

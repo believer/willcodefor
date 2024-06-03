@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"time"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/yuin/goldmark"
@@ -13,6 +14,7 @@ import (
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
 	"go.abhg.dev/goldmark/anchor"
+	"go.abhg.dev/goldmark/frontmatter"
 )
 
 type ASTTransformer struct{}
@@ -63,6 +65,7 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 				extension.WithFootnoteBacklinkClass([]byte("font-mono no-underline")),
 			),
 			extension.Table,
+			&frontmatter.Extender{},
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("catppuccin-mocha"),
 			),
@@ -78,6 +81,64 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 	}
 
 	return buf
+}
+
+type Metadata struct {
+	ID        int       `yaml:"id"`
+	TILID     int       `yaml:"til_id"`
+	Title     string    `yaml:"title"`
+	Slug      []string  `yaml:"slug"`
+	CreatedAt time.Time `yaml:"created"`
+}
+
+func MarkdownWithFrontmatter(input []byte) (bytes.Buffer, Metadata) {
+	var buf bytes.Buffer
+	var meta Metadata
+
+	md := goldmark.New(
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+			parser.WithASTTransformers(
+				util.Prioritized(&ASTTransformer{}, 1000),
+			),
+		),
+		goldmark.WithExtensions(
+			&anchor.Extender{
+				Attributer: anchor.Attributes{
+					"class": "!text-neutral-400 dark:!text-neutral-500 no-underline",
+				},
+				Texter: anchor.Text("#"),
+			},
+			extension.Strikethrough,
+			extension.Typographer,
+			extension.NewFootnote(
+				extension.WithFootnoteBacklinkClass([]byte("font-mono no-underline")),
+			),
+			extension.Table,
+			&frontmatter.Extender{},
+			highlighting.NewHighlighting(
+				highlighting.WithStyle("catppuccin-mocha"),
+			),
+		),
+		goldmark.WithRendererOptions(
+			html.WithXHTML(),
+			html.WithUnsafe(),
+		),
+	)
+
+	ctx := parser.NewContext()
+
+	if err := md.Convert(input, &buf, parser.WithContext(ctx)); err != nil {
+		panic(err)
+	}
+
+	d := frontmatter.Get(ctx)
+
+	if err := d.Decode(&meta); err != nil {
+		panic(err)
+	}
+
+	return buf, meta
 }
 
 // Can't use the same function for both HTML and XML, since Typographer

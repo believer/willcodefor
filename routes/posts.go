@@ -1,9 +1,11 @@
 package routes
 
 import (
+	"bytes"
 	"database/sql"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -247,4 +249,70 @@ func PostSeriesHandler(c *fiber.Ctx) error {
 		"Slug":       slug,
 		"SeriesName": seriesNames[series],
 	}, "")
+}
+
+func MarkdownPost(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	rootDir, err := os.Getwd()
+
+	if err != nil {
+		return err
+	}
+
+	posts, err := filepath.Glob(filepath.Join(rootDir, "posts", "*.md"))
+
+	if err != nil {
+		return err
+	}
+
+	var content bytes.Buffer
+	var metadata utils.Metadata
+	var fileInfo os.FileInfo
+
+	for _, post := range posts {
+		file, err := os.ReadFile(post)
+
+		if err != nil {
+			return c.Render("404", fiber.Map{
+				"Slug": slug,
+			})
+		}
+
+		markdown, frontmatter := utils.MarkdownWithFrontmatter(file)
+
+		fi, err := os.Stat(post)
+
+		if err != nil {
+			return err
+		}
+
+		filename := strings.Split(fi.Name(), ".")[0]
+
+		// Matched title
+		if filename == slug {
+			content = markdown
+			fileInfo = fi
+			metadata = frontmatter
+			break
+		}
+
+		// Matched slug
+		for _, s := range frontmatter.Slug {
+			if s == slug {
+				content = markdown
+				fileInfo = fi
+				metadata = frontmatter
+			}
+		}
+	}
+
+	return c.Render("staticPost", fiber.Map{
+		"Path":      "/posts",
+		"ID":        metadata.ID,
+		"TILID":     metadata.TILID,
+		"Content":   content.String(),
+		"Title":     metadata.Title,
+		"CreatedAt": metadata.CreatedAt,
+		"UpdatedAt": fileInfo.ModTime(),
+	})
 }
