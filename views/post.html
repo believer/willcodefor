@@ -23,7 +23,7 @@
     <li
       class="h-5"
       hx-get="/posts/{{ .Post.ID }}/next"
-      hx-trigger="revealed"
+      hx-trigger="load"
       hx-swap="outerHTML"
     >
       <div class="htmx-indicator">Loading next post...</div>
@@ -31,7 +31,7 @@
     <li
       class="h-5"
       hx-get="/posts/{{ .Post.ID }}/previous"
-      hx-trigger="revealed"
+      hx-trigger="load"
       hx-swap="outerHTML"
     >
       <div class="htmx-indicator">Loading previous post...</div>
