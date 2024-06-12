@@ -53,6 +53,10 @@ func (b Book) WordsRead() float64 {
 	return math.Round(b.WordsPerPage() * float64(b.CurrentPage))
 }
 
+func (b Book) FormattedWordsRead() string {
+	return utils.FormatNumber(int(b.WordsRead()))
+}
+
 func (b Book) FormattedWordCount() string {
 	return utils.FormatNumber(b.WordCount)
 }
