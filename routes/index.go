@@ -28,6 +28,7 @@ func IndexHandler(c *fiber.Ctx) error {
 		"Projects": data.Projects,
 		"Work":     data.Positions,
 		"Books":    books,
+		"HasBooks": len(books) > 0,
 	})
 }
 

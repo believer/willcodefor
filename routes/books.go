@@ -55,6 +55,7 @@ func BooksHandler(c *fiber.Ctx) error {
 	return c.Render("books", fiber.Map{
 		"Path":                 "/books",
 		"Books":                books,
+		"HasCurrentBooks":      len(currentBooks) > 0,
 		"HasPreviousBooks":     len(books) > 0,
 		"CurrentBooks":         currentBooks,
 		"NextBooks":            nextBooks,

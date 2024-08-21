@@ -54,6 +54,7 @@
     </div>
   </div>
 
+  {{ if .HasCurrentBooks }}
   <div>
     <h2 class="text-xl font-semibold">Currently reading</h2>
     <ol class="space-y-4">
@@ -61,8 +62,7 @@
       }}
     </ol>
   </div>
-
-  {{ if .HasNextBooks }}
+  {{ end }} {{ if .HasNextBooks }}
   <div>
     <h2 class="text-xl font-semibold">Next up</h2>
     <ol class="space-y-4">

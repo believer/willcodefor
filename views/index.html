@@ -105,6 +105,7 @@
   </div>
 </section>
 
+{{ if .HasBooks }}
 <section class="mt-10 grid gap-6 md:grid-cols-12">
   <header
     class="col-span-12 text-neutral-600 dark:text-neutral-400 md:col-span-2 md:text-right"
@@ -127,6 +128,7 @@
     </div>
   </div>
 </section>
+{{ end }}
 
 <section class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-12">
   <header
