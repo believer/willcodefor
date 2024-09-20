@@ -22,7 +22,7 @@ type Work struct {
 var Projects = [8]Project{
 	{
 		Name:        "My Movies",
-		Description: "This is where I keep track of all the movies I've watched. I've been doing it for over 20 years, first using lists in IMDb and from 2011 using my own database.",
+		Description: "<p>I've been keeping track of the movies I watch for 20 years. First, using lists in IMDb and from 2011 using my own database. The site has seen multiple design iterations over the years and is the pet project I've worked most on.</p><p>It's also a testing ground for new technologies and browser features. For example, <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_scroll-driven_animations\" target=\"_blank\" rel=\"noreferrer noopener\">CSS scroll-driven animations</a> and the <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Popover_API\" target=\"_blank\" rel=\"noreferrer noopener\">Popover API</a> with <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/anchor\" target=\"_blank\" rel=\"noreferrer noopener\">anchoring</a>. Currently, both features are only available in Chrome and Edge.</p>",
 		Tech:        []string{"go", "htmx", "tailwind", "hyperscript"},
 		Link:        "https://movies.willcodefor.beer",
 	},
@@ -52,7 +52,7 @@ var Projects = [8]Project{
 	},
 	{
 		Name:        "WCAG Color",
-		Description: "<p>According to the WHO an <a href=\"https://www.who.int/en/news-room/fact-sheets/detail/blindness-and-visual-impairment\">estimated 1.3 billion</a> people live with some form of visual impairment. This includes people who are legally blind and people with less than 20/20 vision.</p>  <p>This library helps you achieve the accessibility standards for color contrast outlined in the WCAG 2.0 specification.</p> ",
+		Description: "<p>According to the WHO an <a href=\"https://www.who.int/en/news-room/fact-sheets/detail/blindness-and-visual-impairment\" target=\"_blank\" rel=\"noreferrer noopener\">estimated 1.3 billion</a> people live with some form of visual impairment. This includes people who are legally blind and people with less than 20/20 vision.</p>  <p>This library helps you achieve the accessibility standards for color contrast outlined in the WCAG 2.0 specification.</p> ",
 		Tech:        []string{"rescript", "github actions"},
 		Link:        "https://github.com/opendevtools/wcag-color",
 	},
@@ -64,7 +64,7 @@ var Projects = [8]Project{
 	},
 	{
 		Name:        "Workout of the Day",
-		Description: "<p>A collection of competition and benchmark CrossFit workouts but also workouts that I\"ve made. A combination of two of my passions code and CrossFit.</p><p>I\"ve also made a version of the app in <a href=\"https://github.com/believer/wod-elm\">Elm</a>.</p> ",
+		Description: "<p>A collection of competition and benchmark CrossFit workouts but also workouts that I\"ve made. A combination of two of my passions code and CrossFit.</p><p>I\"ve also made a version of the app in <a href=\"https://github.com/believer/wod-elm\" target=\"_blank\" rel=\"noreferrer noopener\">Elm</a>.</p> ",
 		Tech:        []string{"rescript", "vercel", "github actions"},
 		Link:        "https://github.com/believer/wod",
 	},
