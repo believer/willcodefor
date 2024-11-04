@@ -78,9 +78,17 @@ func BarChart(data []CountData) ([]Bar, error) {
 			labelX = float64(barX)
 		}
 
+		isLastBar := i == len(data)-1
+		isMoreThanThreeChars := numberOfCharsInCount > 3
+		hasMoreThanTwelveBars := len(data) > 12
+
 		// If it's the last bar, we want to position the label at the end of the graph
-		if i == len(data)-1 {
+		if isLastBar && numberOfCharsInLabel > 3 {
 			labelX = float64(barX+barWidth) - charWidth*float64(numberOfCharsInLabel)
+		}
+
+		if isLastBar && isMoreThanThreeChars && hasMoreThanTwelveBars {
+			valueX = float64(barX+barWidth) - charWidth*float64(numberOfCharsInCount)
 		}
 
 		// Subtract 8 to put some space between the text and the bar
