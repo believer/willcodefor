@@ -5,6 +5,7 @@ export default {
 		extend: {
 			colors: {
 				github: "#181717",
+				bluesky: "#0085ff",
 			},
 			typography: (theme) => ({
 				DEFAULT: {
