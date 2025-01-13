@@ -14,7 +14,10 @@ func BooksHandler(c *fiber.Ctx) error {
 	var currentBooks []model.Book
 	var nextBooks []model.Book
 
-	err := data.Dot.Select(data.DB, &books, "get-books")
+	currentYear := time.Now().Format("2006")
+	year := c.Query("year", currentYear)
+
+	err := data.Dot.Select(data.DB, &books, "get-books", year)
 
 	if err != nil {
 		return err
@@ -45,6 +48,11 @@ func BooksHandler(c *fiber.Ctx) error {
 	booksRead := len(books)
 	now := time.Now()
 	dayOfYear := now.YearDay()
+
+	if year != currentYear {
+		dayOfYear = 365
+	}
+
 	wordsPerDay := totalWords / dayOfYear
 
 	formattedTotalWords := utils.FormatNumber(totalWords)
@@ -64,5 +72,6 @@ func BooksHandler(c *fiber.Ctx) error {
 		"FormattedWordsPerDay": formattedWordsPerDay,
 		"BooksRead":            booksRead,
 		"YearlyProgress":       yearlyProgress,
+		"SelectedYear":         year,
 	})
 }

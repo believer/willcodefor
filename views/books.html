@@ -52,7 +52,17 @@
         style="width: {{ .YearlyProgress }}%"
       ></div>
     </div>
+
+    <ol class="flex gap-x-4">
+      <li>
+        <a class="{{ if eq .SelectedYear "2024"}}text-neutral-800 dark:text-neutral-300{{end}}" href="/books/?year=2024">2024</a>
+      </li>
+      <li>
+        <a class="{{ if eq .SelectedYear "2025"}}text-neutral-800 dark:text-neutral-300{{end}}" href="/books">2025</a>
+      </li>
+    </ol>
   </div>
+
 
   {{ if .HasCurrentBooks }}
   <div>
