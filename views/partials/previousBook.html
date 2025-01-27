@@ -46,6 +46,10 @@
         {{ .FinishedAt.Time.Format "2006-01-02" }} ({{ .DaysElapsed }} days)
       </dt>
       {{ end }}
+      <dd class="font-semibold">Release date</dd>
+      <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+        {{ .ReleaseDate.Format "2006-01-02" }}
+      </dt>
       <dd class="font-semibold">Word count</dd>
       <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
         {{ .FormattedWordCount }}
@@ -64,9 +68,9 @@
       <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
         {{ .FormattedBookFormats }}
       </dt>
-      <dd class="font-semibold">Release date</dd>
+      <dd class="font-semibold">Language</dd>
       <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-        {{ .ReleaseDate.Format "2006-01-02" }}
+        {{ .Language }}
       </dt>
     </dl>
   </div>

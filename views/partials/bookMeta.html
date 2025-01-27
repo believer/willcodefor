@@ -11,6 +11,10 @@
   <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
     {{ .ExpectedFinish.Format "2006-01-02" }} ({{ .DaysLeft }} days)
   </dt>
+  <dd class="font-semibold">Release date</dd>
+  <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
+    {{ .ReleaseDate.Format "2006-01-02" }}
+  </dt>
   <dd class="font-semibold">Page</dd>
   <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
     {{ .CurrentPage }} / {{ .PageCount }} ({{ .ReadPercentage }}%)
@@ -27,9 +31,9 @@
   <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
     {{ .FormattedBookFormats }}
   </dt>
-  <dd class="font-semibold">Release date</dd>
+  <dd class="font-semibold">Language</dd>
   <dt class="tabular-nums text-neutral-600 dark:text-neutral-400">
-    {{ .ReleaseDate.Format "2006-01-02" }}
+    {{ .Language }}
   </dt>
   {{ if .WasRecommended }}
   <dd class="font-semibold">Recommended by</dd>

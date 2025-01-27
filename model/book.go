@@ -14,6 +14,7 @@ type Book struct {
 	ID            int             `db:"id"`
 	Author        string          `db:"author"`
 	Title         string          `db:"title"`
+	Language      string          `db:"language"`
 	Subtitle      sql.NullString  `db:"subtitle"`
 	CoverURL      string          `db:"cover_url"`
 	Series        sql.NullString  `db:"series"`
