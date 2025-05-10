@@ -128,7 +128,7 @@
   </header>
   <div class="col-span-12 space-y-2 md:col-span-10">
     {{ range .Work }}
-    <details>
+    <details class="detail">
       <summary class="group mb-2 flex cursor-pointer items-baseline space-x-4">
         <span
           class="flex-none font-medium group-hover:text-sky-700 group-hover:underline dark:group-hover:text-sky-500"
@@ -166,7 +166,7 @@
   </header>
   <div class="col-span-12 space-y-2 md:col-span-10">
     {{ range .Projects }}
-    <details>
+    <details class="detail">
       <summary class="group mb-2 flex cursor-pointer items-baseline space-x-4">
         <span
           class="flex-none font-medium group-hover:text-sky-700 group-hover:underline dark:group-hover:text-sky-500"
@@ -175,7 +175,7 @@
         </span>
         {{ template "separator" }}
       </summary>
-      <div class="mb-8 text-sm">
+      <div class="pb-4 text-sm">
         <div class="flex-1 space-y-2">
           <div class="flex gap-x-2">
             {{ range .Tech }}

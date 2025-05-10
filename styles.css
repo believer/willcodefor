@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+
 .hljs {
   @apply !bg-transparent;
 }
@@ -107,5 +113,23 @@ dialog::backdrop {
 
     counter-increment: section;
     content: "#" counter(section) ": ";
+  }
+
+  /** Animate details/summary */
+  .detail::details-content {
+    --duration: 300ms;
+
+    opacity: 0;
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      content-visibility var(--duration) allow-discrete,
+      block-size var(--duration),
+      opacity var(--duration);
+  }
+
+  .detail[open]::details-content {
+    block-size: auto;
+    opacity: 1;
   }
 }
