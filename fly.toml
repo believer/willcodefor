@@ -3,12 +3,8 @@
 app = "willcodefor-go"
 primary_region = "arn"
 
-[build]
-  builder = "paketobuildpacks/builder:base"
-  buildpacks = ["gcr.io/paketo-buildpacks/go"]
-
 [build.args]
-  BP_KEEP_FILES = "public/*:views/*:xmls/*:data/*.sql"
+  GO_VERSION = "1.22"
 
 [env]
   PORT = "8080"
