@@ -15,6 +15,7 @@ require (
 	github.com/swithek/dotsqlx v1.1.0
 	github.com/yuin/goldmark v1.7.8
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
+	gitlab.com/staticnoise/goldmark-callout v0.0.0-20240609120641-6366b799e4ab
 	go.abhg.dev/goldmark/anchor v0.1.1
 	golang.org/x/text v0.21.0
 )

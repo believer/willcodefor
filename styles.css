@@ -3,133 +3,163 @@
 @tailwind utilities;
 
 @media (prefers-reduced-motion: no-preference) {
-  html {
-    interpolate-size: allow-keywords;
-  }
+	html {
+		interpolate-size: allow-keywords;
+	}
 }
 
 .hljs {
-  @apply !bg-transparent;
+	@apply !bg-transparent;
 }
 
 ::selection {
-  @apply bg-emerald-300 dark:bg-emerald-700;
+	@apply bg-emerald-300 dark:bg-emerald-700;
 }
 
 dialog::backdrop {
-  @apply fixed inset-0 bg-neutral-400/80 dark:bg-neutral-800/80;
+	@apply fixed inset-0 bg-neutral-400/80 dark:bg-neutral-800/80;
 }
 
 @layer base {
-  details summary::-webkit-details-marker {
-    display: none;
-  }
+	details > summary {
+		list-style: none;
+	}
 
-  h1 {
-    @apply mb-5 flex text-2xl font-semibold;
-  }
+	details > summary::-webkit-details-marker {
+		display: none;
+	}
 
-  h2 {
-    @apply mb-5 text-lg font-semibold;
-  }
+	h1 {
+		@apply mb-5 flex text-2xl font-semibold;
+	}
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  blockquote {
-    @apply text-balance;
-  }
+	h2 {
+		@apply mb-5 text-lg font-semibold;
+	}
 
-  a {
-    @apply text-sky-700 underline dark:text-sky-500 focus:outline-offset-2 dark:focus:outline-neutral-600 focus:outline-dashed;
-  }
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	blockquote {
+		@apply text-balance;
+	}
 
-  hr {
-    @apply my-4 border-neutral-300 dark:border-neutral-700;
-  }
+	a {
+		@apply text-sky-700 underline dark:text-sky-500 focus:outline-offset-2 dark:focus:outline-neutral-600 focus:outline-dashed;
+	}
 
-  abbr[title] {
-    @apply cursor-help border-b-2 border-dotted border-neutral-400 dark:border-neutral-500 no-underline relative;
-  }
+	hr {
+		@apply my-4 border-neutral-300 dark:border-neutral-700;
+	}
 
-  /* Display the abbr title on mobile devices when clicked */
-  abbr[title]:focus-visible::after,
-  abbr[title]:hover::after {
-    content: " (" attr(title) ")";
-  }
+	abbr[title] {
+		@apply cursor-help border-b-2 border-dotted border-neutral-400 dark:border-neutral-500 no-underline relative;
+	}
 
-  /* Remove abbr display on hover devices */
-  @media (any-hover: hover) {
-    abbr[title]:focus-visible::after,
-    abbr[title]:hover::after {
-      content: "";
-    }
-  }
+	/* Display the abbr title on mobile devices when clicked */
+	abbr[title]:focus-visible::after,
+	abbr[title]:hover::after {
+		content: " (" attr(title) ")";
+	}
+
+	/* Remove abbr display on hover devices */
+	@media (any-hover: hover) {
+		abbr[title]:focus-visible::after,
+		abbr[title]:hover::after {
+			content: "";
+		}
+	}
 }
 
 @layer components {
-  .grid-post {
-    grid-template-columns: 1fr max-content;
-  }
+	.grid-post {
+		grid-template-columns: 1fr max-content;
+	}
 
-  .grid-template-main {
-    grid-template-columns: 2rem 1fr minmax(auto, 900px) 1fr 2rem;
-  }
+	.grid-template-main {
+		grid-template-columns: 2rem 1fr minmax(auto, 900px) 1fr 2rem;
+	}
 
-  .grid-search {
-    grid-template-columns: 1fr auto;
-  }
+	.grid-search {
+		grid-template-columns: 1fr auto;
+	}
 
-  .til-counter::before {
-    @apply absolute -left-14 top-1/2 hidden w-12 -translate-y-1/2 text-right text-xs tabular-nums text-neutral-500 dark:text-neutral-400;
+	.til-counter::before {
+		@apply absolute -left-14 top-1/2 hidden w-12 -translate-y-1/2 text-right text-xs tabular-nums text-neutral-500 dark:text-neutral-400;
 
-    content: "#" attr(data-til) ": ";
-  }
+		content: "#" attr(data-til) ": ";
+	}
 
-  /* SM */
-  @media (min-width: 640px) {
-    .grid-post {
-      grid-template-columns: max-content 1fr max-content;
-    }
+	/* SM */
+	@media (min-width: 640px) {
+		.grid-post {
+			grid-template-columns: max-content 1fr max-content;
+		}
 
-    .til-counter::before {
-      @apply block;
-    }
-  }
+		.til-counter::before {
+			@apply block;
+		}
+	}
 
-  .hljs {
-    @apply !bg-transparent;
-  }
+	.hljs {
+		@apply !bg-transparent;
+	}
 
-  .counter {
-    counter-reset: section;
-  }
+	.counter {
+		counter-reset: section;
+	}
 
-  .counter-increment::before {
-    @apply w-12 text-right font-mono text-xs tabular-nums text-neutral-600;
+	.counter-increment::before {
+		@apply w-12 text-right font-mono text-xs tabular-nums text-neutral-600;
 
-    counter-increment: section;
-    content: "#" counter(section) ": ";
-  }
+		counter-increment: section;
+		content: "#" counter(section) ": ";
+	}
 
-  /** Animate details/summary */
-  .detail::details-content {
-    --duration: 300ms;
+	/** Animate details/summary */
+	.detail::details-content {
+		--duration: 300ms;
 
-    opacity: 0;
-    block-size: 0;
-    overflow-y: clip;
-    transition:
-      content-visibility var(--duration) allow-discrete,
-      block-size var(--duration),
-      opacity var(--duration);
-  }
+		opacity: 0;
+		block-size: 0;
+		overflow-y: clip;
+		transition: content-visibility var(--duration) allow-discrete, block-size
+			var(--duration), opacity var(--duration);
+	}
 
-  .detail[open]::details-content {
-    block-size: auto;
-    opacity: 1;
-  }
+	.detail[open]::details-content {
+		block-size: auto;
+		opacity: 1;
+	}
+
+	details[data-callout] {
+		@apply bg-neutral-200 dark:bg-neutral-800 p-4 rounded;
+
+		& summary {
+			@apply font-bold;
+		}
+
+		p {
+			@apply my-4;
+		}
+
+		& p:last-of-type {
+			@apply mb-0;
+		}
+	}
+
+	details[data-callout="NOTE"] summary::before,
+	details[data-callout="note"] summary::before {
+		content: "\270E";
+		margin-right: 4px;
+	}
+
+	details[data-callout="INFO"] summary::before,
+	details[data-callout="info"] summary::before {
+		content: "\24D8";
+		margin-right: 4px;
+	}
 }

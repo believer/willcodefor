@@ -12,6 +12,7 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
+	"gitlab.com/staticnoise/goldmark-callout"
 	"go.abhg.dev/goldmark/anchor"
 )
 
@@ -57,6 +58,7 @@ func MarkdownToHTML(input []byte) bytes.Buffer {
 				},
 				Texter: anchor.Text("#"),
 			},
+			callout.CalloutExtention,
 			extension.Strikethrough,
 			extension.Typographer,
 			extension.NewFootnote(
