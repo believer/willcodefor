@@ -16,7 +16,7 @@
     <div
       class="font-mono text-xs tabular-nums text-neutral-500 dark:text-neutral-400"
     >
-      {{ .Views }} views
+      {{ formatNumber .Views }} views
     </div>
     {{ else if eq $.SortOrder "updatedAt" }}
     <time

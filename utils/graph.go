@@ -65,6 +65,13 @@ func BarChart(data []CountData) ([]Bar, error) {
 		// Position centered on the bar. Subtract 3.4 which is half the width of the text.
 		charWidth := 8.03 // Uses tabular nums so all characters are the same width
 		numberOfCharsInCount := len(strconv.Itoa(row.Count))
+
+		// When the number is equal to or larger than 1000
+		// formatting will add a comma
+		if row.Count >= 1000 {
+			numberOfCharsInCount += 1
+		}
+
 		numberOfCharsInLabel := len(row.Label)
 
 		halfWidthOfCount := charWidth * float64(numberOfCharsInCount) / 2

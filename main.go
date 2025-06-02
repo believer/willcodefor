@@ -12,6 +12,7 @@ import (
 
 	"github.com/believer/willcodefor-go/data"
 	"github.com/believer/willcodefor-go/routes"
+	"github.com/believer/willcodefor-go/utils"
 )
 
 func main() {
@@ -33,6 +34,11 @@ func main() {
 	engine.AddFunc(
 		"add", func(x, y int) int {
 			return x + y
+		},
+	)
+	engine.AddFunc(
+		"formatNumber", func(x int) string {
+			return utils.FormatNumber(x)
 		},
 	)
 

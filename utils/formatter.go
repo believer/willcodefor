@@ -7,7 +7,17 @@ import (
 )
 
 func FormatNumber(n int) string {
-	p := message.NewPrinter(language.Swedish)
+	p := message.NewPrinter(language.English)
 
 	return p.Sprintf("%v", number.Decimal(n))
+}
+
+func FormatFloat(n float64, noDecimals bool) string {
+	p := message.NewPrinter(language.English)
+
+	if noDecimals {
+		return p.Sprintf("%v", n)
+	}
+
+	return p.Sprintf("%.2f", n)
 }

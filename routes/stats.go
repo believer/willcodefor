@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/believer/willcodefor-go/data"
@@ -74,7 +73,7 @@ func averageViewsPerDay(c *fiber.Ctx) (string, error) {
 		viewsPerDay = totalViews
 	}
 
-	return fmt.Sprintf("%.2f", viewsPerDay), nil
+	return utils.FormatFloat(viewsPerDay, false), nil
 }
 
 type Browser struct {
@@ -159,7 +158,7 @@ func StatsHandler(c *fiber.Ctx) error {
 		"Browsers":           browsers,
 		"OS":                 os,
 		"Time":               timeQuery,
-		"TotalViews":         totalViews,
+		"TotalViews":         utils.FormatFloat(totalViews, true),
 		"Path":               "/stats",
 	})
 }
@@ -265,7 +264,7 @@ func TotalViewsHandler(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.SendString(fmt.Sprint(count))
+	return c.SendString(utils.FormatFloat(count, true))
 }
 
 func MostViewedTodayHandler(c *fiber.Ctx) error {
