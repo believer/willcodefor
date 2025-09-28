@@ -8,18 +8,6 @@
   <div class="col-span-12 md:col-start-3 md:col-end-13">
     <header class="text-2xl font-light">
       <h1 class="mb-5 text-4xl font-bold md:text-5xl">Rickard Natt och Dag</h1>
-      <p>
-        Hej! I'm a developer from Sweden. I enjoy making user-friendly websites
-        and creating tools that make life easier for other developers. I
-        currently love working with
-        <a href="https://htmx.org/" target="_blank" rel="noopener noreferrer"
-          >htmx</a
-        >
-        and
-        <a href="https://go.dev/" target="_blank" rel="noopener noreferrer"
-          >Go<span class="sr-only"> (The programming langauge)</span></a
-        >.
-      </p>
     </header>
     <section class="mt-10 flex items-center space-x-6">
       <a
@@ -66,23 +54,10 @@
   <div class="col-span-12 md:col-span-10 space-y-8">
     <section class="space-y-4">
       <p class="mt-0">
-        Today I Learned (TIL) are interesting things I've found on the web,
-        ideas, thoughts, and reminders regarding software development. I see it
+        Today I Learned (TIL) are things I've found interesting. Ideas, thoughts, and reminders regarding software development. I see it
         as a second brain for all things related to development and a way for me
         to practice
         <a href="/posts/learning-in-public">Learning in public</a>.
-      </p>
-
-      <p>
-        This is heavily inspired by Lee Byron's
-        <a
-          href="https://leebyron.com/til"
-          target="_blank"
-          rel="noopener noreferrer"
-          >TIL</a
-        >
-        and builds on top of my initial attempt with my
-        <a href="https://devlog.willcodefor.beer">Devlog</a>.
       </p>
     </section>
 
@@ -176,14 +151,7 @@
         {{ template "separator" }}
       </summary>
       <div class="pb-4 text-sm">
-        <div class="flex-1 space-y-2">
-          <div class="flex gap-x-2">
-            {{ range .Tech }}
-            <div class="text-xs text-neutral-600 dark:text-neutral-400">
-              {{ . }}
-            </div>
-            {{ end}}
-          </div>
+        <div class="flex-1">
           <div class="space-y-2">{{ unescape .Description }}</div>
         </div>
         <div class="mt-4 flex flex-wrap"></div>

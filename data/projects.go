@@ -6,7 +6,6 @@ type Project struct {
 	Description string
 	Link        string
 	Name        string
-	Tech        []string
 }
 
 type Work struct {
@@ -23,49 +22,41 @@ var Projects = [8]Project{
 	{
 		Name:        "My Movies",
 		Description: "<p>I've been keeping track of the movies I watch for 20 years. First, using lists in IMDb and from 2011 using my own database. The site has seen multiple design iterations over the years and is the pet project I've worked most on.</p><p>It's also a testing ground for new technologies and browser features. For example, <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_scroll-driven_animations\" target=\"_blank\" rel=\"noreferrer noopener\">CSS scroll-driven animations</a> and the <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Popover_API\" target=\"_blank\" rel=\"noreferrer noopener\">Popover API</a> with <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/anchor\" target=\"_blank\" rel=\"noreferrer noopener\">anchoring</a>. Currently, both features are only available in Chrome and Edge.</p>",
-		Tech:        []string{"go", "htmx", "tailwind", "hyperscript"},
 		Link:        "https://movies.willcodefor.beer",
 	},
 	{
 		Name:        "Supreme",
 		Description: "Supreme is a command line tool that helps you get up and running fast with new apps. It can currently generate rescript-react apps with Tailwind CSS, GraphQL APIs with examples for queries, mutations and subscriptions using TypeScript and React apps with both TypeScript and JavaScript. It can also help you install and generate commonly used configs for things like prettier, husky and jest. ",
-		Tech:        []string{"rust", "github actions"},
 		Link:        "https://github.com/opendevtools/supreme",
 	},
 	{
 		Name:        "rescript-intl",
 		Description: "re-intl helps you with date, number and currency formatting in ReasonML (BuckleScript). Everything is built on top of Intl which comes built-in with browsers >= IE11 as well as Node.",
-		Tech:        []string{"rescript", "github actions"},
 		Link:        "https://github.com/opendevtools/rescript-intl",
 	},
 	{
 		Name:        "Clearingnummer",
 		Description: "Sort codes, clearingnummer in Swedish, are four or five digit identifiers for Swedish banks. This package helps you find the bank related to a specific number. ",
-		Tech:        []string{"typescript", "github actions"},
 		Link:        "https://github.com/believer/clearingnummer",
 	},
 	{
 		Name:        "Telefonnummer",
 		Description: "Telefonnummer is phone number in Swedish. This package formats all Swedish phone numbers, both mobile and landline, to a standard format. ",
-		Tech:        []string{"typescript", "github actions"},
 		Link:        "https://github.com/believer/telefonnummer",
 	},
 	{
 		Name:        "WCAG Color",
 		Description: "<p>According to the WHO an <a href=\"https://www.who.int/en/news-room/fact-sheets/detail/blindness-and-visual-impairment\" target=\"_blank\" rel=\"noreferrer noopener\">estimated 1.3 billion</a> people live with some form of visual impairment. This includes people who are legally blind and people with less than 20/20 vision.</p>  <p>This library helps you achieve the accessibility standards for color contrast outlined in the WCAG 2.0 specification.</p> ",
-		Tech:        []string{"rescript", "github actions"},
 		Link:        "https://github.com/opendevtools/wcag-color",
 	},
 	{
 		Name:        "Wejay",
 		Description: "A Slack bot that controls a Sonos system. We use it at Iteam as a collaborative music player. It can do pretty much everything from managing the play queue, control playback, list most played songs and even contains some hidden easter eggs. ",
-		Tech:        []string{"reasonml", "docker", "elasticsearch", "github actions", "slack"},
 		Link:        "https://github.com/Iteam1337/sonos-wejay",
 	},
 	{
 		Name:        "Workout of the Day",
 		Description: "<p>A collection of competition and benchmark CrossFit workouts but also workouts that I\"ve made. A combination of two of my passions code and CrossFit.</p><p>I\"ve also made a version of the app in <a href=\"https://github.com/believer/wod-elm\" target=\"_blank\" rel=\"noreferrer noopener\">Elm</a>.</p> ",
-		Tech:        []string{"rescript", "vercel", "github actions"},
 		Link:        "https://github.com/believer/wod",
 	},
 }
