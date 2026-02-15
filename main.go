@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"log/slog"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +20,7 @@ func main() {
 	err := godotenv.Load()
 
 	if err != nil {
-		panic("No env variables")
+		slog.Info("No environment variables")
 	}
 
 	err = data.InitDB()
