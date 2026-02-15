@@ -16,8 +16,13 @@ import (
 )
 
 func main() {
-	godotenv.Load()
-	err := data.InitDB()
+	err := godotenv.Load()
+
+	if err != nil {
+		panic("No env variables")
+	}
+
+	err = data.InitDB()
 
 	if err != nil {
 		log.Fatalf("Error connecting to database: %v", err)

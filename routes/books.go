@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/believer/willcodefor-go/data"
@@ -36,6 +37,15 @@ func BooksHandler(c *fiber.Ctx) error {
 	}
 
 	totalWords := 0
+
+	years := make([]string, 0)
+	startYear := 2024
+	endYear := time.Now().Year()
+
+	for year := startYear; year <= endYear; year++ {
+		y := strconv.Itoa(year)
+		years = append(years, y)
+	}
 
 	for _, book := range books {
 		totalWords += book.WordCount
@@ -73,5 +83,6 @@ func BooksHandler(c *fiber.Ctx) error {
 		"BooksRead":            booksRead,
 		"YearlyProgress":       yearlyProgress,
 		"SelectedYear":         year,
+		"Years":                years,
 	})
 }
