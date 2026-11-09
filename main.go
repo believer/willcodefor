@@ -47,6 +47,11 @@ func main() {
 			return utils.FormatNumber(x)
 		},
 	)
+	engine.AddFunc(
+		"umamiWebsiteID", func() string {
+			return os.Getenv("UMAMI_WEBSITE_ID")
+		},
+	)
 
 	app := fiber.New(fiber.Config{
 		Views:       engine,

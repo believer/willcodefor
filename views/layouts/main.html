@@ -24,6 +24,9 @@
     <script defer src="/public/hyperscript.0.9.12.min.js"></script>
     {{end}}
     <script async src="/public/command-menu.4e6ce0.js"></script>
+    {{ with umamiWebsiteID }}
+    <script defer src="https://analytics.willcodefor.beer/script.js" data-website-id="{{ . }}"></script>
+    {{ end }}
     {{ if .Metadata }}
     <meta property="og:title" content="{{ .Metadata.Title }}" />
     <meta property="og:type" content="article" />
