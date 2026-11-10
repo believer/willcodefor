@@ -2,7 +2,6 @@ package routes
 
 import (
 	"database/sql"
-	"os"
 	"path"
 	"strconv"
 	"strings"
@@ -11,19 +10,7 @@ import (
 	"github.com/believer/willcodefor-go/model"
 	"github.com/believer/willcodefor-go/utils"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mileusna/useragent"
 )
-
-func NewNullString(s string) sql.NullString {
-	if len(s) == 0 {
-		return sql.NullString{}
-	}
-
-	return sql.NullString{
-		String: s,
-		Valid:  true,
-	}
-}
 
 func PostsHandler(c *fiber.Ctx) error {
 	var (
@@ -71,7 +58,13 @@ func PostsSearchHandler(c *fiber.Ctx) error {
 func PostsViewsHandler(c *fiber.Ctx) error {
 	var posts []model.Post
 
-	err := data.Dot.Select(data.DB, &posts, "posts-views")
+	umamiPaths, umamiViews, err := data.UmamiPostViews()
+
+	if err != nil {
+		return err
+	}
+
+	err = data.Dot.Select(data.DB, &posts, "posts-views", umamiPaths, umamiViews, data.UmamiStart)
 
 	if err != nil {
 		return err
@@ -158,61 +151,21 @@ func PostPreviousHandler(c *fiber.Ctx) error {
 	return c.Render("partials/postPrev", prevPost, "")
 }
 
-func PostStatsHandler(c *fiber.Ctx) error {
+func PostViewsHandler(c *fiber.Ctx) error {
 	var (
 		postViews string
 		id        = c.Params("id")
-		userAgent = c.GetReqHeaders()["User-Agent"][0]
-		env       = os.Getenv("APP_ENV")
 	)
 
-	if userAgent != "" && env == "production" {
-		var (
-			engine       = ""
-			deviceModel  = ""
-			deviceVendor = ""
-			ua           = useragent.Parse(userAgent)
-		)
+	umamiPaths, umamiViews, err := data.UmamiPostViews()
 
-		switch ua.Name {
-		case "Firefox":
-			engine = "Gecko"
-		case "Edge":
-		case "Chrome":
-			engine = "Blink"
-		case "Safari":
-			engine = "WebKit"
-		}
-
-		switch ua.OS {
-		case "macOS":
-			deviceModel = "Macintosh"
-			deviceVendor = "Apple"
-		case "iOS":
-			deviceVendor = "Apple"
-		}
-
-		_, err := data.Dot.Exec(data.DB, "insert-view",
-			ua.String,
-			id,
-			ua.Bot,
-			ua.Name,
-			ua.Version,
-			NewNullString(ua.Device),
-			NewNullString(deviceModel),
-			NewNullString(deviceVendor),
-			ua.OS,
-			ua.OSVersion,
-			ua.Version,
-			NewNullString(engine),
-		)
-
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
 	}
 
-	if err := data.Dot.Get(data.DB, &postViews, "post-views", id); err != nil {
+	err = data.Dot.Get(data.DB, &postViews, "post-views", umamiPaths, umamiViews, data.UmamiStart, id)
+
+	if err != nil {
 		return err
 	}
 

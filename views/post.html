@@ -50,7 +50,7 @@
       ></span
     >{{ end }}. It has been viewed
     <span
-      hx-post="/posts/{{ .Post.ID }}/stats"
+      hx-get="/posts/{{ .Post.ID }}/views"
       hx-trigger="intersect"
       hx-swap="outerHTML"
     >

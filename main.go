@@ -88,7 +88,7 @@ func main() {
 
 	posts.Get("/:id/next", routes.PostNextHandler)
 	posts.Get("/:id/previous", routes.PostPreviousHandler)
-	posts.Post("/:id/stats", routes.PostStatsHandler)
+	posts.Get("/:id/views", routes.PostViewsHandler)
 
 	// Series
 	// ––––––––––––––––––––––––––––––––––––––––
@@ -108,19 +108,12 @@ func main() {
 
 	// Stats
 	// ––––––––––––––––––––––––––––––––––––––––
-	stats := app.Group("/stats")
+	statsHandler := func(c *fiber.Ctx) error {
+		return c.Redirect("https://analytics.willcodefor.beer/share/OHueKaD9f3bKlz61", fiber.StatusSeeOther)
+	}
 
-	stats.Get("/", routes.StatsHandler)
-	stats.Get("/total-views", routes.TotalViewsHandler)
-	stats.Get("/views-per-day", routes.ViewsPerDay)
-	stats.Get("/browsers", routes.BrowsersHandler)
-	stats.Get("/os", routes.OSHandler)
-	stats.Get("/most-viewed", routes.MostViewedHandler)
-	stats.Get("/most-viewed-today", routes.MostViewedTodayHandler)
-	stats.Get("/chart", routes.ChartHandler)
-	stats.Get("/posts", routes.PostsStatsHandler)
-	stats.Get("/:id", routes.StatsPostHandler)
-	stats.Get("/:id/views", routes.StatsPostViewsHandler)
+	app.Get("/stats", statsHandler)
+	app.Get("/stats/*", statsHandler)
 
 	// Redirects to old page
 	// ––––––––––––––––––––––––––––––––––––––––

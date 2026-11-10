@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	DB  *sqlx.DB
-	Dot *dotsqlx.DotSqlx
+	DB      *sqlx.DB
+	UmamiDB *sqlx.DB
+	Dot     *dotsqlx.DotSqlx
 )
 
 func InitDB() error {
@@ -28,10 +29,15 @@ func InitDB() error {
 		log.Println("Connected to database")
 	}
 
-	statsQueries, err := dotsql.LoadFromFile("./data/statsQueries.sql")
+	// Optional, view counts only include frozen post_view data without it
+	if umamiConnectionString := os.Getenv("UMAMI_DATABASE_URL"); umamiConnectionString != "" {
+		UmamiDB, err = sqlx.Connect("postgres", umamiConnectionString)
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
+
+		log.Println("Connected to Umami database")
 	}
 
 	indexQueries, err := dotsql.LoadFromFile("./data/indexQueries.sql")
@@ -52,11 +58,17 @@ func InitDB() error {
 		return err
 	}
 
+	umamiQueries, err := dotsql.LoadFromFile("./data/umamiQueries.sql")
+
+	if err != nil {
+		return err
+	}
+
 	dot := dotsql.Merge(
-		statsQueries,
 		indexQueries,
 		postQueries,
 		bookQueries,
+		umamiQueries,
 	)
 	dotx := dotsqlx.Wrap(dot)
 

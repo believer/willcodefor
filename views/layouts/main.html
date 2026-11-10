@@ -20,9 +20,6 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for willcodefor.beer" href="/feed.xml" />
     <script defer src="/public/htmx.2.0.0.min.js"></script>
     <script defer src="/public/htmx.head-support.js"></script>
-    {{ if eq .Path "/stats" }}
-    <script defer src="/public/hyperscript.0.9.12.min.js"></script>
-    {{end}}
     <script async src="/public/command-menu.4e6ce0.js"></script>
     {{ with umamiWebsiteID }}
     <script defer src="https://analytics.willcodefor.beer/script.js" data-website-id="{{ . }}" data-performance="true" data-errors="true"></script>
